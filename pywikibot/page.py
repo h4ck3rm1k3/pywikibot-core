@@ -19,7 +19,7 @@ import hashlib
 import htmlentitydefs
 import logging
 import re
-import threading
+#import threading
 import unicodedata
 import urllib
 import collections
@@ -429,7 +429,8 @@ class Page(object):
 
     def previousRevision(self):
         """Return the revision id for the previous revision of this Page."""
-        vh = self.getVersionHistory(total=2)
+        #vh = 
+        self.getVersionHistory(total=2)
         revkey = sorted(self._revisions, reverse=True)[1]
         return revkey
 

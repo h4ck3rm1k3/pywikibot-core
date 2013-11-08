@@ -17,7 +17,7 @@ lists which are required by some other programs.
 __version__ = '$Id$'
 
 # used for date recognition
-import types
+#import types
 import re
 
 #

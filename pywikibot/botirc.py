@@ -18,19 +18,22 @@ __version__ = '$Id$'
 # scripts, instead of writing each one from scratch.
 
 
-import logging
+#import logging
 import logging.handlers
        # all output goes thru python std library "logging" module
 import re
 
 from ircbot import SingleServerIRCBot
-from irclib import nm_to_n, nm_to_h, irc_lower, ip_numstr_to_quad
+from irclib import nm_to_n,  
+#irc_lower
+#nm_to_h
+#ip_numstr_to_quad
 from irclib import ip_quad_to_numstr
 
 # logging levels
 _logger = "botirc"
 
-from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
+#from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 STDOUT = 16
 VERBOSE = 18
 INPUT = 25

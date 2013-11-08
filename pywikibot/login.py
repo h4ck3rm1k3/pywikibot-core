@@ -11,7 +11,7 @@ Library to log the robot in to a wiki account.
 #
 __version__ = '$Id$'
 
-import logging
+#import logging
 import pywikibot
 from pywikibot import config, deprecate_arg
 from pywikibot.exceptions import NoSuchSite, NoUsername
