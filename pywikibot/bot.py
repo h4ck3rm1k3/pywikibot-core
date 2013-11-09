@@ -83,7 +83,7 @@ class RotatingFileHandler(logging.handlers.RotatingFileHandler):
             os.rename(self.baseFilename, dfn)
             #print "%s -> %s" % (self.baseFilename, dfn)
         elif self.backupCount == -1:
-            if not hasattr(self, lastNo):
+            if not hasattr(self, 'lastNo'):
                 self._lastNo = 1
             while True:
                 fn = "%s.%d%s" % (root, self._lastNo, ext)
@@ -624,9 +624,7 @@ def handleArgs(*args):
         ver = pywikibot.__version__  # probably can be improved on
         # Please don't change the regular expression here unless you really
         # have to - some git versions (like 1.7.0.4) seem to treat lines
-        # containing just `$Id:` as if they were ident lines (see
-        # gitattributes(5)) leading to unwanted behaviour like automatic
-        # replacement with `$Id$`
+        # containing just `$Id$Id$`
         # or `$Id$`.
         m = re.search(r"\$Id"
                       r": (\w+) \$", ver)
