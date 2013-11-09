@@ -30,7 +30,7 @@ __version__ = '$Id$'
 # Distributed under the terms of the MIT license.
 #
 import pywikibot
-from pywikibot import i18n, config, catlib, pagegenerators
+from pywikibot import i18n, pagegenerators # catlib config,  
 
 
 class DeletionRobot:
@@ -61,19 +61,19 @@ class DeletionRobot:
 def main():
     genFactory = pagegenerators.GeneratorFactory()
     pageName = ''
-    singlePage = ''
+    #singlePage = ''
     summary = ''
     always = False
-    doSinglePage = False
-    doCategory = False
-    deleteSubcategories = True
-    doRef = False
-    doLinks = False
+    #doSinglePage = False
+    #doCategory = False
+    #deleteSubcategories = True
+    #doRef = False
+    #doLinks = False
     doImages = False
     undelete = False
-    fileName = ''
+    #fileName = ''
     generator = None
-
+    mysite = pywikibot.getSite()
     # read command line parameters
     for arg in pywikibot.handleArgs():
         if arg == '-always':
@@ -83,8 +83,9 @@ def main():
                 summary = pywikibot.input(u'Enter a reason for the deletion:')
             else:
                 summary = arg[len('-summary:'):]
-        elif arg.startswith('-nosubcats'):
-            deleteSubcategories = False
+                #        elif arg.startswith('-nosubcats'):
+                #           #deleteSubcategories = False
+                #           pass
         elif arg.startswith('-images'):
             doImages = True
             if len(arg) == len('-images'):
@@ -105,7 +106,7 @@ def main():
                 summary = i18n.twtranslate(mysite, 'delete-referring-pages', {'page': pageName})
             elif arg.startswith('-file'):
                 summary = i18n.twtranslate(mysite, 'delete-from-file')
-    mysite = pywikibot.getSite()
+
     if doImages:
         if not summary:
             summary = i18n.twtranslate(mysite, 'delete-images',

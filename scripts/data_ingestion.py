@@ -87,6 +87,7 @@ def CSVReader(fileobj, urlcolumn, *args, **kwargs):
     for line in reader:
         yield Photo(line[urlcolumn], line)
 
+import upload
 
 class DataIngestionBot:
     def __init__(self, reader, titlefmt, pagefmt, site=pywikibot.getSite(u'commons', u'commons')):

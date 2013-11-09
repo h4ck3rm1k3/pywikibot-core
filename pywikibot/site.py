@@ -10,10 +10,11 @@ on the same topic in different languages).
 #
 __version__ = '$Id$'
 
-try:
-    from hashlib import md5
-except ImportError:
-    from md5 import md5
+#try:
+#    from hashlib import md5
+#except ImportError:
+#    #from md5 import md5
+
 import datetime
 import itertools
 import os
@@ -28,10 +29,15 @@ import pywikibot
 from pywikibot import deprecate_arg
 from pywikibot import config
 from pywikibot import deprecated
-from pywikibot import pagegenerators
+#from pywikibot import pagegenerators
 from pywikibot.throttle import Throttle
 from pywikibot.data import api
-from pywikibot.exceptions import *
+from pywikibot.exceptions import NoSuchSite, Error, UserBlocked,NoPage,NoUsername,EditConflict, SpamfilterError, LockedPage
+
+class Captcha():
+    def input(x):
+        print x
+cap_answerwikipedia= Captcha()
 
 _logger = "wiki.site"
 
@@ -885,7 +891,8 @@ class APISite(BaseSite):
 
     def logout(self):
         uirequest = api.Request(site=self, action="logout")
-        uidata = uirequest.submit()
+        #uidata = 
+        uirequest.submit()
         self._loginstatus = LoginStatus.NOT_LOGGED_IN
         if hasattr(self, "_userinfo"):
             del self._userinfo
@@ -1001,7 +1008,7 @@ class APISite(BaseSite):
     def has_mediawiki_message(self, key):
         """Return True iff this site defines a MediaWiki message for 'key'."""
         try:
-            v = self.mediawiki_message(key)
+            self.mediawiki_message(key)
             return True
         except KeyError:
             return False
@@ -1987,13 +1994,14 @@ class APISite(BaseSite):
             pywikibot.debug(
                 u"allpages: 'includeRedirects' argument is deprecated; use 'filterredirs'.",
                 _logger)
-            if includeredirects:
-                if includeredirects == "only":
-                    filterredirs = True
-                else:
-                    filterredirs = None
-            else:
-                filterredirs = False
+            # if includeredirects:
+            #     if includeredirects == "only":
+            #         filterredirs = True
+            #     else:
+            #         filterredirs = None
+            # else:
+            #     #filterredirs = False
+            #     pass
 
         apgen = self._generator(api.PageGenerator, type_arg="allpages",
                                 gapnamespace=str(namespace),
@@ -2976,7 +2984,8 @@ class APISite(BaseSite):
                           title=page.title(withSection=False),
                           reason=summary)
         try:
-            result = req.submit()
+            #result = 
+            req.submit()
         except api.APIError, err:
             errdata = {
                 'site': self,
@@ -3043,15 +3052,6 @@ class APISite(BaseSite):
         """Backwards-compatible interface to exturlusage()"""
         return self.exturlusage(siteurl, total=limit)
 
-    @deprecated('Site().logevents(logtype="upload",...)')
-    @deprecate_arg("repeat", None)
-    def newimages(self, number=100, lestart=None, leend=None, leuser=None,
-                  letitle=None):
-        """Yield ImagePages from most recent uploads"""
-        if isinstance(letitle, basestring):
-            letitle = pywikibot.Page(pywikibot.Link(letitle))
-        return self.logevents(logtype="upload", total=number, start=lestart,
-                              end=leend, user=leuser, page=letitle)
 
     def getFilesFromAnHash(self, hash_found=None):
         """Return all images that have the same hash.
@@ -3133,7 +3133,8 @@ class APISite(BaseSite):
             if not os.path.isfile(source_filename):
                 raise ValueError("File '%s' does not exist."
                                  % source_filename)
-            filesize = os.path.getsize(source_filename)
+            #filesize = 
+            os.path.getsize(source_filename)
             # TODO: if file size exceeds some threshold (to be determined),
             #       upload by chunks
             req = api.Request(site=self, action="upload", token=token,
@@ -3157,7 +3158,7 @@ class APISite(BaseSite):
             result = req.submit()
         except api.APIError, err:
             # TODO: catch and process foreseeable errors
-            raise
+            raise err
         result = result["upload"]
         pywikibot.debug(result, _logger)
         if "warnings" in result:
@@ -3201,7 +3202,8 @@ class APISite(BaseSite):
         # N.B. API still provides no way to access Special:Newpages content
         # directly, so we get new pages indirectly through 'recentchanges'
 
-        namespaces = namespaces if namespaces is not None else namespace
+        namespaces = namespaces # if namespaces is not None else namespace
+
         gen = self.recentchanges(
             start=start, end=end, reverse=reverse,
             namespaces=namespaces, changetype="new", user=user,
@@ -3217,12 +3219,23 @@ class APISite(BaseSite):
                 yield (newpage, pageitem['timestamp'], pageitem['newlen'],
                        u'', pageitem['user'], pageitem['comment'])
 
+
+    # doubles
+    # @deprecated('Site().logevents(logtype="upload",...)')
+    # @deprecate_arg("repeat", None)
+    # def newimages(self, number=100, lestart=None, leend=None, leuser=None,
+    #               letitle=None):
+    #     """Yield ImagePages from most recent uploads"""
+    #     if isinstance(letitle, basestring):
+    #         letitle = pywikibot.Page(pywikibot.Link(letitle))
+    #     return self.logevents(logtype="upload", total=number, start=lestart,
+    #                           end=leend, user=leuser, page=letitle)
+
     @deprecate_arg("number", None)
     @deprecate_arg("repeat", None)
     def newimages(self, user=None, start=None, end=None, reverse=False,
                   step=None, total=None):
         """Yield information about newly uploaded images.
-
         Yields a tuple of ImagePage, Timestamp, user(unicode), comment(unicode).
 
         N.B. the API does not provide direct access to Special:Newimages, so
@@ -3230,7 +3243,7 @@ class APISite(BaseSite):
 
         """
         #TODO: update docstring
-        for event in logevents(self, logtype="upload", user=user,
+        for event in self.logevents(self, logtype="upload", user=user,
                                start=start, end=end, reverse=reverse,
                                step=step, total=total):
             image = pywikibot.ImagePage(self, event['title'])
@@ -3790,8 +3803,6 @@ class DataSite (APISite):
     def linksearch(self, *args, **kwargs):
         raise NotImplementedError
 
-    def newimages(self, *args, **kwargs):
-        raise NotImplementedError
 
 
 #### METHODS NOT IMPLEMENTED YET ####

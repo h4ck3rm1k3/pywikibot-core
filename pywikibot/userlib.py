@@ -14,4 +14,4 @@ function/method instead.
 __version__ = '$Id$'
 
 
-from pywikibot import User
+#from pywikibot import User

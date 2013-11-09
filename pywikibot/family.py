@@ -9,7 +9,7 @@ __version__ = '$Id$'
 
 import logging
 import re
-import urllib
+#import urllib
 import collections
 
 import config2 as config

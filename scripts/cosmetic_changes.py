@@ -72,7 +72,7 @@ or by adding a list to the given one:
 #
 __version__ = '$Id$'
 #
-import sys
+#import sys
 import re
 import pywikibot
 import isbn
@@ -536,7 +536,7 @@ class CosmeticChangesToolkit:
         return text
 
     def removeUselessSpaces(self, text):
-        result = []
+        #result = []
         multipleSpacesR = re.compile('  +')
         spaceAtLineEndR = re.compile(' $')
 

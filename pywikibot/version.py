@@ -139,8 +139,10 @@ def getversion_git(path=None):
     return (tag, rev, date, hsh)
 
 
+from generate_user_files.py import get_base_dir
+
 def getversion_nightly():
-    data = open(os.path.join(wikipediatools.get_base_dir(), 'version'))
+    data = open(os.path.join(get_base_dir(), 'version'))
     tag = data.readline().strip()
     date = time.strptime(data.readline()[:19], '%Y-%m-%dT%H:%M:%S')
     rev = data.readline().strip()

@@ -31,8 +31,8 @@ def translate(page, hints=None, auto=True, removebrackets=False, site=None, fami
         site = page.site
     if family is None and site:
         family = site.family
-    if site:
-        sitelang = site.language()
+    #if site:
+        #sitelang = site.language()
     if hints:
         for h in hints:
             if ':' not in h:

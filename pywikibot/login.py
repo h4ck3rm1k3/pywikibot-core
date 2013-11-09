@@ -14,7 +14,7 @@ __version__ = '$Id$'
 #import logging
 import pywikibot
 from pywikibot import config, deprecate_arg
-from pywikibot.exceptions import NoSuchSite, NoUsername
+from pywikibot.exceptions import NoUsername
 
 _logger = "wiki.login"
 

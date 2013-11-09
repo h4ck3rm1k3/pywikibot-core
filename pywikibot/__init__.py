@@ -12,10 +12,10 @@ __version__ = '$Id$'
 
 import datetime
 import difflib
-import logging
+#import logging
 import math
 import re
-import sys
+#import sys
 import threading
 from Queue import Queue
 
@@ -23,11 +23,12 @@ from Queue import Queue
 # confusion with similarly-named modules in version 1 framework, for users
 # who want to continue using both
 
+import pywikibot
 from pywikibot import config2 as config
-from pywikibot.bot import *
-from pywikibot.exceptions import *
-from pywikibot.textlib import *
-from pywikibot.i18n import translate
+from pywikibot.bot import warning, output, inputChoice
+#from pywikibot.exceptions import *
+#from pywikibot.textlib import *
+#from pywikibot.i18n import translate
 
 
 class Timestamp(datetime.datetime):
@@ -309,9 +310,9 @@ def Site(code=None, fam=None, user=None, sysop=None, interface=None):
 
 getSite = Site  # alias for backwards-compability
 
-
-from page import Page, ImagePage, Category, Link, User, ItemPage, PropertyPage, Claim
-from page import html2unicode, url2unicode
+#Category Page, Link, User, ItemPage, PropertyPage, ImagePage, Claim
+#from page import  
+#from page import html2unicode, url2unicode
 
 
 link_regex = re.compile(r'\[\[(?P<title>[^\]|[<>{}]*)(\|.*?)?\]\]')

@@ -19,16 +19,12 @@ __version__ = '$Id$'
 
 
 #import logging
-import logging.handlers
+#import logging.handlers
        # all output goes thru python std library "logging" module
 import re
 
 from ircbot import SingleServerIRCBot
-from irclib import nm_to_n,  
-#irc_lower
-#nm_to_h
-#ip_numstr_to_quad
-from irclib import ip_quad_to_numstr
+#from irclib import ip_quad_to_numstr
 
 # logging levels
 _logger = "botirc"

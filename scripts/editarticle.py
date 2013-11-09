@@ -70,7 +70,7 @@ class ArticleEditor:
         if not self.options.edit_redirect and self.page.isRedirectPage():
             self.page = self.page.getRedirectTarget()
 
-    def handle_edit_conflict(self):
+    def handle_edit_conflict(self,new):
         fn = os.path.join(tempfile.gettempdir(), self.page.title())
         fp = open(fn, 'w')
         fp.write(new)

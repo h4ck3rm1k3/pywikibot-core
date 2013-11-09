@@ -407,19 +407,19 @@ def twntranslate(code, twtitle, parameters=None):
         },
     }
     #use a number
-    >>> i18n.twntranslate('en', 'test-changing', 0) % {'num': 'no'}
+    >>> twntranslate('en', 'test-changing', 0) % {'num': 'no'}
     Bot: Changing no pages.
     #use a string
-    >>> i18n.twntranslate('en', 'test-changing', '1') % {'num': 'one'}
+    >>> twntranslate('en', 'test-changing', '1') % {'num': 'one'}
     Bot: Changing one page.
     #use a dictionary
-    >>> i18n.twntranslate('en', 'test-changing', {'num':2})
+    >>> twntranslate('en', 'test-changing', {'num':2})
     Bot: Changing 2 pages.
     #use additional format strings
-    >>> i18n.twntranslate('fr', 'test-changing', {'num':1, 'descr':'seulement'})
+    >>> twntranslate('fr', 'test-changing', {'num':1, 'descr':'seulement'})
     Bot: Changer seulement une pages.
     #use format strings also outside
-    >>> i18n.twntranslate('fr', 'test-changing', 0) % {'descr':'seulement'}
+    >>> twntranslate('fr', 'test-changing', 0) % {'descr':'seulement'}
     Bot: Changer seulement un peu pages.
 
     The translations are retrieved from i18n.<package>, based on the callers

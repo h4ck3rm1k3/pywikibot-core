@@ -18,8 +18,14 @@ __version__ = '$Id$'
 
 # used for date recognition
 #import types
+import pywikibot
 import re
 
+def dh_milleniumAD(x, fstr) :
+    u"""
+    I dont know this language, but you need something like inflect
+    """
+    return fstr % x
 #
 # Different collections of well known formats
 #

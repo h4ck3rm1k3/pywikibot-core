@@ -16,10 +16,11 @@ __version__ = '$Id$'
 #
 
 import threading
-import codecs
+#import codecs
 import re
 from xml.etree.cElementTree import iterparse
-import pywikibot
+import xml.sax
+#import pywikibot
 
 
 def parseRestrictions(restrictions):

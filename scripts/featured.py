@@ -64,14 +64,14 @@ __version__ = '$Id$'
 # Distributed under the terms of the MIT license.
 #
 
-import os.path
+#import os.path
 import pickle
 import re
-import sys
+#import sys
 from copy import copy
 import pywikibot
 from pywikibot import i18n
-from pywikibot import config
+#from pywikibot import config
 from pywikibot.pagegenerators import PreloadingGenerator
 
 
@@ -210,6 +210,8 @@ former_name = {
     'zh': (CAT, u"已撤销的特色条目"),
 }
 
+
+interactive = False
 
 class FeaturedBot(pywikibot.Bot):
     # Bot configuration.
@@ -360,7 +362,8 @@ class FeaturedBot(pywikibot.Bot):
             self.featuredWithInterwiki(fromsite, process)
 
     def featuredArticles(self, site, task, cache):
-        wikidata = False
+        #wikidata = False
+
         code = site.lang
         articles = []
         if task == 'good':
@@ -520,14 +523,18 @@ class FeaturedBot(pywikibot.Bot):
     def featuredWithInterwiki(self, fromsite, task):
         """Place or remove the Link_GA/FA template on/from a page"""
 
+        global interactive
+
         def compile_link(site, templates):
+
+
             """compile one link template list"""
             findtemplate = '(%s)' % '|'.join(templates)
             return re.compile(ur"\{\{%s\|%s\}\}"
                               % (findtemplate.replace(u' ', u'[ _]'),
                                  site.code), re.IGNORECASE)
 
-        quiet = self.getOption('quiet')
+        #quiet = self.getOption('quiet')
         tosite = self.site
         if not fromsite.lang in self.cache:
             self.cache[fromsite.lang] = {}
@@ -542,7 +549,7 @@ class FeaturedBot(pywikibot.Bot):
         re_Link_remove = compile_link(fromsite, remove_tl)
         gen = self.featuredArticles(fromsite, task, cc)
         gen = PreloadingGenerator(gen)
-        pairs = []
+        #pairs = []
         for a in gen:
             if a.isRedirectPage():
                 a = a.getRedirectTarget()
@@ -603,16 +610,16 @@ class FeaturedBot(pywikibot.Bot):
                 except pywikibot.LockedPage:
                     pywikibot.output(u'Page %s is locked!'
                                      % atrans.title())
-                except pywikibot.PageNotSaved, e:
+                except pywikibot.PageNotSaved:
                     pywikibot.output(u"Page not saved")
 
-
+afterpage=None
 def main(*args):
     global interactive, afterpage
     interactive = 0
     afterpage = u"!"
 
-    featuredcount = False
+    #featuredcount = False
     fromlang = []
     processType = 'featured'
     part = False

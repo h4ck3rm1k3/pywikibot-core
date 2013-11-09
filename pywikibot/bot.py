@@ -294,21 +294,7 @@ def writelogheader():
 # the user console. debug() takes a required second argument, which is a
 # string indicating the debugging layer.
 
-# next bit filched from 1.5.2's inspect.py
-def currentframe():
-    """Return the frame object for the caller's stack frame."""
-    try:
-        raise Exception
-    except:
-        # go back two levels, one for logoutput and one for whatever called it
-        return sys.exc_traceback.tb_frame.f_back.f_back
 
-if hasattr(sys, '_getframe'):
-    # less portable but more efficient
-    currentframe = lambda: sys._getframe(3)
-    # frame0 is this lambda, frame1 is logoutput() in this module,
-    # frame2 is the convenience function (output(), etc.)
-    # so frame3 is whatever called the convenience function
 
 # done filching
 
@@ -329,7 +315,23 @@ def logoutput(text, decoder=None, newline=True, _level=INFO, _logger="",
     if not _handlers_initialized:
         init_handlers()
 
-    frame = currentframe()
+    #    frame = currentframe()
+    # next bit filched from 1.5.2's inspect.py
+    frame = None
+    if hasattr(sys, '_getframe'):
+        # less portable but more efficient
+        frame = sys._getframe(3)
+        # frame0 is this lambda, frame1 is logoutput() in this module,
+        # frame2 is the convenience function (output(), etc.)
+        # so frame3 is whatever called the convenience function
+    else:
+        try:
+            raise Exception
+        except:
+            # go back two levels, one for logoutput and one for whatever called it
+            frame =  sys.exc_traceback.tb_frame.f_back
+
+
     module = os.path.basename(frame.f_code.co_filename)
     context = {'caller_name': frame.f_code.co_name,
                'caller_file': module,
@@ -610,7 +612,7 @@ def handleArgs(*args):
                 if type(getattr(config, _arg)) is not int:
                     raise TypeError
                 setattr(config, _arg, int(_val))
-            except (ValueError, TypeError, AttributeError) as exc:
+            except (ValueError, TypeError, AttributeError) :
             # argument not global -> specific bot script will take care
                 nonGlobalArgs.append(arg)
 

@@ -13,6 +13,7 @@ and return a unicode string.
 #
 __version__ = '$Id$'
 
+from pywikibot.exceptions import Error
 try:
     import mwparserfromhell
 except ImportError:
@@ -595,7 +596,7 @@ def interwikiFormat(links, insite=None):
             link = unicode(links[site]).replace('[[:', '[[')
             s.append(link)
         except AttributeError:
-            s.append(getSite(site).linkto(links[site], othersite=insite))
+            s.append(pywikibot.getSite(site).linkto(links[site], othersite=insite))
     if insite.lang in insite.family.interwiki_on_one_line:
         sep = u' '
     else:
@@ -634,7 +635,7 @@ def interwikiSort(sites, insite=None):
 #---------------------------------------
 
 def getCategoryLinks(text, site=None):
-    import catlib
+    #import catlib
     """Return a list of category links found in text.
 
     List contains Category objects.

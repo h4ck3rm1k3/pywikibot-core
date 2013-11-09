@@ -10,9 +10,11 @@ Objects representing various types of MediaWiki pages.
 __version__ = '$Id$'
 
 import pywikibot
+from pywikibot.exceptions import AutoblockUser, UserActionRefuse
 from pywikibot import deprecate_arg
 from pywikibot import deprecated
 from pywikibot import config
+from pywikibot.bot import calledModuleName
 import pywikibot.site
 
 import hashlib
@@ -429,7 +431,7 @@ class Page(object):
 
     def previousRevision(self):
         """Return the revision id for the previous revision of this Page."""
-        #vh = 
+        #vh =
         self.getVersionHistory(total=2)
         revkey = sorted(self._revisions, reverse=True)[1]
         return revkey

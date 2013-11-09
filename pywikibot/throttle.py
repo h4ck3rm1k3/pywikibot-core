@@ -12,7 +12,7 @@ __version__ = '$Id$'
 import pywikibot
 from pywikibot import config
 
-import logging
+#import logging
 import math
 import threading
 import time
@@ -140,7 +140,7 @@ class Throttle(object):
         """Set the nominal delays in seconds. Defaults to config values."""
         self.lock.acquire()
         try:
-            maxdelay = self.maxdelay
+            #maxdelay = self.maxdelay
             if delay is None:
                 delay = self.mindelay
             if writedelay is None:

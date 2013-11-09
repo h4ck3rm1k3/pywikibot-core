@@ -81,6 +81,8 @@ def listchoice(clist=[], message=None, default=None):
     for n, i in enumerate(clist):
         print ("%d: %s" % (n + 1, i))
 
+    choice = "ERROR"
+
     while True:
         choice = raw_input(message)
 
@@ -100,7 +102,7 @@ def listchoice(clist=[], message=None, default=None):
         except:
             if not isinstance(choice, basestring):
                 print("Invalid response")
-    return response
+    return choice
 
 
 def change_base_dir():

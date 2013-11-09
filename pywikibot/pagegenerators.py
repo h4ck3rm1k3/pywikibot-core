@@ -968,7 +968,7 @@ def UnwatchedPagesPageGenerator(number=100, repeat=False, site=None):
 def AncientPagesPageGenerator(number=100, repeat=False, site=None):
     if site is None:
         site = pywikibot.Site()
-    for page, date in site.ancientpages(number=number, repeat=repeat):
+    for page, a_date in site.ancientpages(number=number, repeat=repeat):
         yield page
 
 

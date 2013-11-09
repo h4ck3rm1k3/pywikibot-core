@@ -383,7 +383,7 @@ class CategoryMoveRobot:
                  editSummary='', inPlace=False, moveCatPage=True,
                  deleteEmptySourceCat=True, titleRegex=None,
                  useSummaryForDeletion=True):
-        site = pywikibot.getSite()
+        #site = pywikibot.getSite()
         self.editSummary = editSummary
         self.oldCat = catlib.Category(pywikibot.Link('Category:' + oldCatTitle))
         self.newCatTitle = newCatTitle
@@ -727,7 +727,7 @@ class CategoryTidyRobot:
 
         articles = set(cat.articles())
         if len(articles) == 0:
-            pywikibot.output(u'There are no articles in category ' + catTitle)
+            pywikibot.output(u'There are no articles in category ' + self.catTitle)
         else:
             preloadingGen = pagegenerators.PreloadingGenerator(iter(articles))
             for article in preloadingGen:
@@ -822,6 +822,7 @@ class CategoryTreeRobot:
             pywikibot.output(tree, toStdout=True)
 
 
+catDB=None
 def main(*args):
     global catDB
 
@@ -850,7 +851,7 @@ def main(*args):
     catDB = CategoryDatabase()
     action = None
     sort_by_last_name = False
-    restore = False
+    #restore = False
     create_pages = False
     for arg in pywikibot.handleArgs(*args):
         if arg == 'add':
@@ -960,10 +961,12 @@ def main(*args):
 
 
 if __name__ == "__main__":
+
     try:
         main()
     except pywikibot.Error:
         pywikibot.error("Fatal error:", exc_info=True)
     finally:
+        #global catDB
         catDB.dump()
         pywikibot.stopme()

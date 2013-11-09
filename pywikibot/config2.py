@@ -10,7 +10,7 @@ __version__ = '$Id$'
 import os
 import sys as __sys
 import re
-import platform
+#import platform
 
 # IMPORTANT:
 # Do not change any of the variables in this file. Instead, make
@@ -114,6 +114,12 @@ def _get_base_dir():
 
     """
     NAME = "pywikibot"
+
+    import os
+    import sys as __sys
+    #import re
+    import platform
+
     for arg in __sys.argv[1:]:
         if arg.startswith("-dir:"):
             base_dir = arg[5:]

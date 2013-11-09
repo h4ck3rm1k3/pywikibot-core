@@ -64,6 +64,7 @@ python blockpageschecker.py -show -protectedpages:4
 __version__ = '$Id$'
 #
 
+import time
 import re
 import webbrowser
 import pywikibot
@@ -199,7 +200,8 @@ def showQuest(site, page):
     elif quest == 'g':
         from pywikibot import editor as editarticle
         editor = editarticle.TextEditor()
-        text = editor.edit(page.get())
+        #text = 
+        editor.edit(page.get())
 
 
 def main():
