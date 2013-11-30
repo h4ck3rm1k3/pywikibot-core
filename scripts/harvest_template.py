@@ -81,6 +81,7 @@ class HarvestRobot:
             try:
                 self.procesPage(page)
             except Exception, e:
+                print (e)
                 pywikibot.exception(tb=True)
 
     def getTemplateSynonyms(self, title):

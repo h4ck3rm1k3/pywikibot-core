@@ -7,12 +7,13 @@
 __version__ = '$Id$'
 
 import transliteration
-import traceback
+#import traceback
 import re
 import sys
 import pywikibot as wikipedia
 from pywikibot import config
-from pywikibot.bot import DEBUG, VERBOSE, INFO, STDOUT, INPUT, WARNING
+from pywikibot.bot import  VERBOSE, INFO, STDOUT, INPUT
+#WARNING, DEBUG,
 import logging
 
 transliterator = transliteration.transliterator(config.console_encoding)
@@ -150,7 +151,7 @@ class UI:
                     # mark the transliterated letters in yellow.
                     transliteratedText += '\03{lightyellow}%s\03{default}' \
                                           % transliterated
-                    transLength = len(transliterated)
+                    #transLength = len(transliterated)
                     # memorize if we replaced a single letter by multiple
                     # letters.
                     if len(transliterated) > 0:

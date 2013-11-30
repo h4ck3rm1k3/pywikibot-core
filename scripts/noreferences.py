@@ -37,11 +37,11 @@ a list of affected articles
 __version__ = '$Id$'
 
 import re
-import sys
+#import sys
 import pywikibot
 from pywikibot import i18n
 from pywikibot import pagegenerators, catlib
-import editarticle
+#import editarticle
 
 # This is required for the text that is shown when you run this script
 # with the parameter -help.

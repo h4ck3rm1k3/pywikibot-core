@@ -42,7 +42,19 @@ from pywikibot import config
 import upload
 
 import flickrapi                  # see: http://stuvel.eu/projects/flickrapi
-from Tkinter import *
+from Tkinter  import (
+    Button,
+    END,
+    Entry,
+    Label,
+    NORMAL,
+    Scrollbar,
+    Text,
+    Tk,
+    VERTICAL,
+    WORD,
+)
+
 from PIL import Image, ImageTk    # see: http://www.pythonware.com/products/pil/
 
 flickr_allowed_license = {
@@ -74,7 +86,7 @@ def getPhoto(flickr=None, photo_id=''):
             #xml.etree.ElementTree.dump(photoSizes)
             gotPhoto = True
         except flickrapi.exceptions.FlickrError:
-            gotPhotos = False
+            #gotPhotos = False
             pywikibot.output(u'Flickr api problem, sleeping')
             time.sleep(30)
     return photoInfo, photoSizes
@@ -390,8 +402,8 @@ class Tkdialog:
 def getPhotos(flickr=None, user_id=u'', group_id=u'', photoset_id=u'',
               start_id='', end_id='', tags=u''):
     """ Loop over a set of Flickr photos. """
-    result = []
-    retry = False
+    #result = []
+    #retry = False
     found_start_id = not start_id
 
     # http://www.flickr.com/services/api/flickr.groups.pools.getPhotos.html
@@ -503,7 +515,7 @@ def usage():
 
 
 def main():
-    site = pywikibot.getSite(u'commons', u'commons')
+    #site = pywikibot.getSite(u'commons', u'commons')
     #imagerecat.initLists()
 
     #Get the api key

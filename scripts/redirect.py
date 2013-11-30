@@ -58,11 +58,11 @@ and arguments can be:
 #
 __version__ = '$Id$'
 #
-import re
+#import re
 import datetime
 import pywikibot
 from pywikibot import i18n
-from pywikibot import config
+#from pywikibot import config
 from pywikibot import xmlreader
 
 

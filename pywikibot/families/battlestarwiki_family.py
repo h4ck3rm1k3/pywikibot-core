@@ -21,7 +21,7 @@ class Family(family.Family):
         # if you carefully avoid the options, you could get away without these
         # for another wiki family.
 
-        alphabetic = ['de', 'en', 'es', 'fr', 'tr', 'zh']
+        #alphabetic = ['de', 'en', 'es', 'fr', 'tr', 'zh']
 
     def hostname(self, code):
         return '%s.battlestarwiki.org' % code

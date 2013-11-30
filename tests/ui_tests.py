@@ -45,7 +45,8 @@ if os.name == "nt":
 
     class pywikibotWrapper(object):
         def init(self):
-            import pywikibot
+            #import pywikibot
+            pass
 
         def output(self, *args, **kwargs):
             import pywikibot
@@ -174,11 +175,6 @@ if __name__ == "__main__":
             self.assertEqual(newstderr.getvalue(), "CRITICAL: CRITICAL\n")
 
         def test_output(self):
-            pywikibot.output("output", toStdout=False)
-            self.assertEqual(newstdout.getvalue(), "")
-            self.assertEqual(newstderr.getvalue(), "output\n")
-
-        def test_output(self):
             pywikibot.output("output", toStdout=True)
             self.assertEqual(newstdout.getvalue(), "output\n")
             self.assertEqual(newstderr.getvalue(), "")
@@ -207,16 +203,6 @@ if __name__ == "__main__":
             pywikibot.debug("debug", "test")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "")
-
-        def test_exception(self):
-            class TestException(Exception):
-                pass
-            try:
-                raise TestException("Testing Exception")
-            except TestException:
-                pywikibot.exception("exception")
-            self.assertEqual(newstdout.getvalue(), "")
-            self.assertEqual(newstderr.getvalue(), "ERROR: TestException: Testing Exception\n")
 
         def test_exception(self):
             class TestException(Exception):
@@ -459,7 +445,7 @@ if __name__ == "__main__":
     class TestWindowsTerminalUnicodeArguments(WindowsTerminalTestCase):
         @classmethod
         def setUpClass(cls):
-            import inspect
+            #import inspect
             cls.setUpProcess(["cmd", "/k", "echo off"])
 
         @classmethod

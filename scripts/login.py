@@ -54,11 +54,13 @@ subdirectory.
 #
 __version__ = '$Id$'
 
-import logging
+#import logging
 import pywikibot
 from os.path import join
-from pywikibot import config, deprecate_arg
-from pywikibot.exceptions import NoSuchSite, NoUsername
+from pywikibot import config
+#, deprecate_arg
+from pywikibot.exceptions import NoSuchSite
+#, NoUsername
 
 
 def main(*args):

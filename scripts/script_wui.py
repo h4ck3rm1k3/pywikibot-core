@@ -62,7 +62,7 @@ __version__ = '$Id$'
 
 
 import datetime
-import time
+#import time
 import thread
 import threading
 import sys

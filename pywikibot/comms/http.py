@@ -22,9 +22,9 @@ __version__ = '$Id$'
 __docformat__ = 'epytext'
 
 import Queue
-import urllib
+#import urllib
 import urlparse
-import logging
+#import logging
 import atexit
 
 from httplib2 import SSLHandshakeError

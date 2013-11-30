@@ -123,13 +123,13 @@ __version__ = '$Id$'
 # Distributed under the terms of the MIT license.
 #
 
-import sys
+#import sys
 import re
 import time
 import pywikibot
 from pywikibot import pagegenerators
 from pywikibot import editor as editarticle
-from pywikibot import catlib, config
+#from pywikibot import catlib, config
 from pywikibot import i18n
 import webbrowser
 

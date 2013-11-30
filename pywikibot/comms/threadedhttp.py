@@ -23,9 +23,9 @@ __docformat__ = 'epytext'
 # standard python libraries
 import re
 import threading
-import time
-import logging
-
+#import time
+#import logging
+from httplib2 import RedirectLimit
 import urllib
 import cookielib
 import sys
@@ -439,7 +439,8 @@ class DummyMessage(object):
 
     def getheaders(self, k):
         k = k.lower()
-        v = self.response.get(k.lower(), None)
+        #v = 
+        self.response.get(k.lower(), None)
         if k not in self.response:
             return []
         #return self.response[k].split(re.compile(',\\s*'))

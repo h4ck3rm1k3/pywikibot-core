@@ -140,7 +140,8 @@ class MovePagesBot:
                         u'Do you want to remove the namespace prefix "%s:"?'
                         % namesp, ['yes', 'no'], ['y', 'n'])
                     if choice2 == 'y':
-                        noNamespace = True
+                        #noNamespace = True
+                        pass
                     else:
                         newPageTitle = (u'%s:%s' % (namesp, newPageTitle))
                 choice2 = pywikibot.inputChoice(
@@ -173,7 +174,7 @@ class MovePagesBot:
                     if choice2 == 'y':
                         newPageTitle = self.regex.sub(
                             self.replacePattern, page.title(withNamespace=False))
-                        noNamespace = True
+                        #noNamespace = True
                     else:
                         newPageTitle = self.regex.sub(self.replacePattern,
                                                       page.title())
@@ -211,7 +212,7 @@ def main():
     gen = None
     prefix = None
     oldName = None
-    newName = None
+    #newName = None
     noredirect = False
     always = False
     skipredirects = False

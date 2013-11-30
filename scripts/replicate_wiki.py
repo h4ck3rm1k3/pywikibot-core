@@ -27,8 +27,9 @@ not take the origin wiki into account.
 '''
 
 import sys
-import re
-from pywikibot import *
+#import re
+from pywikibot import getSite, config, Page
+import pywikibot 
 from itertools import imap
 
 

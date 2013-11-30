@@ -28,7 +28,7 @@ __version__ = '$Id$'
 #
 
 import os
-import sys
+#import sys
 import time
 import urllib
 import urlparse
@@ -75,7 +75,8 @@ class UploadRobot:
         dt = 15
         uo = urllib.URLopener()
         retrieved = False
-
+        rlen = 0
+        _contents = ""
         while not retrieved:
             if resume:
                 pywikibot.output(u"Resume download...")
@@ -228,6 +229,7 @@ class UploadRobot:
                 return
 
         except Exception, e:
+            print(e)
             pywikibot.error("Upload error: ", exc_info=True)
 
         else:

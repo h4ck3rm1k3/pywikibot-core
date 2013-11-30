@@ -11,8 +11,9 @@ __version__ = '$Id$'
 
 
 import pywikibot
-import warnings
-from tests import patch_request, unpatch_request
+#import warnings
+#from tests import patch_request, unpatch_request
+
 from utils import PywikibotTestCase, unittest
 
 mysite = None
@@ -73,7 +74,8 @@ class TestSiteObject(PywikibotTestCase):
         langs = mysite.languages()
         self.assertType(langs, list)
         self.assertTrue(mysite.code in langs)
-        obs = mysite.family.obsolete
+        #obs = 
+        mysite.family.obsolete
         ipf = mysite.interwiki_putfirst()
         if ipf:  # Not all languages use this
             self.assertType(ipf, list)

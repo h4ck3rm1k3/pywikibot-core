@@ -344,7 +344,7 @@ __version__ = '$Id$'
 #
 
 import sys
-import copy
+#import copy
 import re
 import os
 import time
@@ -355,7 +355,7 @@ import socket
 import webbrowser
 import pywikibot
 from pywikibot import config
-from pywikibot import catlib
+#from pywikibot import catlib
 from pywikibot import pagegenerators
 from pywikibot import i18n
 from pywikibot import interwiki_graph
@@ -1498,7 +1498,7 @@ u'WARNING: %s is in namespace %i, but %s is in namespace %i. Follow it anyway?'
     def assemble(self):
         # No errors have been seen so far, except....
         errorCount = self.problemfound
-        mysite = pywikibot.getSite()
+        #mysite = pywikibot.getSite()
         # Build up a dictionary of all pages found, with the site as key.
         # Each value will be a list of pages.
         new = {}
@@ -2428,7 +2428,7 @@ def readWarnfile(filename, bot):
 def main():
     singlePageTitle = []
     opthintsonly = False
-    start = None
+    #start = None
     # Which namespaces should be processed?
     # default to [] which means all namespaces will be processed
     namespaces = []
@@ -2440,7 +2440,7 @@ def main():
     optContinue = False
     optRestore = False
     restoredFiles = []
-    File2Restore = []
+    #File2Restore = []
     dumpFileName = ''
     append = True
     newPages = None

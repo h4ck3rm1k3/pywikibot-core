@@ -21,7 +21,7 @@ __version__ = '$Id$'
 import imp
 import os
 import sys
-
+import pwb
 
 def tryimport_pwb():
     # See if we can import pywikibot. If so, we need to patch pwb.argvu, too.

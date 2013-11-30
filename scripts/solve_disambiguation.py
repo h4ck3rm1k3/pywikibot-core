@@ -684,12 +684,14 @@ u"        [m]ore context, show [d]isambiguation page, [l]ist, [a]dd new):")
                         editor = editarticle.TextEditor()
                         if disambPage.isRedirectPage():
                             disambredir = disambPage.getRedirectTarget()
-                            disambigText = editor.edit(
+                            #disambigText = 
+                            editor.edit(
                                 disambredir.get(),
                                 jumpIndex=m.start(),
                                 highlight=disambredir.title())
                         else:
-                            disambigText = editor.edit(
+                            #disambigText = 
+                            editor.edit(
                                 disambPage.get(),
                                 jumpIndex=m.start(),
                                 highlight=disambPage.title())
@@ -1024,7 +1026,7 @@ def main(*args):
     main_only = False
 
     # For sorting the linked pages, case can be ignored
-    ignoreCase = False
+    #ignoreCase = False
     minimum = 0
 
     for arg in pywikibot.handleArgs(*args):

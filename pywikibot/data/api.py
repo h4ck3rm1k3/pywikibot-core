@@ -28,11 +28,11 @@ import re
 import traceback
 import time
 import urllib
-import warnings
+#import warnings
 
 import pywikibot
 from pywikibot import config, login
-from pywikibot.exceptions import *
+from pywikibot.exceptions import (Server504Error, FatalServerError,Error)
 
 _logger = "data.api"
 
@@ -295,6 +295,7 @@ class Request(object, DictMixin):
                 raise
             #TODO: what other exceptions can occur here?
             except Exception, e:
+                print (e)
                 # for any other error on the http request, wait and retry
                 pywikibot.error(traceback.format_exc())
                 pywikibot.log(u"%s, %s" % (uri, paramstring))
@@ -994,7 +995,8 @@ def update_page(page, pagedict):
 
 
 if __name__ == "__main__":
-    from pywikibot import Site, logging
+    from pywikibot import Site
+    #, logging
     logging.getLogger("pywiki.data.api").setLevel(logging.DEBUG)
     mysite = Site("en", "wikipedia")
     pywikibot.output(u"starting test....")

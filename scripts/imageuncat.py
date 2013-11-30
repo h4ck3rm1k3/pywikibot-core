@@ -13,16 +13,15 @@ __version__ = '$Id$'
 #
 #
 
-import os
-import sys
-import re
-import codecs
+#import os
+#import sys
+#import re
+#import codecs
 from datetime import datetime
 from datetime import timedelta
 import pywikibot
-from pywikibot import config
+#from pywikibot import config
 from pywikibot import pagegenerators
-from pywikibot import config
 import query
 
 #Probably unneeded because these are hidden categories. Have to figure it out.
@@ -1266,9 +1265,9 @@ def uploadedYesterday(site=None):
         for item in data['query']['logevents']:
             result.append(item['title'])
     except IndexError:
-        raise NoPage(u'API Error, nothing found in the APIs')
+        raise pywikibot.NoPage(u'API Error, nothing found in the APIs')
     except KeyError:
-        raise NoPage(u'API Error, nothing found in the APIs')
+        raise pywikibot.NoPage(u'API Error, nothing found in the APIs')
 
     return pagegenerators.PagesFromTitlesGenerator(result, site)
 

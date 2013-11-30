@@ -38,7 +38,7 @@ Furthermore, the following command line parameters are supported:
 
 __version__ = '$Id$'
 
-import sys
+#import sys
 import re
 
 import pywikibot
@@ -1157,25 +1157,6 @@ ranges = {
 }
 
 
-class IsbnBot:
-    def __init__(self, generator):
-        self.generator = generator
-
-    def run(self):
-        for page in self.generator:
-            try:
-                text = page.get(get_redirect=self.touch_redirects)
-                # convert ISBN numbers
-                page.put(text)
-            except pywikibot.NoPage:
-                pywikibot.output(u"Page %s does not exist?!"
-                                 % page.title(asLink=True))
-            except pywikibot.IsRedirectPage:
-                pywikibot.output(u"Page %s is a redirect; skipping."
-                                 % page.title(asLink=True))
-            except pywikibot.LockedPage:
-                pywikibot.output(u"Page %s is locked?!"
-                                 % page.title(asLink=True))
 
 
 class InvalidIsbnException(pywikibot.Error):
