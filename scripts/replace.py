@@ -114,7 +114,6 @@ talk about HTTP, where the typo has become part of the standard:
 
 Please type "replace.py -help | more" if you can't read the top of the help.
 """
-from __future__ import generators
 #
 # (C) Daniel Herding & the Pywikipedia team, 2004-2012
 #
@@ -122,8 +121,10 @@ __version__ = '$Id$'
 #
 # Distributed under the terms of the MIT license.
 #
+__version__ = '$Id$'
+#
 
-#import sys
+import sys
 import re
 import time
 import pywikibot
@@ -410,11 +411,11 @@ class ReplaceRobot:
                 except pywikibot.EditConflict:
                     pywikibot.output(u'Skipping %s because of edit conflict'
                                      % (page.title(),))
-                except pywikibot.SpamfilterError, e:
+                except pywikibot.SpamfilterError as e:
                     pywikibot.output(
                         u'Cannot change %s because of blacklist entry %s'
                         % (page.title(), e.url))
-                except pywikibot.PageNotSaved, error:
+                except pywikibot.PageNotSaved as error:
                     pywikibot.output(u'Error putting page: %s'
                                      % (error.args,))
                 except pywikibot.LockedPage:
@@ -546,7 +547,7 @@ def main(*args):
     pywikibot.Site().login()
     gen = genFactory.getCombinedGenerator()
     if (len(commandline_replacements) % 2):
-        raise pywikibot.Error, 'require even number of replacements.'
+        raise pywikibot.Error('require even number of replacements.')
     elif (len(commandline_replacements) == 2 and fix is None):
         replacements.append((commandline_replacements[0],
                              commandline_replacements[1]))

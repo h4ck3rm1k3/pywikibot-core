@@ -67,26 +67,22 @@ To complete a move of a page, one can use:
     python solve_disambiguation.py -just -pos:New_Name Old_Name
 
 """
-
 #
 # (C) Rob W.W. Hooft, 2003
 # (C) Daniel Herding, 2004
 # (C) Andre Engels, 2003-2004
 # (C) WikiWichtel, 2004
-# (C) Pywikipedia team, 2003-2009
-#
-__version__ = '$Id$'
+# (C) Pywikibot team, 2003-2013
 #
 # Distributed under the terms of the MIT license.
 #
+__version__ = '$Id$'
+#
 
-
-# Standard library imports
 import re
 import sys
 import codecs
 
-# Application specific imports
 import pywikibot
 from pywikibot import editor as editarticle
 from pywikibot import pagegenerators
@@ -571,7 +567,7 @@ class DisambiguationRobot(object):
                                  % (self.mysite.redirect(default=True), target)
                     try:
                         refPage.put_async(redir_text, comment=self.comment)
-                    except pywikibot.PageNotSaved, error:
+                    except pywikibot.PageNotSaved as error:
                         pywikibot.output(u'Page not saved: %s' % error.args)
             else:
                 choice = pywikibot.inputChoice(
@@ -838,7 +834,7 @@ u"Choice out of range. Please select a number between 0 and %i."
                     refPage.put_async(text, comment=self.comment)
                 except pywikibot.LockedPage:
                     pywikibot.output(u'Page not saved: page is locked')
-                except pywikibot.PageNotSaved, error:
+                except pywikibot.PageNotSaved as error:
                     pywikibot.output(u'Page not saved: %s' % error.args)
         return True
 
@@ -1077,10 +1073,10 @@ def main(*args):
                 generator = pagegenerators.NamespaceFilterPageGenerator(
                     generator, [0])
             except pywikibot.NoPage:
-                print "Disambiguation category for your wiki is not known."
+                pywikibot.output("Disambiguation category for your wiki is not known.")
                 raise
         elif arg.startswith("-"):
-            print "Unrecognized command line argument: %s" % arg
+            pywikibot.output("Unrecognized command line argument: %s" % arg)
             # show help text and exit
             pywikibot.showHelp()
         else:

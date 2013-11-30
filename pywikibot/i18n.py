@@ -1,20 +1,22 @@
 # -*- coding: utf-8  -*-
-""" Various i18n functions, both for the internal translation system
-    and for TranslateWiki-based translations
+"""
+Various i18n functions, both for the internal translation system
+and for TranslateWiki-based translations
 """
 #
-# (C) Pywikipedia bot team, 2004-2013
+# (C) Pywikibot team, 2004-2013
 #
 # Distributed under the terms of the MIT license.
 #
 __version__ = '$Id$'
+#
 
 import re
 import locale
 from pywikibot import Error
-from plural import plural_rules
+from .plural import plural_rules
 import pywikibot
-import config2 as config
+from . import config2 as config
 
 PLURAL_PATTERN = '{{PLURAL:(?:%\()?([^\)]*?)(?:\)d)?\|(.*?)}}'
 
@@ -281,8 +283,8 @@ def translate(code, xdict, parameters=None, fallback=True):
                 code = alt
                 break
         else:
-            trans = xdict.values()[0]
-            code = xdict.keys()[0]
+            trans = list(xdict.values())[0]
+            code = list(xdict.keys())[0]
     if not trans:
         return  # return None if we have no translation found
     if parameters is None:
@@ -384,7 +386,7 @@ def twntranslate(code, twtitle, parameters=None):
     Support is implemented like in MediaWiki extension. If the tw message
     contains a plural tag inside which looks like
     {{PLURAL:<number>|<variant1>|<variant2>[|<variantn>]}}
-    it takes that variant calculated by the plural_func depending on the number
+    it takes that variant calculated by the plural_rules depending on the number
     value.
 
     Examples:
@@ -502,6 +504,7 @@ def input(twtitle, parameters=None, password=False):
         default is os locale setting
 
     """
-    code = config.userinterface_lang or locale.getdefaultlocale()[0].split('_')[0]
+    code = config.userinterface_lang or \
+           locale.getdefaultlocale()[0].split('_')[0]
     trans = twtranslate(code, twtitle, parameters)
     return pywikibot.input(trans, password)

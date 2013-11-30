@@ -32,12 +32,12 @@ Furthermore, the following command line parameters are supported:
 #
 # (C) Leonardo Gregianin, 2006
 # (C) Andreas J. Schwab, 2007
-# (C) Pywikipedia bot team, 2006-2013
+# (C) Pywikibot team, 2006-2013
 #
 # Distributed under the terms of the MIT license.
 #
-
 __version__ = '$Id$'
+#
 
 import sys
 import re
@@ -77,7 +77,7 @@ class MovePagesBot:
             pywikibot.output(u'Page %s is a redirect; skipping.' % page.title())
         except pywikibot.LockedPage:
             pywikibot.output(u'Page %s is locked!' % page.title())
-        except pywikibot.PageNotSaved, e:
+        except pywikibot.PageNotSaved as e:
             #target newPageTitle already exists
             pywikibot.output(e.message)
 

@@ -15,8 +15,8 @@ python harvest_template.py -lang:nl -cat:Sisoridae -template:"Taxobox straalvinn
 &params;
 """
 #
-# (C) 2013 Multichill, Amir
-# (C) 2013 Pywikipediabot team
+# (C) Multichill, Amir, 2013
+# (C) Pywikibot team, 2013
 #
 # Distributed under the terms of MIT License.
 #
@@ -80,8 +80,7 @@ class HarvestRobot:
         for page in self.generator:
             try:
                 self.procesPage(page)
-            except Exception, e:
-                print (e)
+            except Exception as e:
                 pywikibot.exception(tb=True)
 
     def getTemplateSynonyms(self, title):
@@ -147,7 +146,7 @@ class HarvestRobot:
                                 elif claim.getType() == 'string':
                                     claim.setTarget(value.strip())
                                 else:
-                                    print "%s is not a supported datatype." % claim.getType()
+                                    pywikibot.output("%s is not a supported datatype." % claim.getType())
                                     continue
 
                                 pywikibot.output('Adding %s --> %s' % (claim.getID(), claim.getTarget()))

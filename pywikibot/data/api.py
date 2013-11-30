@@ -9,7 +9,7 @@ Interface functions to Mediawiki's api.php
 #
 __version__ = '$Id$'
 
-from UserDict import DictMixin
+from collections import MutableMapping
 from pywikibot.comms import http
 from email.mime.multipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
@@ -64,7 +64,7 @@ class TimeoutError(pywikibot.Error):
     pass
 
 
-class Request(object, DictMixin):
+class Request(MutableMapping):
     """A request to a Site's api.php interface.
 
     Attributes of this object (except for the special parameters listed
@@ -155,7 +155,7 @@ class Request(object, DictMixin):
         del self.params[key]
 
     def keys(self):
-        return self.params.keys()
+        return list(self.params.keys())
 
     def __contains__(self, key):
         return self.params.__contains__(key)
@@ -163,8 +163,11 @@ class Request(object, DictMixin):
     def __iter__(self):
         return self.params.__iter__()
 
+    def __len__(self):
+        return len(self.params)
+
     def iteritems(self):
-        return self.params.iteritems()
+        return iter(self.params.items())
 
     def http_params(self):
         """Return the parameters formatted for inclusion in an HTTP request."""
@@ -275,7 +278,7 @@ class Request(object, DictMixin):
                     eoh = body.find(marker)
                     body = body[eoh + len(marker):]
                     # retrieve the headers from the MIME object
-                    mimehead = dict(container.items())
+                    mimehead = dict(list(container.items()))
                     rawdata = http.request(self.site, uri, ssl, method="POST",
                                            headers=mimehead, body=body)
                 else:
@@ -294,8 +297,7 @@ class Request(object, DictMixin):
                 pywikibot.error(traceback.format_exc())
                 raise
             #TODO: what other exceptions can occur here?
-            except Exception, e:
-                print (e)
+            except Exception as e:
                 # for any other error on the http request, wait and retry
                 pywikibot.error(traceback.format_exc())
                 pywikibot.log(u"%s, %s" % (uri, paramstring))
@@ -678,7 +680,7 @@ class QueryGenerator(object):
                 if isinstance(resultdata, dict):
                     pywikibot.debug(u"%s received %s; limit=%s"
                                     % (self.__class__.__name__,
-                                       resultdata.keys(),
+                                       list(resultdata.keys()),
                                        self.limit),
                                     _logger)
                     if "results" in resultdata:
@@ -708,6 +710,10 @@ class QueryGenerator(object):
                     count += 1
                     if self.limit > 0 and count >= self.limit:
                         return
+            if self.module == "random" and self.limit:
+                # "random" module does not return "query-continue"
+                # now we loop for a new random query
+                continue
             if not "query-continue" in self.data:
                 return
             if not self.continuekey in self.data["query-continue"]:
@@ -716,7 +722,7 @@ class QueryGenerator(object):
                     % self.continuekey)
                 return
             update = self.data["query-continue"][self.continuekey]
-            for key, value in update.iteritems():
+            for key, value in update.items():
                 # query-continue can return ints
                 if isinstance(value, int):
                     value = str(value)
@@ -995,8 +1001,7 @@ def update_page(page, pagedict):
 
 
 if __name__ == "__main__":
-    from pywikibot import Site
-    #, logging
+    from pywikibot import Site, logging
     logging.getLogger("pywiki.data.api").setLevel(logging.DEBUG)
     mysite = Site("en", "wikipedia")
     pywikibot.output(u"starting test....")

@@ -59,9 +59,11 @@ __version__ = '$Id$'
 # (C) Maxim Razin, 2005
 # (C) Leonardo Gregianin, 2005-2008
 # (C) xqt, 2009-2013
-# (C) Pywikipedia bot team, 2005-2012
+# (C) Pywikibot team, 2005-2012
 #
 # Distributed under the terms of the MIT license.
+#
+__version__ = '$Id$'
 #
 
 #import os.path
@@ -211,8 +213,6 @@ former_name = {
 }
 
 
-interactive = False
-
 class FeaturedBot(pywikibot.Bot):
     # Bot configuration.
     # Only the keys of the dict can be passed as init options
@@ -293,7 +293,7 @@ class FeaturedBot(pywikibot.Bot):
     def run_good(self):
         task = 'good'
         if not self.hastemplate(task):
-            pywikibot.output(u'\nNOTE: % arcticles are not implemented at %.'
+            pywikibot.output(u'\nNOTE: %s arcticles are not implemented at %s.'
                              % (task, self.site))
             return
 
@@ -317,6 +317,9 @@ class FeaturedBot(pywikibot.Bot):
             except KeyboardInterrupt:
                 pywikibot.output('\nQuitting featured treat...')
                 break
+            except pywikibot.NoSuchSite:
+                pywikibot.output('"%s" is not a valid site. Skipping...' % code)
+                continue
         self.writecache()
 
     # not implemented yet
@@ -330,7 +333,7 @@ class FeaturedBot(pywikibot.Bot):
     def run_featured(self):
         task = 'featured'
         if not self.hastemplate(task):
-            pywikibot.output(u'\nNOTE: % arcticles are not implemented at %.'
+            pywikibot.output(u'\nNOTE: %s arcticles are not implemented at %s.'
                              % (task, self.site))
             return
 
@@ -354,6 +357,9 @@ class FeaturedBot(pywikibot.Bot):
             except KeyboardInterrupt:
                 pywikibot.output('\nQuitting featured treat...')
                 break
+            except pywikibot.NoSuchSite:
+                pywikibot.output('"%s" is not a valid site. Skipping...' % code)
+                continue
         self.writecache()
 
     def treat(self, code, process):
@@ -362,9 +368,7 @@ class FeaturedBot(pywikibot.Bot):
             self.featuredWithInterwiki(fromsite, process)
 
     def featuredArticles(self, site, task, cache):
-        #wikidata = False
-
-        code = site.lang
+           code = site.lang
         articles = []
         if task == 'good':
             info = good_name
@@ -523,18 +527,13 @@ class FeaturedBot(pywikibot.Bot):
     def featuredWithInterwiki(self, fromsite, task):
         """Place or remove the Link_GA/FA template on/from a page"""
 
-        global interactive
-
         def compile_link(site, templates):
-
-
             """compile one link template list"""
             findtemplate = '(%s)' % '|'.join(templates)
-            return re.compile(ur"\{\{%s\|%s\}\}"
+            return re.compile(r"\{\{%s\|%s\}\}"
                               % (findtemplate.replace(u' ', u'[ _]'),
                                  site.code), re.IGNORECASE)
 
-        #quiet = self.getOption('quiet')
         tosite = self.site
         if not fromsite.lang in self.cache:
             self.cache[fromsite.lang] = {}
@@ -549,7 +548,6 @@ class FeaturedBot(pywikibot.Bot):
         re_Link_remove = compile_link(fromsite, remove_tl)
         gen = self.featuredArticles(fromsite, task, cc)
         gen = PreloadingGenerator(gen)
-        #pairs = []
         for a in gen:
             if a.isRedirectPage():
                 a = a.getRedirectTarget()
@@ -610,16 +608,15 @@ class FeaturedBot(pywikibot.Bot):
                 except pywikibot.LockedPage:
                     pywikibot.output(u'Page %s is locked!'
                                      % atrans.title())
-                except pywikibot.PageNotSaved:
+                except pywikibot.PageNotSaved as e:
                     pywikibot.output(u"Page not saved")
 
-afterpage=None
+
 def main(*args):
     global interactive, afterpage
     interactive = 0
     afterpage = u"!"
 
-    #featuredcount = False
     fromlang = []
     processType = 'featured'
     part = False

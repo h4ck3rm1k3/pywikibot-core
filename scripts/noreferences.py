@@ -598,7 +598,7 @@ class NoReferencesBot:
             except pywikibot.EditConflict:
                 pywikibot.output(u'Skipping %s because of edit conflict'
                                  % (page.title(),))
-            except pywikibot.SpamfilterError, e:
+            except pywikibot.SpamfilterError as e:
                 pywikibot.output(
                     u'Cannot change %s because of blacklist entry %s'
                     % (page.title(), e.url))
@@ -691,8 +691,8 @@ def main():
         else:
             if not namespaces:
                 namespaces = [0]
-            cat = catlib.Category(site, "%s:%s" % (site.category_namespace(),
-                                                   cat))
+            cat = pywikibot.Category(site, "%s:%s" % (
+                site.category_namespace(), cat))
             gen = pagegenerators.CategorizedPageGenerator(cat)
     if not gen:
         pywikibot.showHelp('noreferences')

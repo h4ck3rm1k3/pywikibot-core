@@ -2,7 +2,7 @@
 #
 # (C) Rob W.W. Hooft, 2003
 # (C) Yuri Astrakhan, 2005
-# (C) Pywikipedia bot team, 2003-2010
+# (C) Pywikibot team, 2003-2010
 #
 # Distributed under the terms of the MIT license.
 #
@@ -56,7 +56,7 @@ def translate(page, hints=None, auto=True, removebrackets=False, site=None, fami
                     newname = page.title()
                 # ... unless we do want brackets
                 if removebrackets:
-                    newname = re.sub(re.compile(ur"\W*?\(.*?\)\W*?", re.UNICODE), u" ", newname)
+                    newname = re.sub(re.compile(r"\W*?\(.*?\)\W*?", re.UNICODE), u" ", newname)
             try:
                 number = int(codes)
                 codes = site.family.languages_by_size[:number]
@@ -94,7 +94,7 @@ def translate(page, hints=None, auto=True, removebrackets=False, site=None, fami
                 pywikibot.output(
                     u'TitleTranslate: %s was recognized as %s with value %d'
                     % (page.title(), dictName, value))
-                for entryLang, entry in date.formats[dictName].iteritems():
+                for entryLang, entry in date.formats[dictName].items():
                     if entryLang != page.site.code:
                         if (dictName == 'yearsBC' and
                                 entryLang in date.maxyearBC and
@@ -118,7 +118,7 @@ bcDateErrors = [u'[[ko:%d년]]']
 
 
 def appendFormatedDates(result, dictName, value):
-    for code, func in date.formats[dictName].iteritems():
+    for code, func in date.formats[dictName].items():
         result.append(u'[[%s:%s]]' % (code, func(value)))
 
 

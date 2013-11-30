@@ -52,7 +52,7 @@ and arguments can be:
 # (C) Daniel Herding, 2004.
 # (C) Purodha Blissenbach, 2009.
 # (C) xqt, 2009-2012
-# (C) Pywikipedia bot team, 2004-2013
+# (C) Pywikibot team, 2004-2013
 #
 # Distributed under the terms of the MIT license.
 #
@@ -466,14 +466,14 @@ class RedirectRobot:
                 pywikibot.warning(
                     u"Redirect target section %s doesn't exist."
                     % newRedir.title(asLink=True))
-            except pywikibot.CircularRedirect, e:
+            except pywikibot.CircularRedirect as e:
                 try:
                     pywikibot.warning(u"Skipping circular redirect: [[%s]]"
                                       % str(e))
                 except UnicodeDecodeError:
                     pywikibot.warning(u"Skipping circular redirect")
                 break
-            except pywikibot.BadTitle, e:
+            except pywikibot.BadTitle as e:
                 # str(e) is in the format 'BadTitle: [[Foo]]'
                 pywikibot.warning(
                     u'Redirect target %s is not a valid page title.'
@@ -561,9 +561,19 @@ class RedirectRobot:
             except pywikibot.BadTitle:
                 pywikibot.output(u"Bad Title Error")
                 break
+            oldlink = self.site.redirectRegex().search(oldText).group(1)
+            if "#" in oldlink and targetPage.section() is None:
+                sectionlink = oldlink[oldlink.index("#"):]
+                targetlink = pywikibot.Page(
+                    self.site,
+                    targetPage.title() + sectionlink
+                ).title(asLink=True, textlink=True)
+            else:
+                targetlink = targetPage.title(asLink=True, textlink=True)
+
             text = self.site.redirectRegex().sub(
                 '#%s %s' % (self.site.redirect(True),
-                            targetPage.title(asLink=True, textlink=True)),
+                            targetlink),
                 oldText)
             if redir.title() == targetPage.title() or text == oldText:
                 pywikibot.output(u"Note: Nothing left to do on %s"
@@ -578,18 +588,18 @@ class RedirectRobot:
                     redir.put(text, summary)
                 except pywikibot.LockedPage:
                     pywikibot.output(u'%s is locked.' % redir.title())
-                except pywikibot.SpamfilterError, error:
+                except pywikibot.SpamfilterError as error:
                     pywikibot.output(
                         u"Saving page [[%s]] prevented by spam filter: %s"
                         % (redir.title(), error.url))
-                except pywikibot.PageNotSaved, error:
+                except pywikibot.PageNotSaved as error:
                     pywikibot.output(u"Saving page [[%s]] failed: %s"
                                      % (redir.title(), error))
                 except pywikibot.NoUsername:
                     pywikibot.output(
                         u"Page [[%s]] not saved; sysop privileges required."
                         % redir.title())
-                except pywikibot.Error, error:
+                except pywikibot.Error as error:
                     pywikibot.output(
                         u"Unexpected error occurred trying to save [[%s]]: %s"
                         % (redir.title(), error))

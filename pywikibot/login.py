@@ -5,16 +5,17 @@ Library to log the robot in to a wiki account.
 """
 #
 # (C) Rob W.W. Hooft, 2003
-# (C) Pywikipedia bot team, 2003-2012
+# (C) Pywikibot team, 2003-2012
 #
 # Distributed under the terms of the MIT license.
 #
 __version__ = '$Id$'
+#
 
 #import logging
 import pywikibot
 from pywikibot import config, deprecate_arg
-from pywikibot.exceptions import NoUsername
+from pywikibot.exceptions import NoSuchSite, NoUsername
 
 _logger = "wiki.login"
 
@@ -46,7 +47,8 @@ class LoginManager:
             self.username = user
         elif sysop:
             try:
-                self.username = config.sysopnames[self.site.family.name][self.site.code]
+                self.username = config.sysopnames[
+                    self.site.family.name][self.site.code]
             except KeyError:
                 raise NoUsername(
 u"""ERROR: Sysop username for %(fam_name)s:%(wiki_code)s is undefined.
@@ -57,7 +59,8 @@ sysopnames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
                        'wiki_code': self.site.code})
         else:
             try:
-                self.username = config.usernames[self.site.family.name][self.site.code]
+                self.username = config.usernames[
+                    self.site.family.name][self.site.code]
             except:
                 raise NoUsername(
 u"""ERROR: Username for %(fam_name)s:%(wiki_code)s is undefined.
@@ -77,7 +80,8 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
         """
         if self.site.family.name in botList \
                 and self.site.code in botList[self.site.family.name]:
-            botListPageTitle, botTemplate = botList[self.site.family.name][self.site.code]
+            botListPageTitle, botTemplate = botList[
+                self.site.family.name][self.site.code]
             botListPage = pywikibot.Page(self.site, botListPageTitle)
             if botTemplate:
                 for template in botListPage.templatesWithParams():
@@ -170,7 +174,7 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
                          % {'name': self.username, 'site': self.site})
         try:
             cookiedata = self.getCookie()
-        except pywikibot.data.api.APIError, e:
+        except pywikibot.data.api.APIError as e:
             pywikibot.error(u"Login failed (%s)." % e.code)
             if retry:
                 self.password = None

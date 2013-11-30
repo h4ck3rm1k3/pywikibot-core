@@ -286,7 +286,7 @@ def main(*args):
     templates = {}
     subst = False
     remove = False
-    #namespaces = []
+    namespaces = []
     editSummary = ''
     addedCat = ''
     acceptAll = False
@@ -342,7 +342,7 @@ u'Unless using solely -subst or -remove, you must give an even number of templat
             return
 
     oldTemplates = []
-    #ns = pywikibot.Site().template_namespace()
+    ns = pywikibot.Site().template_namespace()
     for templateName in templates.keys():
         oldTemplate = pywikibot.Page(pywikibot.Site(), templateName, ns=10)
         oldTemplates.append(oldTemplate)

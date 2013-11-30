@@ -35,8 +35,13 @@ Furthermore, the following command line parameters are supported:
 -always           Don't prompt you for each replacement.
 
 """
-
+#
+# (C) Pywikibot team, 2009-2013
+#
+# Distributed under the terms of the MIT license.
+#
 __version__ = '$Id$'
+#
 
 #import sys
 import re
@@ -1191,7 +1196,8 @@ class ISBN:
                 publisherRanges = ranges[groupNumber]
                 break
         else:
-            raise InvalidIsbnException('ISBN %s: group number unknown.' % self.code)
+            raise InvalidIsbnException('ISBN %s: group number unknown.'
+                                       % self.code)
 
         # Determine the publisher
         for (start, end) in publisherRanges:
@@ -1201,7 +1207,8 @@ class ISBN:
                 rest = rest[length:]
                 break
         else:
-            raise InvalidIsbnException('ISBN %s: publisher number unknown.' % self.code)
+            raise InvalidIsbnException('ISBN %s: publisher number unknown.'
+                                       % self.code)
 
         # The rest is the item number and the 1-digit checksum.
         result += rest[:-1] + '-' + rest[-1]
@@ -1227,14 +1234,17 @@ class ISBN13(ISBN):
             if c.isdigit():
                 result.append(int(c))
             elif c != '-':
-                raise InvalidIsbnException('The ISBN %s contains invalid characters.' % self.code)
+                raise InvalidIsbnException(
+                    'The ISBN %s contains invalid characters.' % self.code)
         return result
 
     def checkValidity(self):
         if len(self.digits()) != 13:
-            raise InvalidIsbnException('The ISBN %s is not 13 digits long.' % self.code)
+            raise InvalidIsbnException('The ISBN %s is not 13 digits long.'
+                                       % self.code)
         if self.calculateChecksum() != self.digits()[-1]:
-            raise InvalidIsbnException('The ISBN checksum of %s is incorrect.' % self.code)
+            raise InvalidIsbnException('The ISBN checksum of %s is incorrect.'
+                                       % self.code)
 
     def calculateChecksum(self):
         # See http://en.wikipedia.org/wiki/ISBN#Check_digit_in_ISBN_13
@@ -1263,7 +1273,8 @@ class ISBN10(ISBN):
             if c.isdigit() or c in 'Xx':
                 result.append(c)
             elif c != '-':
-                raise InvalidIsbnException('The ISBN %s contains invalid characters.' % self.code)
+                raise InvalidIsbnException(
+                    'The ISBN %s contains invalid characters.' % self.code)
         return result
 
     def checkChecksum(self):
@@ -1280,14 +1291,19 @@ class ISBN10(ISBN):
         #print checksum
         lastDigit = self.digits()[-1]
         #print lastDigit
-        if not ((checksum == 10 and lastDigit in 'Xx') or (lastDigit.isdigit() and checksum == int(lastDigit))):
-            raise InvalidIsbnException('The ISBN checksum of %s is incorrect.' % self.code)
+        if not ((checksum == 10 and lastDigit in 'Xx') or
+                (lastDigit.isdigit() and checksum == int(lastDigit))):
+            raise InvalidIsbnException('The ISBN checksum of %s is incorrect.'
+                                       % self.code)
 
     def checkValidity(self):
         if len(self.digits()) != 10:
-            raise InvalidIsbnException('The ISBN %s is not 10 digits long.' % self.code)
+            raise InvalidIsbnException('The ISBN %s is not 10 digits long.'
+                                       % self.code)
         if 'X' in self.digits()[:-1] or 'x' in self.digits()[:-1]:
-            raise InvalidIsbnException('ISBN %s: X is only allowed at the end of the ISBN.' % self.code)
+            raise InvalidIsbnException(
+                'ISBN %s: X is only allowed at the end of the ISBN.'
+                % self.code)
         self.checkChecksum()
 
     def toISBN13(self):
@@ -1314,11 +1330,12 @@ class ISBN10(ISBN):
 def getIsbn(code):
     try:
         i = ISBN13(code)
-    except InvalidIsbnException, e13:
+    except InvalidIsbnException as e13:
         try:
             i = ISBN10(code)
-        except InvalidIsbnException, e10:
-            raise InvalidIsbnException(u'ISBN-13: %s / ISBN-10: %s' % (e13, e10))
+        except InvalidIsbnException as e10:
+            raise InvalidIsbnException(u'ISBN-13: %s / ISBN-10: %s'
+                                       % (e13, e10))
     return i
 
 
@@ -1363,6 +1380,7 @@ def convertIsbn10toIsbn13(text):
 
 
 class IsbnBot:
+
     def __init__(self, generator, to13=False, format=False, always=False):
         self.generator = generator
         self.to13 = to13
@@ -1378,7 +1396,7 @@ class IsbnBot:
                 code = match.group('code')
                 try:
                     getIsbn(code)
-                except InvalidIsbnException, e:
+                except InvalidIsbnException as e:
                     pywikibot.output(e)
 
             newText = oldText
@@ -1389,9 +1407,11 @@ class IsbnBot:
                 newText = self.isbnR.sub(_hyphenateIsbnNumber, newText)
             self.save(page, newText)
         except pywikibot.NoPage:
-            pywikibot.output(u"Page %s does not exist?!" % page.title(asLink=True))
+            pywikibot.output(u"Page %s does not exist?!"
+                             % page.title(asLink=True))
         except pywikibot.IsRedirectPage:
-            pywikibot.output(u"Page %s is a redirect; skipping." % page.title(asLink=True))
+            pywikibot.output(u"Page %s is a redirect; skipping."
+                             % page.title(asLink=True))
         except pywikibot.LockedPage:
             pywikibot.output(u"Page %s is locked?!" % page.title(asLink=True))
 
@@ -1399,10 +1419,13 @@ class IsbnBot:
         if text != page.get():
             # Show the title of the page we're working on.
             # Highlight the title in purple.
-            pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<" % page.title())
+            pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+                             % page.title())
             pywikibot.showDiff(page.get(), text)
             if not self.always:
-                choice = pywikibot.inputChoice(u'Do you want to accept these changes?', ['Yes', 'No', 'Always yes'], ['y', 'N', 'a'], 'N')
+                choice = pywikibot.inputChoice(
+                    u'Do you want to accept these changes?',
+                    ['Yes', 'No', 'Always yes'], ['y', 'N', 'a'], 'N')
                 if choice == 'n':
                     return
                 elif choice == 'a':
@@ -1412,11 +1435,15 @@ class IsbnBot:
                 try:
                     page.put(text, comment=self.comment)
                 except pywikibot.EditConflict:
-                    pywikibot.output(u'Skipping %s because of edit conflict' % (page.title(),))
-                except pywikibot.SpamfilterError, e:
-                    pywikibot.output(u'Cannot change %s because of blacklist entry %s' % (page.title(), e.url))
+                    pywikibot.output(u'Skipping %s because of edit conflict'
+                                     % (page.title(),))
+                except pywikibot.SpamfilterError as e:
+                    pywikibot.output(
+                        u'Cannot change %s because of blacklist entry %s'
+                        % (page.title(), e.url))
                 except pywikibot.LockedPage:
-                    pywikibot.output(u'Skipping %s (locked page)' % (page.title(),))
+                    pywikibot.output(u'Skipping %s (locked page)'
+                                     % (page.title(),))
             else:
                 # Save the page in the background. No need to catch exceptions.
                 page.put(text, comment=self.comment, async=True)
@@ -1463,7 +1490,8 @@ def main():
     site = pywikibot.getSite()
     site.login()
     if pageTitle:
-        gen = iter([pywikibot.Page(pywikibot.Link(t, site)) for t in pageTitle])
+        gen = iter([pywikibot.Page(pywikibot.Link(t, site))
+                    for t in pageTitle])
     if not gen:
         gen = genFactory.getCombinedGenerator()
     if not gen:

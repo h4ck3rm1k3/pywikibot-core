@@ -7,11 +7,12 @@ and return a unicode string.
 
 """
 #
-# (C) Pywikipedia bot team, 2008-2013
+# (C) Pywikibot team, 2008-2013
 #
 # Distributed under the terms of the MIT license.
 #
 __version__ = '$Id$'
+#
 
 from pywikibot.exceptions import Error
 try:
@@ -21,7 +22,7 @@ except ImportError:
 import pywikibot
 import re
 from HTMLParser import HTMLParser
-import config2 as config
+from . import config2 as config
 
 TEMP_REGEX = re.compile(
     '{{(?:msg:)?(?P<name>[^{\|]+?)(?:\|(?P<params>[^{]+?(?:{[^{]+?}[^{]*?)?))?}}')
@@ -90,11 +91,15 @@ def replaceExcept(text, old, new, exceptions, caseInsensitive=False,
         # also finds links to foreign sites with preleading ":"
         'interwiki':    re.compile(r'(?i)\[\[:?(%s)\s?:[^\]]*\]\][\s]*'
                                    % '|'.join(site.validLanguageLinks() +
-                                              site.family.obsolete.keys())),
+                                              list(site.family.obsolete.keys()))),
         # Wikidata property inclusions
         'property':     re.compile(r'(?i)\{\{\s*#property:\s*p\d+\s*\}\}'),
         # Module invocations (currently only Lua)
         'invoke':       re.compile(r'(?i)\{\{\s*#invoke:.*?}\}'),
+        # categories
+        'category':     re.compile(u'\[\[ *(?:%s)\s*:.*?\]\]' % u'|'.join(site.namespace(14, all=True))),
+        #files
+        'file':         re.compile(u'\[\[ *(?:%s)\s*:.*?\]\]' % u'|'.join(site.namespace(6, all=True))),
 
     }
 
@@ -220,15 +225,15 @@ def replaceExcept(text, old, new, exceptions, caseInsensitive=False,
                     groupMatch = groupR.search(replacement)
                     if not groupMatch:
                         break
-                    groupID = (groupMatch.group('name') or \
+                    groupID = (groupMatch.group('name') or
                                int(groupMatch.group('number')))
                     try:
-                        replacement = (replacement[:groupMatch.start()] + \
+                        replacement = (replacement[:groupMatch.start()] +
                                        match.group(groupID) + \
                                        replacement[groupMatch.end():])
                     except IndexError:
-                        print '\nInvalid group reference:', groupID
-                        print 'Groups found:\n', match.groups()
+                        pywikibot.output('\nInvalid group reference: %s' % groupID)
+                        pywikibot.output('Groups found:\n%s' % match.groups())
                         raise IndexError
             text = text[:match.start()] + replacement + text[match.end():]
 
@@ -271,7 +276,7 @@ def removeDisabledParts(text, tags=['*']):
         'syntaxhighlight': r'<syntaxhighlight .*?</syntaxhighlight>',
     }
     if '*' in tags:
-        tags = regexes.keys()
+        tags = list(regexes.keys())
     # add alias
     tags = set(tags)
     if 'source' in tags:
@@ -426,7 +431,7 @@ def getLanguageLinks(text, insite=None, pageLink="[[]]",
         # language, or if it's e.g. a category tag or an internal link
         if lang in fam.obsolete:
             lang = fam.obsolete[lang]
-        if lang in fam.langs.keys():
+        if lang in list(fam.langs.keys()):
             if '|' in pagetitle:
                 # ignore text after the pipe
                 pagetitle = pagetitle[:pagetitle.index('|')]
@@ -458,7 +463,7 @@ def removeLanguageLinks(text, site=None, marker=''):
     # This regular expression will find every interwiki link, plus trailing
     # whitespace.
     languages = '|'.join(site.validLanguageLinks() +
-                         site.family.obsolete.keys())
+                         list(site.family.obsolete.keys()))
     interwikiR = re.compile(r'\[\[(%s)\s?:[^\[\]\n]*\]\][\s]*'
                             % languages, re.IGNORECASE)
     text = replaceExcept(text, interwikiR, '',
@@ -513,9 +518,11 @@ def replaceLanguageLinks(oldtext, new, site=None, addOnly=False,
     if s:
         if site.language() in site.family.interwiki_attop or \
            u'<!-- interwiki at top -->' in oldtext:
-            #do not add separator if interiki links are on one line
+            #do not add separator if interwiki links are on one line
             newtext = (s +
-                       [u'' if site.language() else separator] + \
+                       [u''
+                        if site.language() in site.family.interwiki_on_one_line
+                        else separator] +
                        s2.replace(marker, '').strip())
         else:
             # calculate what was after the language links on the page
@@ -589,14 +596,14 @@ def interwikiFormat(links, insite=None):
     if not links:
         return ''
 
-    ar = interwikiSort(links.keys(), insite)
+    ar = interwikiSort(list(links.keys()), insite)
     s = []
     for site in ar:
         try:
             link = unicode(links[site]).replace('[[:', '[[')
             s.append(link)
         except AttributeError:
-            s.append(pywikibot.getSite(site).linkto(links[site], othersite=insite))
+            s.append(getSite(site).linkto(links[site], othersite=insite))
     if insite.lang in insite.family.interwiki_on_one_line:
         sep = u' '
     else:
@@ -941,12 +948,12 @@ def extract_templates_and_params_regex(text):
     marker4 = findmarker(thistxt, u'§§', u'§')
 
     result = []
-    Rmath = re.compile(ur'<math>[^<]+</math>')
+    Rmath = re.compile(r'<math>[^<]+</math>')
     Rvalue = re.compile(r'{{{.+?}}}')
-    Rmarker1 = re.compile(ur'%s(\d+)%s' % (marker1, marker1))
-    Rmarker2 = re.compile(ur'%s(\d+)%s' % (marker2, marker2))
-    Rmarker3 = re.compile(ur'%s(\d+)%s' % (marker3, marker3))
-    Rmarker4 = re.compile(ur'%s(\d+)%s' % (marker4, marker4))
+    Rmarker1 = re.compile(r'%s(\d+)%s' % (marker1, marker1))
+    Rmarker2 = re.compile(r'%s(\d+)%s' % (marker2, marker2))
+    Rmarker3 = re.compile(r'%s(\d+)%s' % (marker3, marker3))
+    Rmarker4 = re.compile(r'%s(\d+)%s' % (marker4, marker4))
 
     # Replace math with markers
     maths = {}

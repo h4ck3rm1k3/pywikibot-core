@@ -6,8 +6,8 @@
 #
 __version__ = '$Id$'
 
-import transliteration
-#import traceback
+from . import transliteration
+import traceback
 import re
 import sys
 import pywikibot as wikipedia
@@ -238,8 +238,8 @@ class UI:
         """
         try:
             import gui
-        except ImportError, e:
-            print 'Could not load GUI modules: %s' % e
+        except ImportError as e:
+            print('Could not load GUI modules: %s' % e)
             return text
         editor = gui.EditBoxWindow()
         return editor.edit(text, jumpIndex=jumpIndex, highlight=highlight)

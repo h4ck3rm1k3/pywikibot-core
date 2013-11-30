@@ -5,13 +5,11 @@ python pwb.py <name_of_script> <options>
 and it will use the package directory to store all user files, will fix up
 search paths so the package does not need to be installed, etc.
 """
-# (C) Pywikipedia team, 2013
-#
-__version__ = '$Id$'
+# (C) Pywikibot team, 2013
 #
 # Distributed under the terms of the MIT license.
 #
-
+__version__ = '$Id$'
 
 # The following snippet was developed by Ned Batchelder (and others)
 # for coverage.py [1], and is available under the BSD license (see [2])
@@ -123,3 +121,5 @@ if len(sys.argv) > 1:
             else:
                 raise Exception("%s not found!" % fn)
     run_python_file(fn, argv, argvu)
+elif __name__ == "__main__":
+    print __doc__

@@ -16,7 +16,7 @@ All other parameters will be regarded as part of the title of a single page,
 and the bot will only work on that single page.
 """
 #
-# (C) Pywikipedia bot team, 2006-2011
+# (C) Pywikibot team, 2006-2013
 #
 # Distributed under the terms of the MIT license.
 #
@@ -123,7 +123,7 @@ class BasicBot:
                         pywikibot.output(
                             u'Skipping %s because of edit conflict'
                             % (page.title()))
-                    except pywikibot.SpamfilterError, error:
+                    except pywikibot.SpamfilterError as error:
                         pywikibot.output(
                             u'Cannot change %s because of spam blacklist entry %s'
                             % (page.title(), error.url))

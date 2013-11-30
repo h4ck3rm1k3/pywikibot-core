@@ -20,7 +20,7 @@ and for a description.
 """
 #
 # (C) Rob W.W. Hooft, Andre Engels 2003-2004
-# (C) Pywikipedia bot team, 2003-2010
+# (C) Pywikibot team, 2003-2010
 #
 # Distributed under the terms of the MIT license.
 #
@@ -28,7 +28,6 @@ __version__ = '$Id$'
 #
 
 import os
-#import sys
 import time
 import urllib
 import urlparse
@@ -43,9 +42,9 @@ class UploadRobot:
                  verifyDescription=True, ignoreWarning=False,
                  targetSite=None, uploadByUrl=False):
         """
-        ignoreWarning - Set this to True if you want to upload even if another
-                        file would be overwritten or another mistake would be
-                        risked.
+        @param ignoreWarning: Set this to True if you want to upload even if
+            another file would be overwritten or another mistake would be
+            risked.
 
         """
         self.url = url
@@ -56,7 +55,8 @@ class UploadRobot:
         self.verifyDescription = verifyDescription
         self.ignoreWarning = ignoreWarning
         if config.upload_to_commons:
-            self.targetSite = targetSite or pywikibot.Site('commons', 'commons')
+            self.targetSite = targetSite or pywikibot.Site('commons',
+                                                           'commons')
         else:
             self.targetSite = targetSite or pywikibot.Site()
         self.targetSite.forceLogin()
@@ -75,8 +75,7 @@ class UploadRobot:
         dt = 15
         uo = urllib.URLopener()
         retrieved = False
-        rlen = 0
-        _contents = ""
+
         while not retrieved:
             if resume:
                 pywikibot.output(u"Resume download...")
@@ -85,8 +84,7 @@ class UploadRobot:
             infile = uo.open(self.url)
 
             if 'text/html' in infile.info().getheader('Content-Type'):
-                print \
-"Couldn't download the image: the requested URL was not found on server."
+                pywikibot.output(u"Couldn't download the image: the requested URL was not found on server.")
                 return
 
             content_len = infile.info().getheader('Content-Length')
@@ -158,7 +156,7 @@ class UploadRobot:
                 invalid = set(forbidden) & set(newfn)
                 if invalid:
                     c = "".join(invalid)
-                    print "Invalid character(s): %s. Please try again" % c
+                    pywikibot.output("Invalid character(s): %s. Please try again" % c)
                     continue
                 if ext not in allowed_formats:
                     choice = pywikibot.inputChoice(
@@ -215,7 +213,7 @@ class UploadRobot:
                 site.upload(imagepage, source_filename=temp,
                             ignore_warnings=self.ignoreWarning)
 
-        except pywikibot.UploadWarning, warn:
+        except pywikibot.UploadWarning as warn:
             pywikibot.output(u"We got a warning message: ", newline=False)
             pywikibot.output(str(warn))
             answer = pywikibot.inputChoice(u"Do you want to ignore?",
@@ -228,8 +226,7 @@ class UploadRobot:
                 pywikibot.output(u"Upload aborted.")
                 return
 
-        except Exception, e:
-            print(e)
+        except Exception as e:
             pywikibot.error("Upload error: ", exc_info=True)
 
         else:

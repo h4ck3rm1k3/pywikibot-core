@@ -3,7 +3,7 @@
 User-interface related functions for building bots
 """
 #
-# (C) Pywikipedia bot team, 2008-2012
+# (C) Pywikibot team, 2008-2013
 #
 # Distributed under the terms of the MIT license.
 #
@@ -20,10 +20,12 @@ import logging.handlers
 import os
 import os.path
 import sys
+import re
 
 # logging levels
 _logger = "bot"
 
+# logging levels
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 STDOUT = 16
 VERBOSE = 18
@@ -83,7 +85,7 @@ class RotatingFileHandler(logging.handlers.RotatingFileHandler):
             os.rename(self.baseFilename, dfn)
             #print "%s -> %s" % (self.baseFilename, dfn)
         elif self.backupCount == -1:
-            if not hasattr(self, 'lastNo'):
+            if not hasattr(self, '_lastNo'):
                 self._lastNo = 1
             while True:
                 fn = "%s.%d%s" % (root, self._lastNo, ext)
@@ -244,7 +246,7 @@ def writelogheader():
     except AttributeError:
         return
 
-    log(u'=== Pywikipediabot framework v2.0 -- Logging header ===')
+    log(u'=== Pywikibot framework v2.0 -- Logging header ===')
 
     # script call
     log(u'COMMAND: %s' % unicode(sys.argv))
@@ -263,7 +265,7 @@ def writelogheader():
 
     # imported modules
     log(u'MODULES:')
-    for item in sys.modules.keys():
+    for item in list(sys.modules.keys()):
         ver = version.getfileversion('%s.py' % item.replace('.', '/'))
         if ver:
             log(u'  %s' % ver)
@@ -294,7 +296,21 @@ def writelogheader():
 # the user console. debug() takes a required second argument, which is a
 # string indicating the debugging layer.
 
+# next bit filched from 1.5.2's inspect.py
+def currentframe():
+    """Return the frame object for the caller's stack frame."""
+    try:
+        raise Exception
+    except:
+        # go back two levels, one for logoutput and one for whatever called it
+        return sys.exc_traceback.tb_frame.f_back.f_back
 
+if hasattr(sys, '_getframe'):
+    # less portable but more efficient
+    currentframe = lambda: sys._getframe(3)
+    # frame0 is this lambda, frame1 is logoutput() in this module,
+    # frame2 is the convenience function (output(), etc.)
+    # so frame3 is whatever called the convenience function
 
 # done filching
 
@@ -315,23 +331,7 @@ def logoutput(text, decoder=None, newline=True, _level=INFO, _logger="",
     if not _handlers_initialized:
         init_handlers()
 
-    #    frame = currentframe()
-    # next bit filched from 1.5.2's inspect.py
-    frame = None
-    if hasattr(sys, '_getframe'):
-        # less portable but more efficient
-        frame = sys._getframe(3)
-        # frame0 is this lambda, frame1 is logoutput() in this module,
-        # frame2 is the convenience function (output(), etc.)
-        # so frame3 is whatever called the convenience function
-    else:
-        try:
-            raise Exception
-        except:
-            # go back two levels, one for logoutput and one for whatever called it
-            frame =  sys.exc_traceback.tb_frame.f_back
-
-
+    frame = currentframe()
     module = os.path.basename(frame.f_code.co_filename)
     context = {'caller_name': frame.f_code.co_name,
                'caller_file': module,
@@ -558,6 +558,10 @@ def handleArgs(*args):
         elif arg == '-nolog':
             if moduleName in config.log:
                 config.log.remove(moduleName)
+        elif arg in ('-cosmeticchanges', '-cc'):
+            config.cosmetic_changes = not config.cosmetic_changes
+            output(u'NOTE: option cosmetic_changes is %s\n'
+                   % config.cosmetic_changes)
         elif arg == '-simulate':
             config.simulate = True
         #
@@ -585,7 +589,7 @@ def handleArgs(*args):
         #    If used, "-debug" turns on file logging, regardless of any
         #    other settings.
         #
-        elif arg == "-debug":
+        elif arg == '-debug':
             if moduleName not in config.log:
                 config.log.append(moduleName)
             if "" not in config.debug_log:
@@ -596,7 +600,7 @@ def handleArgs(*args):
             component = arg[len("-debug:"):]
             if component not in config.debug_log:
                 config.debug_log.append(component)
-        elif arg == '-verbose' or arg == "-v":
+        elif arg in ('-verbose', '-v'):
             config.verbose_output += 1
         elif arg == '-daemonize':
             import daemonize
@@ -606,14 +610,15 @@ def handleArgs(*args):
             daemonize.daemonize(redirect_std=arg[11:])
         else:
             # the argument depends on numerical config settings
+            # e.g. -maxlag:
             try:
                 _arg, _val = arg[1:].split(':')
                 # explicitly check for int (so bool doesn't match)
                 if type(getattr(config, _arg)) is not int:
                     raise TypeError
                 setattr(config, _arg, int(_val))
-            except (ValueError, TypeError, AttributeError) :
-            # argument not global -> specific bot script will take care
+            except (ValueError, TypeError, AttributeError) as exc:
+                # argument not global -> specific bot script will take care
                 nonGlobalArgs.append(arg)
 
     if username:
@@ -622,15 +627,20 @@ def handleArgs(*args):
     init_handlers()
 
     if config.verbose_output:
-        import re
-        ver = pywikibot.__version__  # probably can be improved on
         # Please don't change the regular expression here unless you really
         # have to - some git versions (like 1.7.0.4) seem to treat lines
-        # containing just `$Id$Id$`
+        # containing just `$Id:` as if they were ident lines (see
+        # gitattributes(5)) leading to unwanted behaviour like automatic
+        # replacement with `$Id$`
         # or `$Id$`.
         m = re.search(r"\$Id"
-                      r": (\w+) \$", ver)
-        pywikibot.output(u'Pywikipediabot r%s' % m.group(1))
+                      r": (\w+) \$", pywikibot.__version__)
+        if m:
+            pywikibot.output(u'Pywikibot r%s' % m.group(1))
+        else:
+            # Version ID not availlable on SVN repository.
+            # Maybe these informations should be imported from version.py
+            pywikibot.output(u'Pywikibot SVN repository')
         pywikibot.output(u'Python %s' % sys.version)
 
     if do_help:
@@ -683,26 +693,34 @@ Global arguments available for all bots:
                   edits during periods of database server lag. Default is set by
                   config.py
 
+-putthrottle:n    Set the minimum time (in seconds) the bot will wait between
+-pt:n             saving pages.
+-put_throttle:n
+
 -debug:item       Enable the logfile and include extensive debugging data
 -debug            for component "item" (for all components if the second form
                   is used).
 
--putthrottle:n    Set the minimum time (in seconds) the bot will wait between
--pt:n             saving pages.
-
 -verbose          Have the bot provide additional console output that may be
 -v                useful in debugging.
+
+-cosmeticchanges  Toggles the cosmetic_changes setting made in config.py or
+-cc               user_config.py to its inverse and overrules it. All other
+                  settings and restrictions are untouched.
 
 -simulate         Disables writing to the server. Useful for testing and
                   debugging of new code (if given, doesn't do any real
                   changes, but only shows what would have been changed).
+
+-<config var>:n   You may use all given numeric config variables as option and
+                  modify it with command line.
 
 ''' % modname
     try:
         module = __import__('%s' % modname)
         helpText = module.__doc__.decode('utf-8')
         if hasattr(module, 'docuReplacements'):
-            for key, value in module.docuReplacements.iteritems():
+            for key, value in module.docuReplacements.items():
                 helpText = helpText.replace(key, value.strip('\n\r'))
         pywikibot.stdout(helpText)  # output to STDOUT
     except Exception:

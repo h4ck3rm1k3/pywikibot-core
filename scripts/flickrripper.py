@@ -25,11 +25,12 @@ Todo:
 """
 #
 # (C) Multichill, 2009
-# (C) Pywikipedia team, 2009-2013
+# (C) Pywikibot team, 2009-2013
 #
 # Distributed under the terms of the MIT license.
 #
 __version__ = '$Id$'
+#
 
 import urllib
 import re
@@ -268,7 +269,7 @@ def processPhoto(flickr=None, photo_id=u'', flickrreview=False, reviewer=u'',
                  autonomous=False):
     """ Process a single Flickr photo """
     if photo_id:
-        print photo_id
+        pywikibot.output(str(photo_id))
         (photoInfo, photoSizes) = getPhoto(flickr, photo_id)
     if isAllowedLicense(photoInfo) or override:
         #Get the url of the largest photo
@@ -533,7 +534,7 @@ def main():
             pywikibot.input("Press ENTER after you authorized this program")
         flickr.get_token_part_two((token, frob))
     else:
-        print 'Accessing public content only'
+        pywikibot.output('Accessing public content only')
         flickr = flickrapi.FlickrAPI(config.flickr['api_key'])
 
     group_id = u''
@@ -558,7 +559,7 @@ def main():
     if config.flickr['reviewer']:
         reviewer = config.flickr['reviewer']
     elif 'commons' in config.sysopnames['commons']:
-        print config.sysopnames['commons']
+        pywikibot.output(config.sysopnames['commons'])
         reviewer = config.sysopnames['commons']['commons']
     elif 'commons' in config.usernames['commons']:
         reviewer = config.usernames['commons']['commons']

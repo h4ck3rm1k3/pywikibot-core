@@ -1,18 +1,19 @@
 # -*- coding: utf-8  -*-
 
 #
-# (C) Pywikipedia bot team, 2004-2013
+# (C) Pywikibot team, 2004-2013
 #
 # Distributed under the terms of the MIT license.
 #
 __version__ = '$Id$'
+#
 
 import logging
 import re
 #import urllib
 import collections
 
-import config2 as config
+from . import config2 as config
 import pywikibot
 
 logger = logging.getLogger("pywiki.wiki.family")
@@ -98,13 +99,9 @@ class Family(object):
         ]
 
         # Order for fy: alphabetical by code, but y counts as i
-        def fycomp(x, y):
-            x = x.replace("y", "i") + x.count("y") * "!"
-            y = y.replace("y", "i") + y.count("y") * "!"
-            return cmp(x, y)
         self.fyinterwiki = self.alphabetic[:]
         self.fyinterwiki.remove('nb')
-        self.fyinterwiki.sort(fycomp)
+        self.fyinterwiki.sort(key=lambda x: x.replace("y", "i") + x.count("y") * "!")
 
         self.langs = {}
 
@@ -834,8 +831,8 @@ class Family(object):
     @property
     def iwkeys(self):
         if self.interwiki_forward:
-            return pywikibot.Family(self.interwiki_forward).langs.keys()
-        return self.langs.keys()
+            return list(pywikibot.Family(self.interwiki_forward).langs.keys())
+        return list(self.langs.keys())
 
     def _addlang(self, code, location, namespaces={}):
         """Add a new language to the langs and namespaces of the family.
@@ -873,19 +870,22 @@ class Family(object):
         if not hasattr(self, "_catredirtemplates"):
             self._catredirtemplates = {}
         if code in self.category_redirect_templates:
-            cr_template = self.category_redirect_templates[code][0]
+            cr_template_list = self.category_redirect_templates[code]
+            cr_list = list(self.category_redirect_templates[code])
         else:
-            cr_template = self.category_redirect_templates[fallback][0]
-        # start with list of category redirect templates from family file
-        cr_page = pywikibot.Page(pywikibot.Site(code, self),
-                                 "Template:" + cr_template)
-        cr_list = list(self.category_redirect_templates[code])
-        # retrieve all redirects to primary template from API,
-        # add any that are not already on the list
-        for t in cr_page.backlinks(filterRedirects=True, namespaces=10):
-            newtitle = t.title(withNamespace=False)
-            if newtitle not in cr_list:
-                cr_list.append(newtitle)
+            cr_template_list = self.category_redirect_templates[fallback]
+            cr_list = []
+        if cr_template_list:
+            cr_template = cr_template_list[0]
+            # start with list of category redirect templates from family file
+            cr_page = pywikibot.Page(pywikibot.Site(code, self),
+                                     "Template:" + cr_template)
+            # retrieve all redirects to primary template from API,
+            # add any that are not already on the list
+            for t in cr_page.backlinks(filterRedirects=True, namespaces=10):
+                newtitle = t.title(withNamespace=False)
+                if newtitle not in cr_list:
+                    cr_list.append(newtitle)
         self._catredirtemplates[code] = cr_list
 
     def disambig(self, code, fallback='_default'):
@@ -1065,7 +1065,7 @@ class WikimediaFamily(Family):
         """Return Wikimedia projects version number as a string."""
         # Don't use this, use versionnumber() instead. This only exists
         # to not break family files.
-        return '1.23wmf1'
+        return '1.23wmf4'
 
     def shared_image_repository(self, code):
         return ('commons', 'commons')

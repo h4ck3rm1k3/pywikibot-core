@@ -21,6 +21,8 @@ __version__ = '$Id$'
 #
 # Distributed under the terms of the MIT license.
 #
+__version__ = '$Id$'
+#
 
 import cPickle
 #import math
@@ -57,7 +59,7 @@ class CategoryRedirectBot(object):
                 'da': "Kategori:Omdirigeringskategorier",
                 'en': "Category:Wikipedia soft redirected categories",
                 'es': "Categoría:Wikipedia:Categorías redirigidas",
-                'fa': u"رده:رده‌های منتقل شده",
+                'fa': u"رده:رده‌های منتقل‌شده",
                 'hu': "Kategória:Kategóriaátirányítások",
                 'ja': "Category:移行中のカテゴリ",
                 'no': "Kategori:Wikipedia omdirigertekategorier",
@@ -104,7 +106,7 @@ class CategoryRedirectBot(object):
             # an update due to changes in a transcluded template
             article.put(newtext, comment)
             if newtext == oldtext:
-                pywikibot.output(u'No changes in made in page %s.'
+                pywikibot.output(u'No changes made in page %s.'
                                  % article.title(asLink=True))
                 return False
             return True
@@ -118,7 +120,7 @@ class CategoryRedirectBot(object):
                 'title': article.title(asLink=True, textlink=True),
                 'oldcat': oldCat.title(asLink=True, textlink=True),
                 'newcat': newCat.title(asLink=True, textlink=True)})
-        except pywikibot.SpamfilterError, error:
+        except pywikibot.SpamfilterError as error:
             pywikibot.output(
                 u'Changing page %s blocked by spam filter (URL=%s)'
                 % (article.title(asLink=True), error.url))
@@ -130,7 +132,7 @@ class CategoryRedirectBot(object):
                 'title': article.title(asLink=True, textlink=True),
                 'oldcat': oldCat.title(asLink=True, textlink=True),
                 'newcat': newCat.title(asLink=True, textlink=True)})
-        except pywikibot.PageNotSaved, error:
+        except pywikibot.PageNotSaved as error:
             pywikibot.output(u"Saving page %s failed: %s"
                              % (article.title(asLink=True), error))
         return False
@@ -187,7 +189,7 @@ class CategoryRedirectBot(object):
 
     def readyToEdit(self, cat):
         """Return True if cat not edited during cooldown period, else False."""
-        #dateformat = "%Y-%m-%dT%H:%M:%SZ"
+        dateformat = "%Y-%m-%dT%H:%M:%SZ"
         today = datetime.now()
         deadline = today + timedelta(days=-self.cooldown)
         if cat.editTime() is None:
@@ -248,7 +250,8 @@ class CategoryRedirectBot(object):
             cPickle.dump(record, open(datafile + ".bak", "wb"), -1)
 
         try:
-            template_list = self.site.family.category_redirect_templates[self.site.code]
+            template_list = self.site.family.category_redirect_templates[
+                self.site.code]
         except KeyError:
             pywikibot.output(u"No redirect templates defined for %s"
                              % self.site.sitename())
@@ -257,15 +260,15 @@ class CategoryRedirectBot(object):
         #  note that any templates containing optional "category:" are
         #  incorrect and will be fixed by the bot
         template_regex = re.compile(
-            ur"""{{\s*(?:%(prefix)s\s*:\s*)?  # optional "template:"
-                      (?:%(template)s)\s*\|   # catredir template name
-                      (\s*%(catns)s\s*:\s*)?  # optional "category:"
-                      ([^|}]+)                # redirect target cat
-                      (?:\|[^|}]*)*}}         # optional arguments 2+, ignored
-              """ % {'prefix': self.site.namespace(10).lower(),
-                     'template': "|".join(item.replace(" ", "[ _]+")
-                                          for item in template_list),
-                     'catns': self.site.namespace(14)},
+            r"""{{\s*(?:%(prefix)s\s*:\s*)?  # optional "template:"
+                     (?:%(template)s)\s*\|   # catredir template name
+                     (\s*%(catns)s\s*:\s*)?  # optional "category:"
+                     ([^|}]+)                # redirect target cat
+                     (?:\|[^|}]*)*}}         # optional arguments 2+, ignored
+             """ % {'prefix': self.site.namespace(10).lower(),
+                    'template': "|".join(item.replace(" ", "[ _]+")
+                                         for item in template_list),
+                    'catns': self.site.namespace(14)},
             re.I | re.X)
 
         # check for hard-redirected categories that are not already marked
@@ -298,7 +301,7 @@ class CategoryRedirectBot(object):
                                          % (template_list[0],
                                             page.title(asLink=True,
                                                        textlink=True)))
-                except pywikibot.Error, e:
+                except pywikibot.Error as e:
                     self.log_text.append(u"* Failed to add {{tl|%s}} to %s"
                                          % (template_list[0],
                                             page.title(asLink=True,
@@ -423,7 +426,7 @@ class CategoryRedirectBot(object):
                                 i18n.twtranslate(self.site.lang,
                                                  self.dbl_redir_comment),
                                 minorEdit=True)
-                    except pywikibot.Error, e:
+                    except pywikibot.Error as e:
                         self.log_text.append("** Failed: %s" % e)
                 continue
 
@@ -454,7 +457,7 @@ class CategoryRedirectBot(object):
         self.log_text.sort()
         problems.sort()
         newredirs.sort()
-        self.log_page.put(u"\n==%i-%02i-%02iT%02i:%02i:%02iZ==\n"
+        self.log_page.put(u"\n== %i-%02i-%02iT%02i:%02i:%02iZ ==\n"
                           % time.gmtime()[:6]
                           + u"\n".join(self.log_text)
                           + u"\n* New redirects since last report:\n"

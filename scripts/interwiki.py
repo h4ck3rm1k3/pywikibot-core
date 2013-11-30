@@ -336,7 +336,7 @@ that you have to break it off, use "-continue" next time.
 # (C) Daniel Herding, 2004
 # (C) Yuri Astrakhan, 2005-2006
 # (C) xqt, 2009-2013
-# (C) Pywikipedia bot team, 2007-2013
+# (C) Pywikibot team, 2007-2013
 #
 # Distributed under the terms of the MIT license.
 #
@@ -516,7 +516,7 @@ class Global(object):
             f = codecs.open(hintfilename, 'r', config.textfile_encoding)
 
             # hint or title ends either before | or before ]]
-            R = re.compile(ur'\[\[(.+?)(?:\]\]|\|)')
+            R = re.compile(r'\[\[(.+?)(?:\]\]|\|)')
             for pageTitle in R.findall(f.read()):
                 self.hints.append(pageTitle)
             f.close()
@@ -1995,15 +1995,15 @@ u'WARNING: %s is in namespace %i, but %s is in namespace %i. Follow it anyway?'
                     pywikibot.output(
                         u'ERROR putting page: An edit conflict occurred. Giving up.')
                     raise SaveError(u'Edit conflict')
-                except (pywikibot.SpamfilterError), error:
+                except (pywikibot.SpamfilterError) as error:
                     pywikibot.output(
                         u'ERROR putting page: %s blacklisted by spamfilter. Giving up.'
                         % (error.url,))
                     raise SaveError(u'Spam filter')
-                except (pywikibot.PageNotSaved), error:
+                except (pywikibot.PageNotSaved) as error:
                     pywikibot.output(u'ERROR putting page: %s' % (error.args,))
                     raise SaveError(u'PageNotSaved')
-                except (socket.error, IOError), error:
+                except (socket.error, IOError) as error:
                     if timeout > 3600:
                         raise
                     pywikibot.output(u'ERROR putting page: %s' % (error.args,))
