@@ -29,7 +29,7 @@ from ircbot import SingleServerIRCBot
 # logging levels
 _logger = "botirc"
 
-#from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
+from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 STDOUT = 16
 VERBOSE = 18
 INPUT = 25
