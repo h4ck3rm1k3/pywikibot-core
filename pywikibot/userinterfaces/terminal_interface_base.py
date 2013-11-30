@@ -265,7 +265,10 @@ class UI:
                 'What is the solution of the CAPTCHA at this url ?')
 
     def argvu(self):
-        return [s.decode(self.encoding) for s in self.argv]
+        try:
+            return [s.decode(self.encoding) for s in self.argv]
+        except AttributeError:  # in python 3, self.argv is unicode and thus cannot be decoded
+            return [s for s in self.argv]
 
 
 class TerminalHandler(logging.Handler):
