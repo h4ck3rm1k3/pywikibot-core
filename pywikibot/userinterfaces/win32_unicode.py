@@ -167,7 +167,7 @@ if sys.platform == "win32":
                     if self._hConsole is None:
                         try:
                             self._stream.flush()
-                        except Exception, e:
+                        except Exception as e:
                             _complain("%s.flush: %r from %r"
                                       % (self.name, e, self._stream))
                             raise
@@ -175,11 +175,11 @@ if sys.platform == "win32":
                 def write(self, text):
                     try:
                         if self._hConsole is None:
-                            if isinstance(text, unicode):
+                            if isinstance(text, str):
                                 text = text.encode('utf-8')
                             self._stream.write(text)
                         else:
-                            if not isinstance(text, unicode):
+                            if not isinstance(text, str):
                                 text = str(text).decode('utf-8')
                             remaining = len(text)
                             while remaining > 0:
@@ -197,7 +197,7 @@ if sys.platform == "win32":
                                 if remaining == 0:
                                     break
                                 text = text[n.value:]
-                    except Exception, e:
+                    except Exception as e:
                         _complain("%s.write: %r" % (self.name, e))
                         raise
 
@@ -205,7 +205,7 @@ if sys.platform == "win32":
                     try:
                         for line in lines:
                             self.write(line)
-                    except Exception, e:
+                    except Exception as e:
                         _complain("%s.writelines: %r" % (self.name, e))
                         raise
 
@@ -225,7 +225,7 @@ if sys.platform == "win32":
             else:
                 stderr = UnicodeOutput(None, sys.stderr, old_stderr_fileno,
                                        '<Unicode redirected stderr>')
-    except Exception, e:
+    except Exception as e:
         _complain("exception %r while fixing up sys.stdout and sys.stderr" % (e,))
 
     # While we're at it, let's unmangle the command-line arguments:
@@ -248,16 +248,16 @@ if sys.platform == "win32":
         # Also skip option arguments to the Python interpreter.
         while len(argv) > 0:
             arg = argv[0]
-            if not arg.startswith(u"-") or arg == u"-":
+            if not arg.startswith("-") or arg == "-":
                 break
             argv = argv[1:]
-            if arg == u'-m':
+            if arg == '-m':
                 # sys.argv[0] should really be the absolute path of the module source,
                 # but never mind
                 break
-            if arg == u'-c':
-                argv[0] = u'-c'
+            if arg == '-c':
+                argv[0] = '-c'
                 break
 
     if argv == []:
-        argv = [u'']
+        argv = ['']

@@ -11,7 +11,7 @@ import sys
 import subprocess
 import pywikibot
 
-from utils import unittest
+from .utils import unittest
 
 pypath = sys.executable
 basepath = os.path.split(os.path.split(__file__)[0])[0]

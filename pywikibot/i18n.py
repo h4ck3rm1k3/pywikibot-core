@@ -298,7 +298,7 @@ def translate(code, xdict, parameters=None, fallback=True):
     else:  # we found PLURAL patterns, process it
         if type(parameters) == dict:
             num = param[selector]
-        elif isinstance(parameters, basestring):
+        elif isinstance(parameters, str):
             num = int(parameters)
         else:
             num = parameters
@@ -445,7 +445,7 @@ def twntranslate(code, twtitle, parameters=None):
     else:
         if type(parameters) == dict:
             num = param[selector]
-        elif isinstance(parameters, basestring):
+        elif isinstance(parameters, str):
             num = int(parameters)
         else:
             num = parameters

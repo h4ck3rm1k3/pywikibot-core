@@ -170,8 +170,8 @@ class XmlDump(object):
         return XmlEntry(title=self.title,
                         ns=self.ns,
                         id=self.pageid,
-                        text=text or u'',
-                        username=username or u'',  # username might be deleted
+                        text=text or '',
+                        username=username or '',  # username might be deleted
                         ipedit=bool(ipeditor),
                         timestamp=timestamp,
                         editRestriction=self.editRestriction,

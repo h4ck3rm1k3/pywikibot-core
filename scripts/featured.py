@@ -83,7 +83,7 @@ def CAT(site, name, hide):
     for article in cat.articles(endsort=hide):
         yield article
     if hide:
-        for article in cat.articles(startFrom=unichr(ord(hide) + 1)):
+        for article in cat.articles(startFrom=chr(ord(hide) + 1)):
             yield article
 
 
@@ -103,7 +103,7 @@ def DATA(site, name, hide):
     for article in cat.articles(endsort=hide):
         yield article
     if hide:
-        for article in cat.articles(startFrom=unichr(ord(hide) + 1)):
+        for article in cat.articles(startFrom=chr(ord(hide) + 1)):
             yield article
 
 
@@ -118,11 +118,11 @@ template = {
     '_default': ['Link FA'],
     'als': ['LinkFA'],
     'an': ['Destacato', 'Destacau'],
-    'ar': [u'وصلة مقالة مختارة'],
+    'ar': ['وصلة مقالة مختارة'],
     'ast': ['Enllaz AD'],
     'az': ['Link FM'],
     'br': ['Liamm PuB', 'Lien AdQ'],
-    'ca': [u'Enllaç AD', 'Link FA', 'Destacat'],
+    'ca': ['Enllaç AD', 'Link FA', 'Destacat'],
     'cy': ['Cyswllt erthygl ddethol', 'Dolen ED'],
     'eo': ['LigoElstara'],
     'en': ['Link FA', 'FA link'],
@@ -132,22 +132,22 @@ template = {
     'fur': ['Leam VdC'],
     'ga': ['Nasc AR'],
     'hi': ['Link FA', 'Lien AdQ'],
-    'is': [u'Tengill ÚG'],
+    'is': ['Tengill ÚG'],
     'it': ['Link AdQ'],
     'no': ['Link UA'],
     'oc': ['Ligam AdQ', 'Lien AdQ'],
-    'ro': [u'Legătură AC', u'Legătură AF'],
+    'ro': ['Legătură AC', 'Legătură AF'],
     'sv': ['UA', 'Link UA'],
     'tr': ['Link SM'],
-    'vi': [u'Liên kết chọn lọc'],
-    'vo': [u'Yüm YG'],
-    'yi': [u'רא'],
+    'vi': ['Liên kết chọn lọc'],
+    'vo': ['Yüm YG'],
+    'yi': ['רא'],
 }
 
 template_good = {
     '_default': ['Link GA'],
-    'ar': [u'وصلة مقالة جيدة'],
-    'ca': [u'Enllaç AB', 'Lien BA', 'Abo', 'Link GA'],
+    'ar': ['وصلة مقالة جيدة'],
+    'ca': ['Enllaç AB', 'Lien BA', 'Abo', 'Link GA'],
     'da': ['Link GA', 'Link AA'],
     'eo': ['LigoLeginda'],
     'es': ['Bueno'],
@@ -158,7 +158,7 @@ template_good = {
     'no': ['Link AA'],
     'pt': ['Bom interwiki'],
 ##    'tr': ['Link GA', 'Link KM'],
-    'vi': [u'Liên kết bài chất lượng tốt'],
+    'vi': ['Liên kết bài chất lượng tốt'],
     'wo': ['Lien BA'],
 }
 
@@ -168,7 +168,7 @@ template_lists = {
 }
 
 featured_name = {
-    'wikidata': (DATA, u'Q4387444'),
+    'wikidata': (DATA, 'Q4387444'),
 }
 
 good_name = {
@@ -177,39 +177,39 @@ good_name = {
 
 lists_name = {
     'wikidata': (TMPL, 'Q5857568'),
-    'ar': (BACK, u'قائمة مختارة'),
-    'da': (BACK, u'FremragendeListe'),
-    'de': (BACK, u'Informativ'),
-    'en': (BACK, u'Featured list'),
-    'fa': (BACK, u"فهرست برگزیده"),
-    'id': (BACK, u'Featured list'),
-    'ja': (BACK, u'Featured List'),
-    'ksh': (CAT,  u"Joode Leß"),
-    'no': (BACK, u'God liste'),
-    'pl': (BACK, u'Medalista'),
-    'pt': (BACK, u'Anexo destacado'),
-    'ro': (BACK, u'Listă de calitate'),
-    'ru': (BACK, u'Избранный список или портал'),
-    'tr': (BACK, u'Seçkin liste'),
-    'uk': (BACK, u'Вибраний список'),
-    'vi': (BACK, u'Sao danh sách chọn lọc'),
-    'zh': (BACK, u'特色列表'),
+    'ar': (BACK, 'قائمة مختارة'),
+    'da': (BACK, 'FremragendeListe'),
+    'de': (BACK, 'Informativ'),
+    'en': (BACK, 'Featured list'),
+    'fa': (BACK, "فهرست برگزیده"),
+    'id': (BACK, 'Featured list'),
+    'ja': (BACK, 'Featured List'),
+    'ksh': (CAT,  "Joode Leß"),
+    'no': (BACK, 'God liste'),
+    'pl': (BACK, 'Medalista'),
+    'pt': (BACK, 'Anexo destacado'),
+    'ro': (BACK, 'Listă de calitate'),
+    'ru': (BACK, 'Избранный список или портал'),
+    'tr': (BACK, 'Seçkin liste'),
+    'uk': (BACK, 'Вибраний список'),
+    'vi': (BACK, 'Sao danh sách chọn lọc'),
+    'zh': (BACK, '特色列表'),
 }
 
 # Third parameter is the sort key indicating articles to hide from the given
 # list
 former_name = {
-    'ca': (CAT, u"Arxiu de propostes de la retirada de la distinció"),
-    'en': (CAT, u"Wikipedia former featured articles", "#"),
-    'es': (CAT, u"Wikipedia:Artículos anteriormente destacados"),
-    'fa': (CAT, u"مقاله‌های برگزیده پیشین"),
-    'hu': (CAT, u"Korábbi kiemelt cikkek"),
-    'pl': (CAT, u"Byłe artykuły na medal"),
-    'pt': (CAT, u"!Ex-Artigos_destacados"),
-    'ru': (CAT, u"Википедия:Устаревшие избранные статьи"),
-    'th': (CAT, u"บทความคัดสรรในอดีต"),
-    'tr': (CAT, u"Vikipedi eski seçkin maddeler"),
-    'zh': (CAT, u"已撤销的特色条目"),
+    'ca': (CAT, "Arxiu de propostes de la retirada de la distinció"),
+    'en': (CAT, "Wikipedia former featured articles", "#"),
+    'es': (CAT, "Wikipedia:Artículos anteriormente destacados"),
+    'fa': (CAT, "مقاله‌های برگزیده پیشین"),
+    'hu': (CAT, "Korábbi kiemelt cikkek"),
+    'pl': (CAT, "Byłe artykuły na medal"),
+    'pt': (CAT, "!Ex-Artigos_destacados"),
+    'ru': (CAT, "Википедия:Устаревшие избранные статьи"),
+    'th': (CAT, "บทความคัดสรรในอดีต"),
+    'tr': (CAT, "Vikipedi eski seçkin maddeler"),
+    'zh': (CAT, "已撤销的特色条目"),
 }
 
 
@@ -261,14 +261,14 @@ class FeaturedBot(pywikibot.Bot):
                 f = open(self.filename, "rb")
                 self.cache = pickle.load(f)
                 f.close()
-                pywikibot.output(u'Cache file %s found with %d items.'
+                pywikibot.output('Cache file %s found with %d items.'
                                  % (self.filename, len(self.cache)))
             except IOError:
-                pywikibot.output(u'Cache file %s not found.' % self.filename)
+                pywikibot.output('Cache file %s not found.' % self.filename)
 
     def writecache(self):
         if not self.getOption('nocache') is True:
-            pywikibot.output(u'Writing %d items to cache file %s.'
+            pywikibot.output('Writing %d items to cache file %s.'
                              % (len(self.cache), self.filename))
             f = open(self.filename, "wb")
             pickle.dump(self.cache, f)
@@ -288,12 +288,12 @@ class FeaturedBot(pywikibot.Bot):
             done = True
         if self.getOption('featured') or not done:
             self.run_featured()
-        pywikibot.output(u'%d pages written.' % self.editcounter)
+        pywikibot.output('%d pages written.' % self.editcounter)
 
     def run_good(self):
         task = 'good'
         if not self.hastemplate(task):
-            pywikibot.output(u'\nNOTE: %s arcticles are not implemented at %s.'
+            pywikibot.output('\nNOTE: %s arcticles are not implemented at %s.'
                              % (task, self.site))
             return
 
@@ -305,7 +305,7 @@ class FeaturedBot(pywikibot.Bot):
             ### Quick and dirty hack - any ideas?
             # use wikipedia sites only
             self.fromlang = [lang.replace('_', '-') for (lang, fam) in
-                             [key.split('wiki') for key in dp.sitelinks.keys()]
+                             [key.split('wiki') for key in list(dp.sitelinks.keys())]
                              if not fam]
         else:
             return  # 2DO
@@ -333,7 +333,7 @@ class FeaturedBot(pywikibot.Bot):
     def run_featured(self):
         task = 'featured'
         if not self.hastemplate(task):
-            pywikibot.output(u'\nNOTE: %s arcticles are not implemented at %s.'
+            pywikibot.output('\nNOTE: %s arcticles are not implemented at %s.'
                              % (task, self.site))
             return
 
@@ -345,7 +345,7 @@ class FeaturedBot(pywikibot.Bot):
             ### Quick and dirty hack - any ideas?
             # use wikipedia sites only
             self.fromlang = [lang.replace('_', '-') for (lang, fam) in
-                             [key.split('wiki') for key in dp.sitelinks.keys()]
+                             [key.split('wiki') for key in list(dp.sitelinks.keys())]
                              if not fam]
         else:
             return  # 2DO
@@ -384,7 +384,7 @@ class FeaturedBot(pywikibot.Bot):
             method = info[code][0]
         except KeyError:
             pywikibot.error(
-                u'language %s doesn\'t has %s category source.'
+                'language %s doesn\'t has %s category source.'
                 % (code, task))
             return
         name = info[code][1]
@@ -407,12 +407,12 @@ class FeaturedBot(pywikibot.Bot):
             if p.title() < afterpage:
                 continue
 
-            if u"/" in p.title() and p.namespace() != 0:
-                pywikibot.output(u"%s is a subpage" % p.title())
+            if "/" in p.title() and p.namespace() != 0:
+                pywikibot.output("%s is a subpage" % p.title())
                 continue
 
             if p.title() in cache:
-                pywikibot.output(u"(cached) %s -> %s" % (p.title(),
+                pywikibot.output("(cached) %s -> %s" % (p.title(),
                                                          cache[p.title()]))
                 continue
             yield copy(p)
@@ -432,35 +432,35 @@ class FeaturedBot(pywikibot.Bot):
 
         if not ourpage:
             if not quiet:
-                pywikibot.output(u"%s -> no corresponding page in %s"
+                pywikibot.output("%s -> no corresponding page in %s"
                                  % (page.title(), oursite))
             return
 
         if ourpage.section():
-            pywikibot.output(u"%s -> our page is a section link: %s"
+            pywikibot.output("%s -> our page is a section link: %s"
                              % (page.title(), ourpage.title()))
             return
 
         if not ourpage.exists():
-            pywikibot.output(u"%s -> our page doesn't exist: %s"
+            pywikibot.output("%s -> our page doesn't exist: %s"
                              % (page.title(), ourpage.title()))
             return
 
         if ourpage.isRedirectPage():
             ourpage = ourpage.getRedirectTarget()
-        pywikibot.output(u"%s -> corresponding page is %s"
+        pywikibot.output("%s -> corresponding page is %s"
                          % (page.title(), ourpage.title()))
         if ourpage.namespace() != 0:
-            pywikibot.output(u"%s -> not in the main namespace, skipping"
+            pywikibot.output("%s -> not in the main namespace, skipping"
                              % page.title())
             return
 
         if ourpage.isRedirectPage():
-            pywikibot.output(u"%s -> double redirect, skipping" % page.title())
+            pywikibot.output("%s -> double redirect, skipping" % page.title())
             return
 
         if not ourpage.exists():
-            pywikibot.output(u"%s -> page doesn't exist, skipping"
+            pywikibot.output("%s -> page doesn't exist, skipping"
                              % ourpage.title())
             return
 
@@ -471,7 +471,7 @@ class FeaturedBot(pywikibot.Bot):
                 break
 
         if not backpage:
-            pywikibot.output(u"%s -> no back interwiki ref" % page.title())
+            pywikibot.output("%s -> no back interwiki ref" % page.title())
             return
 
         if backpage == page:
@@ -482,7 +482,7 @@ class FeaturedBot(pywikibot.Bot):
         if backpage == page:
             # everything is ok
             return ourpage
-        pywikibot.output(u"%s -> back interwiki ref target is %s"
+        pywikibot.output("%s -> back interwiki ref target is %s"
                          % (page.title(), backpage.title()))
 
     def getTemplateList(self, lang, task):
@@ -531,7 +531,7 @@ class FeaturedBot(pywikibot.Bot):
             """compile one link template list"""
             findtemplate = '(%s)' % '|'.join(templates)
             return re.compile(r"\{\{%s\|%s\}\}"
-                              % (findtemplate.replace(u' ', u'[ _]'),
+                              % (findtemplate.replace(' ', '[ _]'),
                                  site.code), re.IGNORECASE)
 
         tosite = self.site
@@ -553,7 +553,7 @@ class FeaturedBot(pywikibot.Bot):
                 a = a.getRedirectTarget()
 
             if not a.exists():
-                pywikibot.output(u"source page doesn't exist: %s"
+                pywikibot.output("source page doesn't exist: %s"
                                  % a.title())
                 continue
 
@@ -567,24 +567,24 @@ class FeaturedBot(pywikibot.Bot):
             changed = False
             if add_tl:
                 if m1:
-                    pywikibot.output(u"(already added)")
+                    pywikibot.output("(already added)")
                 else:
                     # insert just before interwiki
                     if (not interactive or
                         pywikibot.input(
-                            u'Connecting %s -> %s. Proceed? [Y/N]'
+                            'Connecting %s -> %s. Proceed? [Y/N]'
                             % (a.title(), atrans.title())) in ['Y', 'y']):
                         if self.getOption('side'):
                             # Placing {{Link FA|xx}} right next to
                             # corresponding interwiki
                             text = (text[:m1.end()] +
-                                    u" {{%s|%s}}" % (add_tl[0], fromsite.code) +
+                                    " {{%s|%s}}" % (add_tl[0], fromsite.code) +
                                     text[m1.end():])
                         else:
                             # Moving {{Link FA|xx}} to top of interwikis
                             iw = pywikibot.getLanguageLinks(text, self.site)
                             text = pywikibot.removeLanguageLinks(text, self.site)
-                            text += u"\r\n{{%s|%s}}\r\n" % (add_tl[0],
+                            text += "\r\n{{%s|%s}}\r\n" % (add_tl[0],
                                                             fromsite.code)
                             text = pywikibot.replaceLanguageLinks(text,
                                                                   iw, self.site)
@@ -593,29 +593,29 @@ class FeaturedBot(pywikibot.Bot):
                 if m2:
                     if (not interactive or
                         pywikibot.input(
-                            u'Connecting %s -> %s. Proceed? [Y/N]'
+                            'Connecting %s -> %s. Proceed? [Y/N]'
                             % (a.title(), atrans.title())) in ['Y', 'y']):
                         text = re.sub(re_Link_add, '', text)
                         changed = True
                 elif task == 'former':
-                    pywikibot.output(u"(already removed)")
+                    pywikibot.output("(already removed)")
             cc[a.title()] = atrans.title()
             if changed:
                 comment = i18n.twtranslate(self.site, 'featured-' + task,
-                                           {'page': unicode(a)})
+                                           {'page': str(a)})
                 try:
                     atrans.put(text, comment)
                 except pywikibot.LockedPage:
-                    pywikibot.output(u'Page %s is locked!'
+                    pywikibot.output('Page %s is locked!'
                                      % atrans.title())
                 except pywikibot.PageNotSaved as e:
-                    pywikibot.output(u"Page not saved")
+                    pywikibot.output("Page not saved")
 
 
 def main(*args):
     global interactive, afterpage
     interactive = 0
-    afterpage = u"!"
+    afterpage = "!"
 
     fromlang = []
     processType = 'featured'
@@ -644,16 +644,16 @@ def main(*args):
                 if not end:
                     end = "zzzzzzz"
                 if processType == 'good':
-                    fromlang = [lang for lang in good_name.keys()
+                    fromlang = [lang for lang in list(good_name.keys())
                                 if lang >= start and lang <= end]
                 elif processType == 'list':
-                    fromlang = [lang for lang in lists_name.keys()
+                    fromlang = [lang for lang in list(lists_name.keys())
                                 if lang >= start and lang <= end]
                 elif processType == 'former':
-                    fromlang = [lang for lang in former_name.keys()
+                    fromlang = [lang for lang in list(former_name.keys())
                                 if lang >= start and lang <= end]
                 else:
-                    fromlang = [lang for lang in featured_name.keys()
+                    fromlang = [lang for lang in list(featured_name.keys())
                                 if lang >= start and lang <= end]
         except:
             pass

@@ -19,7 +19,7 @@ from pywikibot import config
 class Error(Exception):
     """Wikipedia error"""
     def __init__(self, arg):
-        self.unicode = arg
+        self.str = arg
         try:
             self.string = arg.encode(config.console_encoding, "xmlcharrefreplace")
         except (AttributeError, TypeError):
@@ -29,7 +29,7 @@ class Error(Exception):
         return self.string
 
     def __unicode__(self):
-        return self.unicode
+        return self.str
 
 
 class PageRelatedError(Error):
@@ -60,7 +60,7 @@ class NoUsername(Error):
 
 class NoPage(PageRelatedError):
     """Page does not exist"""
-    message = u"Page %s doesn't exist."
+    message = "Page %s doesn't exist."
 
 
 class NoSuchSite(Error):
@@ -69,12 +69,12 @@ class NoSuchSite(Error):
 
 class IsRedirectPage(PageRelatedError):
     """Page is a redirect page"""
-    message = u"Page %s is a redirect page."
+    message = "Page %s is a redirect page."
 
 
 class IsNotRedirectPage(PageRelatedError):
     """Page is not a redirect page"""
-    message = u"Page %s is not a redirect page."
+    message = "Page %s is not a redirect page."
 
 
 class CircularRedirect(Error):
@@ -93,7 +93,7 @@ class InvalidTitle(Error):
 
 class LockedPage(PageRelatedError):
     """Page is locked"""
-    message = u"Page %s is locked."
+    message = "Page %s is locked."
 
 
 class SectionError(Error):
@@ -111,7 +111,7 @@ class EditConflict(PageNotSaved):
 class SpamfilterError(PageNotSaved):
     """Saving the page has failed because the MediaWiki spam filter detected a blacklisted URL."""
     def __init__(self, arg):
-        super(SpamfilterError, self).__init__(u'MediaWiki spam filter has been triggered')
+        super(SpamfilterError, self).__init__('MediaWiki spam filter has been triggered')
         self.url = arg
         self.args = arg,
 

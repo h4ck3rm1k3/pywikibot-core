@@ -1,6 +1,6 @@
 import pywikibot
 
-from utils import unittest
+from .utils import unittest
 
 
 class DrySite(pywikibot.site.APISite):

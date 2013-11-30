@@ -14,7 +14,7 @@ import pywikibot
 #import warnings
 #from tests import patch_request, unpatch_request
 
-from utils import PywikibotTestCase, unittest
+from .utils import PywikibotTestCase, unittest
 
 mysite = None
 mainpage = None
@@ -31,27 +31,27 @@ class TestSiteObject(PywikibotTestCase):
         global mysite, mainpage, imagepage
         mysite = pywikibot.Site(cls.code, cls.family)
         mainpage = pywikibot.Page(pywikibot.Link("Main Page", mysite))
-        imagepage = iter(mainpage.imagelinks()).next()  # 1st image on main page
+        imagepage = next(iter(mainpage.imagelinks()))  # 1st image on main page
 
     def testBaseMethods(self):
         """Test cases for BaseSite methods"""
         self.assertEqual(mysite.family.name, self.family)
         self.assertEqual(mysite.code, self.code)
-        self.assertType(mysite.lang, basestring)
+        self.assertType(mysite.lang, str)
         self.assertEqual(mysite, pywikibot.Site("en", "wikipedia"))
-        self.assertType(mysite.user(), (basestring, type(None)))
+        self.assertType(mysite.user(), (str, type(None)))
         self.assertEqual(mysite.sitename(),
                          "%s:%s" % (self.family,
                                     self.code))
         self.assertEqual(repr(mysite),
                          'Site("%s", "%s")'
                          % (self.code, self.family))
-        self.assertType(mysite.linktrail(), basestring)
-        self.assertType(mysite.redirect(default=True), basestring)
+        self.assertType(mysite.linktrail(), str)
+        self.assertType(mysite.redirect(default=True), str)
         self.assertType(mysite.disambcategory(), pywikibot.Category)
-        self.assertEqual(mysite.linkto("foo"), u"[[Foo]]")  # deprecated
+        self.assertEqual(mysite.linkto("foo"), "[[Foo]]")  # deprecated
         self.assertFalse(mysite.isInterwikiLink("foo"))
-        self.assertType(mysite.redirectRegex().pattern, basestring)
+        self.assertType(mysite.redirectRegex().pattern, str)
         self.assertType(mysite.category_on_one_line(), bool)
         for grp in ("user", "autoconfirmed", "bot", "sysop", "nosuchgroup"):
             self.assertType(mysite.has_group(grp), bool)
@@ -109,19 +109,19 @@ class TestSiteObject(PywikibotTestCase):
         self.assertType(ns, dict)
         self.assertTrue(all(x in ns for x in range(0, 16)))
             # built-in namespaces always present
-        self.assertType(mysite.ns_normalize("project"), basestring)
+        self.assertType(mysite.ns_normalize("project"), str)
         self.assertTrue(all(isinstance(key, int)
                             for key in ns))
         self.assertTrue(all(isinstance(val, list)
-                            for val in ns.itervalues()))
-        self.assertTrue(all(isinstance(name, basestring)
-                            for val in ns.itervalues()
+                            for val in ns.values()))
+        self.assertTrue(all(isinstance(name, str)
+                            for val in ns.values()
                             for name in val))
-        self.assertTrue(all(isinstance(mysite.namespace(key), basestring)
+        self.assertTrue(all(isinstance(mysite.namespace(key), str)
                             for key in ns))
         self.assertTrue(all(isinstance(mysite.namespace(key, True), list)
                             for key in ns))
-        self.assertTrue(all(isinstance(item, basestring)
+        self.assertTrue(all(isinstance(item, str)
                             for key in ns
                             for item in mysite.namespace(key, True)))
 
@@ -149,16 +149,16 @@ class TestSiteObject(PywikibotTestCase):
         for msg in ("1movedto2", "about", "aboutpage", "aboutsite",
                     "accesskey-n-portal"):
             self.assertTrue(mysite.has_mediawiki_message(msg))
-            self.assertType(mysite.mediawiki_message(msg), basestring)
+            self.assertType(mysite.mediawiki_message(msg), str)
         self.assertFalse(mysite.has_mediawiki_message("nosuchmessage"))
         self.assertRaises(KeyError, mysite.mediawiki_message, "nosuchmessage")
-        self.assertType(mysite.getcurrenttimestamp(), basestring)
+        self.assertType(mysite.getcurrenttimestamp(), str)
         self.assertType(mysite.siteinfo, dict)
-        self.assertType(mysite.case(), basestring)
+        self.assertType(mysite.case(), str)
         ver = mysite.live_version()
         self.assertType(ver, tuple)
         self.assertTrue(all(isinstance(ver[i], int) for i in (0, 1)))
-        self.assertType(ver[2], basestring)
+        self.assertType(ver[2], str)
 
     def testPageMethods(self):
         """Test ApiSite methods for getting page-specific info"""
@@ -181,7 +181,7 @@ class TestSiteObject(PywikibotTestCase):
         """Test ability to get page tokens"""
 
         for ttype in ("edit", "move"):  # token types for non-sysops
-            self.assertType(mysite.token(mainpage, ttype), basestring)
+            self.assertType(mysite.token(mainpage, ttype), str)
         self.assertRaises(KeyError, mysite.token, mainpage, "invalidtype")
 
     def testPreload(self):
@@ -278,7 +278,7 @@ class TestSiteObject(PywikibotTestCase):
         for ll in mysite.pagelanglinks(mainpage):
             self.assertType(ll, pywikibot.Link)
         # test page_extlinks
-        self.assertTrue(all(isinstance(el, basestring)
+        self.assertTrue(all(isinstance(el, str)
                             for el in mysite.page_extlinks(mainpage)))
 
     def testLoadRevisions(self):
@@ -382,7 +382,7 @@ class TestSiteObject(PywikibotTestCase):
             self.assertTrue(page.title(withNamespace=False) >= "From")
             self.assertTrue(hasattr(page, "_fromid"))
         errgen = mysite.alllinks(unique=True, fromids=True)
-        self.assertRaises(pywikibot.Error, errgen.next)
+        self.assertRaises(pywikibot.Error, errgen.__next__)
 
     def testAllCategories(self):
         """Test the site.allcategories() method"""

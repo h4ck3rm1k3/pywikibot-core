@@ -76,7 +76,7 @@ class BasicBot:
         text = 'Test ' + text
 
         if not self.save(text, page, self.summary):
-            pywikibot.output(u'Page %s not saved.' % page.title(asLink=True))
+            pywikibot.output('Page %s not saved.' % page.title(asLink=True))
 
     def load(self, page):
         """
@@ -86,10 +86,10 @@ class BasicBot:
             # Load the page
             text = page.get()
         except pywikibot.NoPage:
-            pywikibot.output(u"Page %s does not exist; skipping."
+            pywikibot.output("Page %s does not exist; skipping."
                              % page.title(asLink=True))
         except pywikibot.IsRedirectPage:
-            pywikibot.output(u"Page %s is a redirect; skipping."
+            pywikibot.output("Page %s is a redirect; skipping."
                              % page.title(asLink=True))
         else:
             return text
@@ -101,14 +101,14 @@ class BasicBot:
         if text != page.get():
             # Show the title of the page we're working on.
             # Highlight the title in purple.
-            pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+            pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                              % page.title())
             # show what was changed
             pywikibot.showDiff(page.get(), text)
-            pywikibot.output(u'Comment: %s' % comment)
+            pywikibot.output('Comment: %s' % comment)
             if not self.dry:
                 choice = pywikibot.inputChoice(
-                    u'Do you want to accept these changes?',
+                    'Do you want to accept these changes?',
                     ['Yes', 'No'], ['y', 'N'], 'N')
                 if choice == 'y':
                     try:
@@ -117,15 +117,15 @@ class BasicBot:
                         page.save(comment=comment or self.comment,
                                   minor=minorEdit, botflag=botflag)
                     except pywikibot.LockedPage:
-                        pywikibot.output(u"Page %s is locked; skipping."
+                        pywikibot.output("Page %s is locked; skipping."
                                          % page.title(asLink=True))
                     except pywikibot.EditConflict:
                         pywikibot.output(
-                            u'Skipping %s because of edit conflict'
+                            'Skipping %s because of edit conflict'
                             % (page.title()))
                     except pywikibot.SpamfilterError as error:
                         pywikibot.output(
-                            u'Cannot change %s because of spam blacklist entry %s'
+                            'Cannot change %s because of spam blacklist entry %s'
                             % (page.title(), error.url))
                     else:
                         return True

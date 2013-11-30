@@ -87,6 +87,6 @@ class Family(family.WikimediaFamily):
             'zh': [102],
         }
 
-        for key, values in self.authornamespaces.items():
+        for key, values in list(self.authornamespaces.items()):
             for item in values:
                 self.crossnamespace[item].update({key: self.authornamespaces})

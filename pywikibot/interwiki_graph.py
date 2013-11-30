@@ -42,9 +42,9 @@ class GraphSavingThread(threading.Thread):
             filename = 'interwiki-graphs/' + getFilename(self.originPage,
                                                          format)
             if self.graph.write(filename, prog='dot', format=format):
-                pywikibot.output(u'Graph saved as %s' % filename)
+                pywikibot.output('Graph saved as %s' % filename)
             else:
-                pywikibot.output(u'Graph could not be saved as %s' % filename)
+                pywikibot.output('Graph could not be saved as %s' % filename)
 
 
 class GraphDrawer:
@@ -55,7 +55,7 @@ class GraphDrawer:
         self.subject = subject
 
     def getLabel(self, page):
-        return (u'"\"%s:%s\""' % (page.site.language(),
+        return ('"\"%s:%s\""' % (page.site.language(),
                                   page.title())).encode('utf-8')
 
     def addNode(self, page):
@@ -76,9 +76,8 @@ class GraphDrawer:
             node.set_color('green')
             node.set_style('filled,bold')
         # if we found more than one valid page for this language:
-        if len(filter(lambda p: p.site == page.site and p.exists()
-                                and not p.isRedirectPage(),          # noqa
-                      list(self.subject.foundIn.keys()))) > 1:
+        if len([p for p in list(self.subject.foundIn.keys()) if p.site == page.site and p.exists()
+                                and not p.isRedirectPage()]) > 1:
             # mark conflict by octagonal node
             node.set_shape('octagon')
         self.graph.add_node(node)
@@ -101,7 +100,7 @@ class GraphDrawer:
             # (it is unclear why duplicate edges occur)
             elif self.graph.get_edge(sourceLabel, targetLabel):
                 pywikibot.output(
-                    u'BUG: Tried to create duplicate edge from %s to %s'
+                    'BUG: Tried to create duplicate edge from %s to %s'
                     % (refPage.title(asLink=True), page.title(asLink=True)))
                 # duplicate edges would be bad because then get_edge() would
                 # give a list of edges, not a single edge when we handle the
@@ -129,19 +128,19 @@ class GraphDrawer:
         """
         See http://meta.wikimedia.org/wiki/Interwiki_graphs
         """
-        pywikibot.output(u'Preparing graph for %s'
+        pywikibot.output('Preparing graph for %s'
                          % self.subject.originPage.title())
         # create empty graph
         self.graph = pydot.Dot()
         # self.graph.set('concentrate', 'true')
-        for page in self.subject.foundIn.keys():
+        for page in list(self.subject.foundIn.keys()):
             # a node for each found page
             self.addNode(page)
         # mark start node by pointing there from a black dot.
         firstLabel = self.getLabel(self.subject.originPage)
         self.graph.add_node(pydot.Node('start', shape='point'))
         self.graph.add_edge(pydot.Edge('start', firstLabel))
-        for page, referrers in self.subject.foundIn.items():
+        for page, referrers in list(self.subject.foundIn.items()):
             for refPage in referrers:
                 self.addDirectedEdge(page, refPage)
         self.saveGraphFile()

@@ -63,7 +63,7 @@ __version__ = '$Id$'
 
 import datetime
 #import time
-import thread
+import _thread
 import threading
 import sys
 import os
@@ -88,11 +88,11 @@ bot_config = {
     'BotName': pywikibot.config.usernames[pywikibot.config.family][pywikibot.config.mylang],
 
     # protected !!! ('CSS' or other semi-protected page is essential here)
-    'ConfCSSshell': u'User:DrTrigon/DrTrigonBot/script_wui-shell.css',    # u'User:DrTrigonBot/Simon sagt' ?
-    'ConfCSScrontab': u'User:DrTrigon/DrTrigonBot/script_wui-crontab.css',
+    'ConfCSSshell': 'User:DrTrigon/DrTrigonBot/script_wui-shell.css',    # u'User:DrTrigonBot/Simon sagt' ?
+    'ConfCSScrontab': 'User:DrTrigon/DrTrigonBot/script_wui-crontab.css',
 
     # (may be protected but not that important... 'CSS' is not needed here !!!)
-    'ConfCSSoutput': u'User:DrTrigonBot/Simulation',
+    'ConfCSSoutput': 'User:DrTrigonBot/Simulation',
 
     'CRONMaxDelay': 5 * 60.0,       # check all ~5 minutes
 #    'queue_security':       ([u'DrTrigon', u'DrTrigonBot'], u'Bot: exec'),
@@ -111,7 +111,7 @@ __sys_argv = []
 
 class ScriptWUIBot(pywikibot.botirc.IRCBot):
     def __init__(self, *arg):
-        pywikibot.output(u'\03{lightgreen}* Initialization of bot\03{default}')
+        pywikibot.output('\03{lightgreen}* Initialization of bot\03{default}')
 
         pywikibot.botirc.IRCBot.__init__(self, *arg)
 
@@ -123,7 +123,7 @@ class ScriptWUIBot(pywikibot.botirc.IRCBot):
 
         # init environment with minimal changes (try to do as less as possible)
         # - Lua -
-        pywikibot.output(u'** Redirecting Lua print in order to catch it')
+        pywikibot.output('** Redirecting Lua print in order to catch it')
         lua.execute('__print = print')
         #lua.execute('print = python.builtins().print')
         lua.execute('print = python.globals().pywikibot.output')
@@ -136,15 +136,15 @@ class ScriptWUIBot(pywikibot.botirc.IRCBot):
         self.cron = cron.title()
         self.refs = {self.templ: templ,
                      self.cron:  cron, }
-        pywikibot.output(u'** Pre-loading all relevant page contents')
+        pywikibot.output('** Pre-loading all relevant page contents')
         for item in self.refs:
             # security; first check if page is protected, reject any data if not
             if os.path.splitext(self.refs[item].title().lower())[1] not in ['.css', '.js']:
-                raise pywikibot.UserActionRefuse(u'Page %s is not secure, e.g. semi-protected!' % self.refs[item])
+                raise pywikibot.UserActionRefuse('Page %s is not secure, e.g. semi-protected!' % self.refs[item])
             self.refs[item].get(force=True)   # load all page contents
 
         # init background timer
-        pywikibot.output(u'** Starting crontab background timer thread')
+        pywikibot.output('** Starting crontab background timer thread')
         self.on_timer()
 
     def on_pubmsg(self, c, e):
@@ -158,10 +158,10 @@ class ScriptWUIBot(pywikibot.botirc.IRCBot):
         # test actual page against (template incl.) list
         page = match.group('page').decode(self.site.encoding())
         if page in self.refs:
-            pywikibot.output(u"RELOAD: %s" % page)
+            pywikibot.output("RELOAD: %s" % page)
             self.refs[page].get(force=True)   # re-load (refresh) page content
         if page == self.templ:
-            pywikibot.output(u"SHELL: %s" % page)
+            pywikibot.output("SHELL: %s" % page)
             self.do_check(page)
 
     def on_timer(self):
@@ -186,19 +186,19 @@ class ScriptWUIBot(pywikibot.botirc.IRCBot):
             #pywikibot.output(u'CRON delay for execution: %.3f (<= %i)' % (delay, bot_config['CRONMaxDelay']))
 
             if (delay <= bot_config['CRONMaxDelay']):
-                pywikibot.output(u"CRONTAB: %s / %s / %s" % (page, rev, timestmp))
+                pywikibot.output("CRONTAB: %s / %s / %s" % (page, rev, timestmp))
                 self.do_check(page.title(), int(rev))
 
     def do_check(self, page_title, rev=None, params=None):
         # Create two threads as follows
         # (simple 'thread' for more sophisticated code use 'threading')
         try:
-            thread.start_new_thread(main_script, (self.refs[page_title], rev, params))
+            _thread.start_new_thread(main_script, (self.refs[page_title], rev, params))
         except:
             # (done according to subster in trunk and submit in rewrite/.../data/api.py)
             # TODO: is this error handling here needed at all??!?
             pywikibot.exception(tb=True)  # secure traceback print (from api.py submit)
-            pywikibot.warning(u"Unable to start thread")
+            pywikibot.warning("Unable to start thread")
 
             wiki_logger(traceback.format_exc(), self.refs[page_title], rev)
 
@@ -207,13 +207,13 @@ class ScriptWUIBot(pywikibot.botirc.IRCBot):
 def main_script(page, rev=None, params=None):
     # http://opensourcehacker.com/2011/02/23/temporarily-capturing-python-logging-output-to-a-string-buffer/
     # http://docs.python.org/release/2.6/library/logging.html
-    from StringIO import StringIO
+    from io import StringIO
     import logging
 
     # safety; default mode is safe (no writing)
     pywikibot.config.simulate = True
 
-    pywikibot.output(u'--- ' * 20)
+    pywikibot.output('--- ' * 20)
 
     buffer = StringIO()
     rootLogger = logging.getLogger()
@@ -246,13 +246,13 @@ def main_script(page, rev=None, params=None):
     logHandler.flush()
     buffer.flush()
 
-    pywikibot.output(u'--- ' * 20)
+    pywikibot.output('--- ' * 20)
 
     # safety; restore settings
     pywikibot.config.simulate = __simulate
     sys.argv = __sys_argv
 
-    pywikibot.output(u'environment: garbage; %s / memory; %s / members; %s' % (gc.collect(), resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * resource.getpagesize(), len(dir())))
+    pywikibot.output('environment: garbage; %s / memory; %s / members; %s' % (gc.collect(), resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * resource.getpagesize(), len(dir())))
     # 'len(dir())' is equivalent to 'len(inspect.getmembers(__main__))'
 
     # append result to output page
@@ -270,7 +270,7 @@ def wiki_logger(buffer, page, rev=None):
     # append to page
     outpage = pywikibot.Page(pywikibot.getSite(), bot_config['ConfCSSoutput'])
     text = outpage.get()
-    outpage.put(text + u"\n== Simulation vom %s mit [%s code:%s] ==\n<pre>\n%s</pre>\n\n" % (pywikibot.Timestamp.now().isoformat(' '), link, rev, buffer))
+    outpage.put(text + "\n== Simulation vom %s mit [%s code:%s] ==\n<pre>\n%s</pre>\n\n" % (pywikibot.Timestamp.now().isoformat(' '), link, rev, buffer))
 #                comment = pywikibot.translate(self.site.lang, bot_config['msg']))
 
 

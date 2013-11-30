@@ -85,9 +85,9 @@ use_SSL_always = False   # if available, use SSL for all API queries
 
 # Available security projects
 available_ssl_project = [
-    u'wikipedia', u'wikinews', u'wikisource', u'wiktionary', u'wikibooks',
-    u'wikiquote', u'wikiversity', u'meta', u'mediawiki', u'commons',
-    u'species', u'incubator'
+    'wikipedia', 'wikinews', 'wikisource', 'wiktionary', 'wikibooks',
+    'wikiquote', 'wikiversity', 'meta', 'mediawiki', 'commons',
+    'species', 'incubator'
 ]
 
 # password_file = ".passwd"
@@ -99,7 +99,7 @@ password_file = None
 # edit summary to use if not supplied by bot script
 # WARNING: this should NEVER be used in practice, ALWAYS supply a more
 #          relevant summary for bot edits
-default_edit_summary = u'Wikipedia python library v.2'
+default_edit_summary = 'Wikipedia python library v.2'
 
 
 # Get the names of all known families, and initialize
@@ -251,13 +251,13 @@ except:
 # On Windows systems, this script tries to determine the default text editor.
 if __sys.platform == 'win32':
     try:
-        import _winreg
-        _key1 = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,
+        import winreg
+        _key1 = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
                                 'Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.txt\OpenWithProgids')
-        _progID = _winreg.EnumValue(_key1, 1)[0]
-        _key2 = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT,
+        _progID = winreg.EnumValue(_key1, 1)[0]
+        _key2 = winreg.OpenKey(winreg.HKEY_CLASSES_ROOT,
                                 '%s\shell\open\command' % _progID)
-        _cmd = _winreg.QueryValueEx(_key2, None)[0]
+        _cmd = winreg.QueryValueEx(_key2, None)[0]
         editor = _cmd.replace('%1', '')
         # Notepad is even worse than our Tkinter editor.
         if editor.lower().endswith('notepad.exe'):
@@ -607,7 +607,7 @@ max_queue_size = 64
 # pages fetched from screen (mostly) have "\r\n". Interwiki and category
 # separator settings in family files should use multiplied of this.
 # LS is a shortcut alias.
-line_separator = LS = u'\n'
+line_separator = LS = '\n'
 
 # Settings to enable mwparserfromhell
 # <http://mwparserfromhell.readthedocs.org/en/latest/>
@@ -680,11 +680,11 @@ for _filename in _fns:
             if __sys.platform == 'win32' or _filemode & 0o02 == 0 or True:
                 exec(compile(open(_filename).read(), _filename, 'exec'))
             else:
-                print("WARNING: Skipped '%(fn)s': writeable by others." \
-                      % {'fn': _filename})
+                print(("WARNING: Skipped '%(fn)s': writeable by others." \
+                      % {'fn': _filename}))
         else:
-            print("WARNING: Skipped '%(fn)s': owned by someone else." \
-                  % {'fn': _filename})
+            print(("WARNING: Skipped '%(fn)s': owned by someone else." \
+                  % {'fn': _filename}))
 
 # Test for obsoleted and/or unknown variables.
 for _key, _val in list(globals().items()):
@@ -702,9 +702,9 @@ for _key, _val in list(globals().items()):
         elif ot is int and (nt is float or nt is bool):
             pass
         else:
-            print("WARNING: Type of '%(_key)s' changed" % locals())
-            print("         %(was)s: %(old)s" % {'was': "Was", 'old': ot})
-            print("         %(now)s: %(new)s" % {'now': "Now", 'new': nt})
+            print(("WARNING: Type of '%(_key)s' changed" % locals()))
+            print(("         %(was)s: %(old)s" % {'was': "Was", 'old': ot}))
+            print(("         %(now)s: %(new)s" % {'now': "Now", 'new': nt}))
         del nt, ot
     else:
         print(("WARNING: "
@@ -745,7 +745,7 @@ if __name__ == "__main__":
         if _arg == "modified":
             _all = 0
         else:
-            print("Unknown arg %(_arg)s ignored" % locals())
+            print(("Unknown arg %(_arg)s ignored" % locals()))
     _k = list(globals().keys())
     _k.sort()
     for _name in _k:
@@ -753,7 +753,7 @@ if __name__ == "__main__":
             if not type(globals()[_name]) in [types.FunctionType,
                                               types.ModuleType]:
                 if _all or _glv[_name] != globals()[_name]:
-                    print(_name, "=", repr(globals()[_name]))
+                    print((_name, "=", repr(globals()[_name])))
 
 # cleanup all locally-defined variables
 for __var in list(globals().keys()):

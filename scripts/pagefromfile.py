@@ -68,82 +68,82 @@ class PageFromFileRobot:
     """
 
     msg = {
-        'ar': u'استيراد تلقائي للمقالات',
-        'de': u'Automatischer Import von Artikeln',
-        'en': u'Automated import of articles',
-        'fa': u'درون‌ریزی خودکار مقاله‌ها',
-        'fr': u'Import automatique',
-        'he': u'ייבוא ערכים אוטומטי',
-        'ia': u'Importation automatic de articulos',
-        'id': u'Impor artikel automatis',
-        'it': u'Caricamento automatico',
-        'ja': u'記事の自動取り込み',
-        'ksh': u'Bot: automatesch huhjelaade',
-        'mzn': u'ربوت:صفحه شه خاد به خاد دله دکته',
-        'nl': u'Geautomatiseerde import',
-        'no': u'bot: Automatisk import',
-        'pl': u'Automatyczny import artykułów',
-        'pt': u'Importação automática de artigos',
-        'uk': u'Автоматичний імпорт статей',
-        'zh': u'機器人: 自動匯入頁面',
+        'ar': 'استيراد تلقائي للمقالات',
+        'de': 'Automatischer Import von Artikeln',
+        'en': 'Automated import of articles',
+        'fa': 'درون‌ریزی خودکار مقاله‌ها',
+        'fr': 'Import automatique',
+        'he': 'ייבוא ערכים אוטומטי',
+        'ia': 'Importation automatic de articulos',
+        'id': 'Impor artikel automatis',
+        'it': 'Caricamento automatico',
+        'ja': '記事の自動取り込み',
+        'ksh': 'Bot: automatesch huhjelaade',
+        'mzn': 'ربوت:صفحه شه خاد به خاد دله دکته',
+        'nl': 'Geautomatiseerde import',
+        'no': 'bot: Automatisk import',
+        'pl': 'Automatyczny import artykułów',
+        'pt': 'Importação automática de artigos',
+        'uk': 'Автоматичний імпорт статей',
+        'zh': '機器人: 自動匯入頁面',
     }
 
     # The following messages are added to topic when the page already exists
     msg_top = {
-        'ar': u'كتابة على الأعلى',
-        'de': u'ergänze am Anfang',
-        'en': u'append on top',
-        'fa': u'به بالا اضافه شد',
-        'he': u'הוספה בראש הדף',
-        'fr': u'rajouté en haut',
-        'id': u'ditambahkan di atas',
-        'it': u'aggiungo in cima',
-        'ja': u'冒頭への追加',
-        'ksh': u'un dofüürjesaz',
-        'nl': u'bovenaan toegevoegd',
-        'no': u'legger til øverst',
-        'pl': u'dodaj na górze',
-        'pt': u'adicionado no topo',
-        'uk': u'додано зверху',
-        'zh': u'機器人: 增加至最上層',
+        'ar': 'كتابة على الأعلى',
+        'de': 'ergänze am Anfang',
+        'en': 'append on top',
+        'fa': 'به بالا اضافه شد',
+        'he': 'הוספה בראש הדף',
+        'fr': 'rajouté en haut',
+        'id': 'ditambahkan di atas',
+        'it': 'aggiungo in cima',
+        'ja': '冒頭への追加',
+        'ksh': 'un dofüürjesaz',
+        'nl': 'bovenaan toegevoegd',
+        'no': 'legger til øverst',
+        'pl': 'dodaj na górze',
+        'pt': 'adicionado no topo',
+        'uk': 'додано зверху',
+        'zh': '機器人: 增加至最上層',
     }
 
     msg_bottom = {
-        'ar': u'كتابة على الأسفل',
-        'de': u'ergänze am Ende',
-        'en': u'append on bottom',
-        'fa': u'به پایین اضافه شد',
-        'he': u'הוספה בתחתית הדף',
-        'fr': u'rajouté en bas',
-        'id': u'ditambahkan di bawah',
-        'it': u'aggiungo in fondo',
-        'ja': u'末尾への追加',
-        'ksh': u'un aanjehange',
-        'nl': u'onderaan toegevoegd',
-        'no': u'legger til nederst',
-        'pl': u'dodaj na dole',
-        'pt': u'adicionando no fim',
-        'uk': u'додано знизу',
-        'zh': u'機器人: 增加至最底層',
+        'ar': 'كتابة على الأسفل',
+        'de': 'ergänze am Ende',
+        'en': 'append on bottom',
+        'fa': 'به پایین اضافه شد',
+        'he': 'הוספה בתחתית הדף',
+        'fr': 'rajouté en bas',
+        'id': 'ditambahkan di bawah',
+        'it': 'aggiungo in fondo',
+        'ja': '末尾への追加',
+        'ksh': 'un aanjehange',
+        'nl': 'onderaan toegevoegd',
+        'no': 'legger til nederst',
+        'pl': 'dodaj na dole',
+        'pt': 'adicionando no fim',
+        'uk': 'додано знизу',
+        'zh': '機器人: 增加至最底層',
     }
 
     msg_force = {
-        'ar': u'تمت الكتابة على النص الموجود',
-        'de': u'bestehender Text überschrieben',
-        'en': u'existing text overwritten',
-        'fa': u'متن جایگزین شد',
-        'he': u'הטקסט הישן נמחק',
-        'fr': u'texte existant écrasé',
-        'id': u'menimpa teks yang ada',
-        'it': u'sovrascritto il testo esistente',
-        'ja': u'存在するテキストの上書き',
-        'ksh': u'un komplët ußjetuusch',
-        'nl': u'bestaande tekst overschreven',
-        'no': u'erstatter eksisterende tekst',
-        'pl': u'aktualny tekst nadpisany',
-        'pt': u'sobrescrever texto',
-        'uk': u'існуючий текст перезаписано',
-        'zh': u'機器人: 覆寫已存在的文字',
+        'ar': 'تمت الكتابة على النص الموجود',
+        'de': 'bestehender Text überschrieben',
+        'en': 'existing text overwritten',
+        'fa': 'متن جایگزین شد',
+        'he': 'הטקסט הישן נמחק',
+        'fr': 'texte existant écrasé',
+        'id': 'menimpa teks yang ada',
+        'it': 'sovrascritto il testo esistente',
+        'ja': '存在するテキストの上書き',
+        'ksh': 'un komplët ußjetuusch',
+        'nl': 'bestaande tekst overschreven',
+        'no': 'erstatter eksisterende tekst',
+        'pl': 'aktualny tekst nadpisany',
+        'pt': 'sobrescrever texto',
+        'uk': 'існуючий текст перезаписано',
+        'zh': '機器人: 覆寫已存在的文字',
     }
 
     def __init__(self, reader, force, append, summary, minor, autosummary,
@@ -167,7 +167,7 @@ class PageFromFileRobot:
         page = pywikibot.Page(mysite, title)
         # Show the title of the page we're working on.
         # Highlight the title in purple.
-        pywikibot.output(u">>> \03{lightpurple}%s\03{default} <<<"
+        pywikibot.output(">>> \03{lightpurple}%s\03{default} <<<"
                          % page.title())
 
         if self.summary:
@@ -189,29 +189,29 @@ class PageFromFileRobot:
             if self.append == "Top":
                 if appendtops.find(self.nocontents) == -1 and appendtops.find(self.nocontents.lower()) == -1:
                     contents = contents + appendtops
-                    pywikibot.output(u"Page %s already exists, appending on top!"
+                    pywikibot.output("Page %s already exists, appending on top!"
                                      % title)
                 else:
-                    pywikibot.output(u'Page had %s so it is skipped' % (self.nocontents))
+                    pywikibot.output('Page had %s so it is skipped' % (self.nocontents))
                     return
                 contents = contents + page.get()
                 comment = comment_top
             elif self.append == "Bottom":
                 if appendtops.find(self.nocontents) == -1 and appendtops.find(self.nocontents.lower()) == -1:
                     contents = contents + appendtops
-                    pywikibot.output(u"Page %s already exists, appending on bottom!"
+                    pywikibot.output("Page %s already exists, appending on bottom!"
                                      % title)
                 else:
-                    pywikibot.output(u'Page had %s so it is skipped' % (self.nocontents))
+                    pywikibot.output('Page had %s so it is skipped' % (self.nocontents))
                     return
                 contents = page.get() + contents
                 comment = comment_bottom
             elif self.force:
-                pywikibot.output(u"Page %s already exists, ***overwriting!"
+                pywikibot.output("Page %s already exists, ***overwriting!"
                                  % title)
                 comment = comment_force
             else:
-                pywikibot.output(u"Page %s already exists, not adding!" % title)
+                pywikibot.output("Page %s already exists, not adding!" % title)
                 return
         else:
             if self.autosummary:
@@ -228,12 +228,12 @@ class PageFromFileRobot:
         try:
             page.put(contents, comment=comment, minorEdit=self.minor)
         except pywikibot.LockedPage:
-            pywikibot.output(u"Page %s is locked; skipping." % title)
+            pywikibot.output("Page %s is locked; skipping." % title)
         except pywikibot.EditConflict:
-            pywikibot.output(u'Skipping %s because of edit conflict' % title)
+            pywikibot.output('Skipping %s because of edit conflict' % title)
         except pywikibot.SpamfilterError as error:
             pywikibot.output(
-                u'Cannot change %s because of spam blacklist entry %s'
+                'Cannot change %s because of spam blacklist entry %s'
                 % (title, error.url))
 
 
@@ -270,12 +270,12 @@ class PageFromFileReader:
                 length, title, contents = self.findpage(text[position:])
             except AttributeError:
                 if not length:
-                    pywikibot.output(u'\nStart or end marker not found.')
+                    pywikibot.output('\nStart or end marker not found.')
                 else:
-                    pywikibot.output(u'End of file.')
+                    pywikibot.output('End of file.')
                 break
             except NoTitle as err:
-                pywikibot.output(u'\nNo title found - skipping a page.')
+                pywikibot.output('\nNo title found - skipping a page.')
                 position += err.offset
                 continue
 
@@ -311,9 +311,9 @@ def main():
     filename = "dict.txt"
     pageStartMarker = "{{-start-}}"
     pageEndMarker = "{{-stop-}}"
-    titleStartMarker = u"'''"
-    titleEndMarker = u"'''"
-    nocontents = u""
+    titleStartMarker = "'''"
+    titleEndMarker = "'''"
+    nocontents = ""
     include = False
     force = False
     append = None
@@ -355,7 +355,7 @@ def main():
         elif arg == '-autosummary':
             autosummary = True
         else:
-            pywikibot.output(u"Disregarding unknown argument %s." % arg)
+            pywikibot.output("Disregarding unknown argument %s." % arg)
 
     reader = PageFromFileReader(filename, pageStartMarker, pageEndMarker,
                                 titleStartMarker, titleEndMarker, include,

@@ -153,7 +153,7 @@ class Coordinate(object):
         FIXME Should this be in the DataSite object?
         """
         if not self.globe in self.site.globes():
-            raise NotImplementedError(u"%s is not supported in Wikibase yet." % self.globe)
+            raise NotImplementedError("%s is not supported in Wikibase yet." % self.globe)
         return {'latitude': self.lat,
                 'longitude': self.lon,
                 'altitude': self.alt,
@@ -231,7 +231,7 @@ class WbTime(object):
         if month is None:
             self.precision = WbTime.PRECISION['year']
             month = 1
-        self.year = long(year)
+        self.year = int(year)
         self.month = month
         self.day = day
         self.hour = hour
@@ -255,9 +255,9 @@ class WbTime(object):
     def fromTimestr(datetimestr, precision=14, before=0, after=0, timezone=0, calendarmodel='http://www.wikidata.org/entity/Q1985727'):
         match = re.match('([-+]?\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)Z', datetimestr)
         if not match:
-            raise ValueError(u"Invalid format: '%s'" % datetimestr)
+            raise ValueError("Invalid format: '%s'" % datetimestr)
         t = match.groups()
-        return WbTime(long(t[0]), int(t[1]), int(t[2]), int(t[3]), int(t[4]), int(t[5]), precision, before, after, timezone, calendarmodel)
+        return WbTime(int(t[0]), int(t[1]), int(t[2]), int(t[3]), int(t[4]), int(t[5]), precision, before, after, timezone, calendarmodel)
 
     def toWikibase(self):
         """
@@ -276,7 +276,7 @@ class WbTime(object):
 
     @staticmethod
     def fromWikibase(ts):
-        return WbTime.fromTimestr(ts[u'time'], ts[u'precision'], ts[u'before'], ts[u'after'], ts[u'timezone'], ts[u'calendarmodel'])
+        return WbTime.fromTimestr(ts['time'], ts['precision'], ts['before'], ts['after'], ts['timezone'], ts['calendarmodel'])
 
     def __str__(self):
         return str(self.toWikibase())
@@ -285,10 +285,10 @@ class WbTime(object):
         return self.__dict__ == other.__dict__
 
     def __repr__(self):
-        return u"WbTime(year=%(year)d, month=%(month)d, day=%(day)d, " \
-            u"hour=%(hour)d, minute=%(minute)d, second=%(second)d, " \
-            u"precision=%(precision)d, before=%(before)d, after=%(after)d, " \
-            u"timezone=%(timezone)d, calendarmodel='%(calendarmodel)s')" % self.__dict__
+        return "WbTime(year=%(year)d, month=%(month)d, day=%(day)d, " \
+            "hour=%(hour)d, minute=%(minute)d, second=%(second)d, " \
+            "precision=%(precision)d, before=%(before)d, after=%(after)d, " \
+            "timezone=%(timezone)d, calendarmodel='%(calendarmodel)s')" % self.__dict__
 
 
 def deprecated(instead=None):
@@ -299,15 +299,15 @@ def deprecated(instead=None):
     """
     def decorator(method):
         def wrapper(*args, **kwargs):
-            funcname = method.func_name
+            funcname = method.__name__
             classname = args[0].__class__.__name__
             if instead:
-                warning(u"%s.%s is DEPRECATED, use %s instead."
+                warning("%s.%s is DEPRECATED, use %s instead."
                         % (classname, funcname, instead))
             else:
-                warning(u"%s.%s is DEPRECATED." % (classname, funcname))
+                warning("%s.%s is DEPRECATED." % (classname, funcname))
             return method(*args, **kwargs)
-        wrapper.func_name = method.func_name
+        wrapper.__name__ = method.__name__
         return wrapper
     return decorator
 
@@ -323,16 +323,16 @@ def deprecate_arg(old_arg, new_arg):
                 if new_arg:
                     if new_arg in __kw:
                         pywikibot.warning(
-u"%(new_arg)s argument of %(meth_name)s replaces %(old_arg)s; cannot use both."
+"%(new_arg)s argument of %(meth_name)s replaces %(old_arg)s; cannot use both."
                             % locals())
                     else:
                         pywikibot.warning(
-u"%(old_arg)s argument of %(meth_name)s is deprecated; use %(new_arg)s instead."
+"%(old_arg)s argument of %(meth_name)s is deprecated; use %(new_arg)s instead."
                             % locals())
                         __kw[new_arg] = __kw[old_arg]
                 else:
                     pywikibot.debug(
-u"%(old_arg)s argument of %(meth_name)s is deprecated."
+"%(old_arg)s argument of %(meth_name)s is deprecated."
                         % locals(), _logger)
                 del __kw[old_arg]
             return method(*__args, **__kw)
@@ -389,7 +389,7 @@ def Site(code=None, fam=None, user=None, sysop=None, interface=None):
     key = '%s:%s:%s' % (fam, code, user)
     if not key in _sites or not isinstance(_sites[key], __Site):
         _sites[key] = __Site(code=code, fam=fam, user=user, sysop=sysop)
-        pywikibot.debug(u"Instantiating Site object '%(site)s'"
+        pywikibot.debug("Instantiating Site object '%(site)s'"
                         % {'site': _sites[key]}, _logger)
     return _sites[key]
 
@@ -422,7 +422,7 @@ def showDiff(oldtext, newtext):
         '+': 'lightgreen',
         '-': 'lightred',
     }
-    diff = u''
+    diff = ''
     colors = []
     # This will store the last line beginning with + or -.
     lastline = None
@@ -459,7 +459,7 @@ def showDiff(oldtext, newtext):
         lastcolors[0] = color[lastline[0]]
         colors += lastcolors + [None]
 
-    result = u''
+    result = ''
     lastcolor = None
     for i in range(len(diff)):
         if colors[i] != lastcolor:
@@ -488,7 +488,7 @@ def stopme():
     _logger = "wiki"
 
     if not stopped:
-        debug(u"stopme() called", _logger)
+        debug("stopme() called", _logger)
 
         def remaining():
             import datetime
@@ -502,14 +502,14 @@ def stopme():
         stopped = True
 
         if page_put_queue.qsize() > 1:
-            output(u'Waiting for %i pages to be put. Estimated time remaining: %s'
+            output('Waiting for %i pages to be put. Estimated time remaining: %s'
                    % remaining())
 
         while(_putthread.isAlive()):
             try:
                 _putthread.join(1)
             except KeyboardInterrupt:
-                answer = inputChoice(u"""\
+                answer = inputChoice("""\
 There are %i pages remaining in the queue. Estimated time remaining: %s
 Really exit?""" % remaining(),
                     ['yes', 'no'], ['y', 'N'], 'N')
@@ -518,8 +518,8 @@ Really exit?""" % remaining(),
 
     # only need one drop() call because all throttles use the same global pid
     try:
-        _sites.values()[0].throttle.drop()
-        pywikibot.log(u"Dropped throttle(s).")
+        list(_sites.values())[0].throttle.drop()
+        pywikibot.log("Dropped throttle(s).")
     except IndexError:
         pass
 

@@ -86,32 +86,32 @@ docuReplacements = {
 
 
 starsList = [
-    u'bueno',
-    u'bom interwiki',
-    u'cyswllt[ _]erthygl[ _]ddethol', u'dolen[ _]ed',
-    u'destacado', u'destaca[tu]',
-    u'enllaç[ _]ad',
-    u'enllaz[ _]ad',
-    u'leam[ _]vdc',
-    u'legătură[ _]a[bcf]',
-    u'liamm[ _]pub',
-    u'lien[ _]adq',
-    u'lien[ _]ba',
-    u'liên[ _]kết[ _]bài[ _]chất[ _]lượng[ _]tốt',
-    u'liên[ _]kết[ _]chọn[ _]lọc',
-    u'ligam[ _]adq',
-    u'ligoelstara',
-    u'ligoleginda',
-    u'link[ _][afgu]a', u'link[ _]adq', u'link[ _]f[lm]', u'link[ _]km',
-    u'link[ _]sm', u'linkfa',
-    u'na[ _]lotura',
-    u'nasc[ _]ar',
-    u'tengill[ _][úg]g',
-    u'ua',
-    u'yüm yg',
-    u'רא',
-    u'وصلة مقالة جيدة',
-    u'وصلة مقالة مختارة',
+    'bueno',
+    'bom interwiki',
+    'cyswllt[ _]erthygl[ _]ddethol', 'dolen[ _]ed',
+    'destacado', 'destaca[tu]',
+    'enllaç[ _]ad',
+    'enllaz[ _]ad',
+    'leam[ _]vdc',
+    'legătură[ _]a[bcf]',
+    'liamm[ _]pub',
+    'lien[ _]adq',
+    'lien[ _]ba',
+    'liên[ _]kết[ _]bài[ _]chất[ _]lượng[ _]tốt',
+    'liên[ _]kết[ _]chọn[ _]lọc',
+    'ligam[ _]adq',
+    'ligoelstara',
+    'ligoleginda',
+    'link[ _][afgu]a', 'link[ _]adq', 'link[ _]f[lm]', 'link[ _]km',
+    'link[ _]sm', 'linkfa',
+    'na[ _]lotura',
+    'nasc[ _]ar',
+    'tengill[ _][úg]g',
+    'ua',
+    'yüm yg',
+    'רא',
+    'وصلة مقالة جيدة',
+    'وصلة مقالة مختارة',
 ]
 
 
@@ -137,20 +137,20 @@ def add_text(page=None, addText=None, summary=None, regexSkip=None,
     pathWiki = site.family.nicepath(site.lang)
 
     if putText:
-        pywikibot.output(u'Loading %s...' % page.title())
+        pywikibot.output('Loading %s...' % page.title())
     if oldTextGiven is None:
         try:
             text = page.get()
         except pywikibot.NoPage:
             if create:
-                pywikibot.output(u"%s doesn't exist, creating it!"
+                pywikibot.output("%s doesn't exist, creating it!"
                                  % page.title())
-                text = u''
+                text = ''
             else:
-                pywikibot.output(u"%s doesn't exist, skip!" % page.title())
+                pywikibot.output("%s doesn't exist, skip!" % page.title())
                 return (False, False, always)
         except pywikibot.IsRedirectPage:
-            pywikibot.output(u"%s is a redirect, skip!" % page.title())
+            pywikibot.output("%s is a redirect, skip!" % page.title())
             return (False, False, always)
     else:
         text = oldTextGiven
@@ -161,14 +161,14 @@ def add_text(page=None, addText=None, summary=None, regexSkip=None,
         result = re.findall(regexSkipUrl, site.getUrl(url))
         if result != []:
             pywikibot.output(
-u'''Exception! regex (or word) used with -exceptUrl is in the page. Skip!
+'''Exception! regex (or word) used with -exceptUrl is in the page. Skip!
 Match was: %s''' % result)
             return (False, False, always)
     if regexSkip is not None:
         result = re.findall(regexSkip, text)
         if result != []:
             pywikibot.output(
-u'''Exception! regex (or word) used with -except is in the page. Skip!
+'''Exception! regex (or word) used with -except is in the page. Skip!
 Match was: %s''' % result)
             return (False, False, always)
     # If not up, text put below
@@ -187,7 +187,7 @@ Match was: %s''' % result)
             newtext = pywikibot.removeLanguageLinks(newtext, site)
 
             # Adding the text
-            newtext += u"%s%s" % (config.line_separator, addText)
+            newtext += "%s%s" % (config.line_separator, addText)
             # Reputting the categories
             newtext = pywikibot.replaceCategoryLinks(newtext,
                                                      categoriesInside, site,
@@ -211,11 +211,11 @@ Match was: %s''' % result)
             newtext = pywikibot.replaceLanguageLinks(newtext, interwikiInside,
                                                      site)
         else:
-            newtext += u"%s%s" % (config.line_separator, addText)
+            newtext += "%s%s" % (config.line_separator, addText)
     else:
         newtext = addText + config.line_separator + text
     if putText and text != newtext:
-        pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+        pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                          % page.title())
         pywikibot.showDiff(text, newtext)
     # Let's put the changes.
@@ -225,7 +225,7 @@ Match was: %s''' % result)
         if putText:
             if not always:
                 choice = pywikibot.inputChoice(
-                    u'Do you want to accept these changes?',
+                    'Do you want to accept these changes?',
                     ['Yes', 'No', 'All', 'open in Browser'],
                     ['y', 'n', 'a', 'b'], 'n')
                 if choice == 'a':
@@ -247,26 +247,26 @@ Match was: %s''' % result)
                         page.put_async(newtext, summary,
                                        minorEdit=page.namespace() != 3)
                 except pywikibot.EditConflict:
-                    pywikibot.output(u'Edit conflict! skip!')
+                    pywikibot.output('Edit conflict! skip!')
                     return (False, False, always)
                 except pywikibot.ServerError:
                     errorCount += 1
                     if errorCount < config.max_retries:
-                        pywikibot.output(u'Server Error! Wait..')
+                        pywikibot.output('Server Error! Wait..')
                         time.sleep(config.retry_wait)
                         continue
                     else:
-                        raise pywikibot.ServerError(u'Fifth Server Error!')
+                        raise pywikibot.ServerError('Fifth Server Error!')
                 except pywikibot.SpamfilterError as e:
                     pywikibot.output(
-                        u'Cannot change %s because of blacklist entry %s'
+                        'Cannot change %s because of blacklist entry %s'
                         % (page.title(), e.url))
                     return (False, False, always)
                 except pywikibot.PageNotSaved as error:
-                    pywikibot.output(u'Error putting page: %s' % error.args)
+                    pywikibot.output('Error putting page: %s' % error.args)
                     return (False, False, always)
                 except pywikibot.LockedPage:
-                    pywikibot.output(u'Skipping %s (locked page)'
+                    pywikibot.output('Skipping %s (locked page)'
                                      % page.title())
                     return (False, False, always)
                 else:
@@ -298,34 +298,34 @@ def main():
         if arg.startswith('-textfile'):
             if len(arg) == 9:
                 textfile = pywikibot.input(
-                    u'Which textfile do you want to add?')
+                    'Which textfile do you want to add?')
             else:
                 textfile = arg[10:]
         elif arg.startswith('-text'):
             if len(arg) == 5:
-                addText = pywikibot.input(u'What text do you want to add?')
+                addText = pywikibot.input('What text do you want to add?')
             else:
                 addText = arg[6:]
         elif arg.startswith('-summary'):
             if len(arg) == 8:
-                summary = pywikibot.input(u'What summary do you want to use?')
+                summary = pywikibot.input('What summary do you want to use?')
             else:
                 summary = arg[9:]
         elif arg.startswith('-page'):
             if len(arg) == 5:
                 generator = [pywikibot.Page(
                     pywikibot.getSite(),
-                    pywikibot.input(u'What page do you want to use?'))]
+                    pywikibot.input('What page do you want to use?'))]
             else:
                 generator = [pywikibot.Page(pywikibot.getSite(), arg[6:])]
         elif arg.startswith('-excepturl'):
             if len(arg) == 10:
-                regexSkipUrl = pywikibot.input(u'What text should I skip?')
+                regexSkipUrl = pywikibot.input('What text should I skip?')
             else:
                 regexSkipUrl = arg[11:]
         elif arg.startswith('-except'):
             if len(arg) == 7:
-                regexSkip = pywikibot.input(u'What text should I skip?')
+                regexSkip = pywikibot.input('What text should I skip?')
             else:
                 regexSkip = arg[8:]
         elif arg == '-up':

@@ -44,7 +44,7 @@ class HarvestRobot:
 
         """
         self.generator = pg.PreloadingGenerator(generator)
-        self.templateTitle = templateTitle.replace(u'_', u' ')
+        self.templateTitle = templateTitle.replace('_', ' ')
         # TODO: Make it a list which also includes the redirects to the template
         self.fields = fields
         self.repo = pywikibot.Site().data_repository()
@@ -65,7 +65,7 @@ class HarvestRobot:
         Fetches the sources from the onwiki list
         and stores it internally
         """
-        page = pywikibot.Page(self.repo, u'Wikidata:List of wikis/python')
+        page = pywikibot.Page(self.repo, 'Wikidata:List of wikis/python')
         self.source_values = json.loads(page.get())
         self.source_values = self.source_values['wikipedia']
         for source_lang in self.source_values:
@@ -115,7 +115,7 @@ class HarvestRobot:
                                           ns=10).title(withNamespace=False)
                 # We found the template we were looking for
                 if template in self.templateTitles:
-                    for field, value in fielddict.items():
+                    for field, value in list(fielddict.items()):
                         field = field.strip()
                         value = value.strip()
                         # This field contains something useful for us
@@ -124,7 +124,7 @@ class HarvestRobot:
                             claim = pywikibot.Claim(self.repo, self.fields[field])
                             if claim.getID() in item.get().get('claims'):
                                 pywikibot.output(
-                                    u'A claim for %s already exists. Skipping'
+                                    'A claim for %s already exists. Skipping'
                                     % claim.getID())
                                 # TODO FIXME: This is a very crude way of dupe
                                 # checking
@@ -160,12 +160,12 @@ class HarvestRobot:
 def main():
     gen = pg.GeneratorFactory()
     commandline_arguments = list()
-    templateTitle = u''
+    templateTitle = ''
     for arg in pywikibot.handleArgs():
         if arg.startswith('-template'):
             if len(arg) == 9:
                 templateTitle = pywikibot.input(
-                    u'Please enter the template to work on:')
+                    'Please enter the template to work on:')
             else:
                 templateTitle = arg[10:]
         elif gen.handleArg(arg):

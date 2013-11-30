@@ -23,7 +23,7 @@ class LogDict(dict):
     debugging information when a key is missing
     """
     def __missing__(self, key):
-        pywikibot.debug(u"API log entry received:\n" + repr(self),
+        pywikibot.debug("API log entry received:\n" + repr(self),
                         _logger)
         raise KeyError("Log entry has no '%s' key" % key, key)
 
@@ -266,6 +266,6 @@ class LogEntryFactory(object):
             logtype = logdata['type']
             return LogEntryFactory._getEntryClass(logtype)(logdata)
         except KeyError:
-            pywikibot.debug(u"API log entry received:\n" + logdata,
+            pywikibot.debug("API log entry received:\n" + logdata,
                             _logger)
             raise Error("Log entry has no 'type' key")

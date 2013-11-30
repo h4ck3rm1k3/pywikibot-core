@@ -21,9 +21,9 @@ This module is responsible for
 __version__ = '$Id$'
 __docformat__ = 'epytext'
 
-import Queue
+import queue
 #import urllib
-import urlparse
+import urllib.parse
 #import logging
 import atexit
 
@@ -34,7 +34,7 @@ except ImportError:
 from pywikibot import config
 from pywikibot.exceptions import FatalServerError, Server504Error
 import pywikibot
-import cookielib
+import http.cookiejar
 from . import threadedhttp
 import pywikibot.version
 
@@ -58,15 +58,15 @@ numthreads = 1
 threads = []
 
 connection_pool = threadedhttp.ConnectionPool()
-http_queue = Queue.Queue()
+http_queue = queue.Queue()
 
 cookie_jar = threadedhttp.LockableCookieJar(config.datafilepath("pywikibot.lwp"))
 try:
     cookie_jar.load()
-except (IOError, cookielib.LoadError):
-    pywikibot.debug(u"Loading cookies failed.", _logger)
+except (IOError, http.cookiejar.LoadError):
+    pywikibot.debug("Loading cookies failed.", _logger)
 else:
-    pywikibot.debug(u"Loaded cookies from file.", _logger)
+    pywikibot.debug("Loaded cookies from file.", _logger)
 
 
 # Build up HttpProcessors
@@ -82,10 +82,10 @@ for i in range(numthreads):
 def _flush():
     for i in threads:
         http_queue.put(None)
-    pywikibot.log(u'Waiting for threads to finish... ')
+    pywikibot.log('Waiting for threads to finish... ')
     for i in threads:
         i.join()
-    pywikibot.log(u"All threads finished.")
+    pywikibot.log("All threads finished.")
 atexit.register(_flush)
 
 # export cookie_jar to global namespace
@@ -116,7 +116,7 @@ def request(site, uri, ssl=False, *args, **kwargs):
         else:
             proto = site.protocol()
             host = site.hostname()
-        baseuri = urlparse.urljoin("%(proto)s://%(host)s" % locals(), uri)
+        baseuri = urllib.parse.urljoin("%(proto)s://%(host)s" % locals(), uri)
     else:
         baseuri = uri
 
@@ -140,7 +140,7 @@ def request(site, uri, ssl=False, *args, **kwargs):
         raise Server504Error("Server %s timed out" % site.hostname())
 
     if request.data[0].status != 200:
-        pywikibot.warning(u"Http response status %(status)s"
+        pywikibot.warning("Http response status %(status)s"
                           % {'status': request.data[0].status})
 
     return request.data[1]

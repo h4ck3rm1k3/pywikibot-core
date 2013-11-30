@@ -246,14 +246,14 @@ def writelogheader():
     except AttributeError:
         return
 
-    log(u'=== Pywikibot framework v2.0 -- Logging header ===')
+    log('=== Pywikibot framework v2.0 -- Logging header ===')
 
     # script call
-    log(u'COMMAND: %s' % unicode(sys.argv))
+    log('COMMAND: %s' % str(sys.argv))
 
     # new framework release/revision? (handleArgs needs to be called first)
     try:
-        log(u'VERSION: %s' % unicode((version.getversion().strip(),
+        log('VERSION: %s' % str((version.getversion().strip(),
                                       version.getversion_onlinerepo(),
                                       site.live_version())))
     except version.ParseError:
@@ -261,19 +261,19 @@ def writelogheader():
 
     # system
     if hasattr(os, 'uname'):
-        log(u'SYSTEM: %s' % unicode(os.uname()))
+        log('SYSTEM: %s' % str(os.uname()))
 
     # imported modules
-    log(u'MODULES:')
+    log('MODULES:')
     for item in list(sys.modules.keys()):
         ver = version.getfileversion('%s.py' % item.replace('.', '/'))
         if ver:
-            log(u'  %s' % ver)
+            log('  %s' % ver)
 
     # messages on bot discussion page?
-    log(u'MESSAGES: %s' % ('unanswered' if site.messages() else 'none'))
+    log('MESSAGES: %s' % ('unanswered' if site.messages() else 'none'))
 
-    log(u'=== ' * 14)
+    log('=== ' * 14)
 
 
 # User output/logging functions
@@ -342,18 +342,18 @@ def logoutput(text, decoder=None, newline=True, _level=INFO, _logger="",
                'newline': ("\n" if newline else "")}
 
     if decoder:
-        text = unicode(text, decoder)
-    elif not isinstance(text, unicode):
+        text = str(text, decoder)
+    elif not isinstance(text, str):
         if not isinstance(text, str):
             # looks like text is a non-text object.
             # Maybe it has a __unicode__ builtin ?
             # (allows to print Page, Site...)
-            text = unicode(text)
+            text = str(text)
         else:
             try:
-                text = unicode(text, 'utf-8')
+                text = str(text, 'utf-8')
             except UnicodeDecodeError:
-                text = unicode(text, 'iso8859-1')
+                text = str(text, 'iso8859-1')
 
     logger.log(_level, text, extra=context, **kwargs)
 
@@ -441,8 +441,8 @@ def exception(msg=None, decoder=None, newline=True, tb=False, **kwargs):
         exc_info = 1
     else:
         exc_info = sys.exc_info()
-        msg = u'%s: %s' % (repr(exc_info[1]).split('(')[0],
-                           unicode(exc_info[1]).strip())
+        msg = '%s: %s' % (repr(exc_info[1]).split('(')[0],
+                           str(exc_info[1]).strip())
     if tb:
         kwargs['exc_info'] = exc_info
     logoutput(msg, decoder, newline, ERROR, **kwargs)
@@ -563,7 +563,7 @@ def handleArgs(*args):
                 config.log.remove(moduleName)
         elif arg in ('-cosmeticchanges', '-cc'):
             config.cosmetic_changes = not config.cosmetic_changes
-            output(u'NOTE: option cosmetic_changes is %s\n'
+            output('NOTE: option cosmetic_changes is %s\n'
                    % config.cosmetic_changes)
         elif arg == '-simulate':
             config.simulate = True
@@ -640,17 +640,17 @@ def handleArgs(*args):
         m = re.search(r"\$Id"
                       r": (\w+) \$", pywikibot.__version__)
         if m:
-            pywikibot.output(u'Pywikibot r%s' % m.group(1))
+            pywikibot.output('Pywikibot r%s' % m.group(1))
         else:
             # Version ID not availlable on SVN repository.
             # Maybe these informations should be imported from version.py
-            pywikibot.output(u'Pywikibot SVN repository')
-        pywikibot.output(u'Python %s' % sys.version)
+            pywikibot.output('Pywikibot SVN repository')
+        pywikibot.output('Python %s' % sys.version)
 
     if do_help:
         showHelp()
         sys.exit(0)
-    pywikibot.debug(u"handleArgs() completed.", _logger)
+    pywikibot.debug("handleArgs() completed.", _logger)
     return nonGlobalArgs
 
 
@@ -663,7 +663,7 @@ def showHelp(name=""):
         except NameError:
             modname = "no_module"
 
-    globalHelp = u'''
+    globalHelp = '''
 Global arguments available for all bots:
 
 -dir:PATH         Read the bot's configuration data from directory given by
@@ -724,12 +724,12 @@ Global arguments available for all bots:
         module = __import__('%s' % modname)
         helpText = module.__doc__.decode('utf-8')
         if hasattr(module, 'docuReplacements'):
-            for key, value in module.docuReplacements.items():
+            for key, value in list(module.docuReplacements.items()):
                 helpText = helpText.replace(key, value.strip('\n\r'))
         pywikibot.stdout(helpText)  # output to STDOUT
     except Exception:
         if modname:
-            pywikibot.stdout(u'Sorry, no help available for %s' % modname)
+            pywikibot.stdout('Sorry, no help available for %s' % modname)
         pywikibot.log('showHelp:', exc_info=True)
     pywikibot.stdout(globalHelp)
 
@@ -767,7 +767,7 @@ class Bot(object):
             self.options[opt] = kwargs[opt]
 
         for opt in receivedOptions - validOptions:
-            pywikibot.warning(u'%s is not a valid option. It was ignored.'
+            pywikibot.warning('%s is not a valid option. It was ignored.'
                               % opt)
 
     def getOption(self, option):
@@ -778,7 +778,7 @@ class Bot(object):
         try:
             return self.options.get(option, self.availableOptions[option])
         except KeyError:
-            raise pywikibot.Error(u'%s is not a valid bot option.' % option)
+            raise pywikibot.Error('%s is not a valid bot option.' % option)
 
     def userPut(self, page, oldtext, newtext):
         """
@@ -789,18 +789,18 @@ class Bot(object):
             * 'always'
         """
         if oldtext == newtext:
-            pywikibot.output(u'No changes were needed on %s'
+            pywikibot.output('No changes were needed on %s'
                              % page.title(asLink=True))
             return
 
-        pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+        pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                          % page.title())
         pywikibot.showDiff(oldtext, newtext)
 
         choice = 'a'
         if not self.getOption('always'):
             choice = pywikibot.inputChoice(
-                u'Do you want to accept these changes?',
+                'Do you want to accept these changes?',
                 ['Yes', 'No', 'All'],
                 ['y', 'N', 'a'],
                 'N'

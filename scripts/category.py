@@ -111,14 +111,14 @@ docuReplacements = {
 
 cfd_templates = {
     'wikipedia': {
-        'en': [u'cfd', u'cfr', u'cfru', u'cfr-speedy', u'cfm', u'cfdu'],
-        'fi': [u'roskaa', u'poistettava', u'korjattava/nimi',
-               u'yhdistettäväLuokka'],
-        'he': [u'הצבעת מחיקה', u'למחוק'],
-        'nl': [u'categorieweg', u'catweg', u'wegcat', u'weg2']
+        'en': ['cfd', 'cfr', 'cfru', 'cfr-speedy', 'cfm', 'cfdu'],
+        'fi': ['roskaa', 'poistettava', 'korjattava/nimi',
+               'yhdistettäväLuokka'],
+        'he': ['הצבעת מחיקה', 'למחוק'],
+        'nl': ['categorieweg', 'catweg', 'wegcat', 'weg2']
     },
     'commons': {
-        'commons': [u'cfd', u'move']
+        'commons': ['cfd', 'move']
     }
 }
 
@@ -137,7 +137,7 @@ class CategoryDatabase:
                 if not os.path.isabs(filename):
                     filename = config.datafilepath(filename)
                 f = bz2.BZ2File(filename, 'r')
-                pywikibot.output(u'Reading dump from %s'
+                pywikibot.output('Reading dump from %s'
                                  % config.shortpath(filename))
                 databases = pickle.load(f)
                 f.close()
@@ -205,7 +205,7 @@ class CategoryDatabase:
         if not os.path.isabs(filename):
             filename = config.datafilepath(filename)
         if self.catContentDB or self.superclassDB:
-            pywikibot.output(u'Dumping to %s, please wait...'
+            pywikibot.output('Dumping to %s, please wait...'
                              % config.shortpath(filename))
             f = bz2.BZ2File(filename, 'w')
             databases = {
@@ -224,7 +224,7 @@ class CategoryDatabase:
             except EnvironmentError:
                 pass
             else:
-                pywikibot.output(u'Database is empty. %s removed'
+                pywikibot.output('Database is empty. %s removed'
                                  % config.shortpath(filename))
 
 
@@ -276,7 +276,7 @@ class AddCategory:
 
     def run(self):
         self.newcatTitle = pywikibot.input(
-            u'Category to add (do not give namespace):')
+            'Category to add (do not give namespace):')
         if not self.site.nocapitalize:
             self.newcatTitle = (self.newcatTitle[:1].upper() +
                                 self.newcatTitle[1:])
@@ -287,7 +287,7 @@ class AddCategory:
         for page in self.generator:
             self.treat(page)
             counter += 1
-        pywikibot.output(u"%d page(s) processed." % counter)
+        pywikibot.output("%d page(s) processed." % counter)
 
     def load(self, page):
         """
@@ -298,18 +298,18 @@ class AddCategory:
             text = page.get()
         except pywikibot.NoPage:
             if self.create:
-                pywikibot.output(u"Page %s doesn't exist yet; creating."
+                pywikibot.output("Page %s doesn't exist yet; creating."
                                  % (page.title(asLink=True)))
                 text = ''
             else:
-                pywikibot.output(u"Page %s does not exist; skipping."
+                pywikibot.output("Page %s does not exist; skipping."
                                  % page.title(asLink=True))
         except pywikibot.IsRedirectPage as arg:
             redirTarget = pywikibot.Page(self.site, arg.args[0])
             if self.follow_redirects:
                 text = redirTarget.get()
             else:
-                pywikibot.warning(u"Page %s is a redirect to %s; skipping."
+                pywikibot.warning("Page %s is a redirect to %s; skipping."
                                   % (page.title(asLink=True),
                                      redirTarget.title(asLink=True)))
         else:
@@ -320,16 +320,16 @@ class AddCategory:
         if text != page.get():
             # show what was changed
             pywikibot.showDiff(page.get(), text)
-            pywikibot.output(u'Comment: %s' % comment)
+            pywikibot.output('Comment: %s' % comment)
             if not self.dry:
                 if not self.always:
                     confirm = 'y'
                     while True:
                         choice = pywikibot.inputChoice(
-                            u'Do you want to accept these changes?',
+                            'Do you want to accept these changes?',
                             ['Yes', 'No', 'Always'], ['y', 'N', 'a'], 'N')
                         if choice == 'a':
-                            confirm = pywikibot.inputChoice(u"""\
+                            confirm = pywikibot.inputChoice("""\
 This should be used if and only if you are sure that your links are correct!
 Are you sure?""", ['Yes', 'No'], ['y', 'n'], 'n')
                             if confirm == 'y':
@@ -343,16 +343,16 @@ Are you sure?""", ['Yes', 'No'], ['y', 'n'], 'n')
                         page.put(text, comment=comment,
                                  minorEdit=minorEdit, botflag=botflag)
                     except pywikibot.LockedPage:
-                        pywikibot.output(u"Page %s is locked; skipping."
+                        pywikibot.output("Page %s is locked; skipping."
                                          % page.title(asLink=True))
                     except pywikibot.EditConflict:
                         pywikibot.output(
-                            u'Skipping %s because of edit conflict'
+                            'Skipping %s because of edit conflict'
                             % (page.title()))
                     except pywikibot.SpamfilterError as error:
                         pywikibot.output(
-                            u'Cannot change %s because of spam blacklist entry '
-                            u'%s' % (page.title(), error.url))
+                            'Cannot change %s because of spam blacklist entry '
+                            '%s' % (page.title(), error.url))
                     else:
                         return True
         return False
@@ -365,23 +365,23 @@ Are you sure?""", ['Yes', 'No'], ['y', 'n'], 'n')
         # Show the title of the page we're working on.
         # Highlight the title in purple.
         pywikibot.output(
-            u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+            "\n\n>>> \03{lightpurple}%s\03{default} <<<"
             % page.title())
-        pywikibot.output(u"Current categories:")
+        pywikibot.output("Current categories:")
         for cat in cats:
-            pywikibot.output(u"* %s" % cat.title())
+            pywikibot.output("* %s" % cat.title())
         catpl = pywikibot.Page(self.site, self.newcatTitle, defaultNamespace=14)
         if catpl in cats:
-            pywikibot.output(u"%s is already in %s."
+            pywikibot.output("%s is already in %s."
                              % (page.title(), catpl.title()))
         else:
             if self.sort:
                 catpl = self.sorted_by_last_name(catpl, page)
-            pywikibot.output(u'Adding %s' % catpl.title(asLink=True))
+            pywikibot.output('Adding %s' % catpl.title(asLink=True))
             cats.append(catpl)
             text = pywikibot.replaceCategoryLinks(text, cats)
             if not self.save(text, page, self.editSummary):
-                pywikibot.output(u'Page %s not saved.'
+                pywikibot.output('Page %s not saved.'
                                  % page.title(asLink=True))
 
 
@@ -535,7 +535,7 @@ class CategoryListifyRobot:
                 else:
                     listString += "*[[:%s]]\n" % article.title()
         if self.list.exists() and not self.overwrite:
-            pywikibot.output(u'Page %s already exists, aborting.'
+            pywikibot.output('Page %s already exists, aborting.'
                              % self.list.title())
         else:
             self.list.put(listString, comment=self.editSummary)
@@ -569,7 +569,7 @@ class CategoryRemoveRobot:
     def run(self):
         articles = set(self.cat.articles())
         if len(articles) == 0:
-            pywikibot.output(u'There are no articles in category %s'
+            pywikibot.output('There are no articles in category %s'
                              % self.cat.title())
         else:
             for article in articles:
@@ -584,7 +584,7 @@ class CategoryRemoveRobot:
         # Also removes the category tag from subcategories' pages
         subcategories = set(self.cat.subcategories())
         if len(subcategories) == 0:
-            pywikibot.output(u'There are no subcategories in category %s'
+            pywikibot.output('There are no subcategories in category %s'
                              % self.cat.title())
         else:
             for subcategory in subcategories:
@@ -602,7 +602,7 @@ class CategoryRemoveRobot:
                 self.cat.delete(reason, not self.batchMode)
             except pywikibot.NoUsername:
                 pywikibot.output(
-                    u'You\'re not setup sysop info, category will not delete.'
+                    'You\'re not setup sysop info, category will not delete.'
                     % self.cat.site())
                 return
             if (talkPage.exists()):
@@ -639,7 +639,7 @@ class CategoryTidyRobot:
         self.site = pywikibot.getSite()
         self.editSummary = i18n.twtranslate(self.site, 'category-changing',
                                             {'oldcat': self.catTitle,
-                                             'newcat': u''})
+                                             'newcat': ''})
 
     def move_to_category(self, article, original_cat, current_cat):
         '''
@@ -649,25 +649,25 @@ class CategoryTidyRobot:
         NOTE: current_cat is only used for internal recursion. You should
         always use current_cat = original_cat.
         '''
-        pywikibot.output(u'')
+        pywikibot.output('')
         # Show the title of the page where the link was found.
         # Highlight the title in purple.
         pywikibot.output(
-            u'Treating page \03{lightpurple}%s\03{default}, '
-            u'currently in \03{lightpurple}%s\03{default}'
+            'Treating page \03{lightpurple}%s\03{default}, '
+            'currently in \03{lightpurple}%s\03{default}'
             % (article.title(), current_cat.title()))
 
         # Determine a reasonable amount of context to print
         try:
             full_text = article.get(get_redirect=True)
         except pywikibot.NoPage:
-            pywikibot.output(u'Page %s not found.' % article.title())
+            pywikibot.output('Page %s not found.' % article.title())
             return
         try:
             contextLength = full_text.index('\n\n')
         except ValueError:  # substring not found
             contextLength = 500
-        if full_text.startswith(u'[['):  # probably an image
+        if full_text.startswith('[['):  # probably an image
             # Add extra paragraph.
             contextLength = full_text.find('\n\n', contextLength + 2)
         if contextLength > 1000 or contextLength < 0:
@@ -685,26 +685,26 @@ class CategoryTidyRobot:
         # show subcategories as possible choices (with numbers)
         for i in range(len(supercatlist)):
             # layout: we don't expect a cat to have more than 10 supercats
-            pywikibot.output(u'u%d - Move up to %s'
+            pywikibot.output('u%d - Move up to %s'
                              % (i, supercatlist[i].title()))
         for i in range(len(subcatlist)):
             # layout: we don't expect a cat to have more than 100 subcats
-            pywikibot.output(u'%2d - Move down to %s'
+            pywikibot.output('%2d - Move down to %s'
                              % (i, subcatlist[i].title()))
         pywikibot.output(' j - Jump to another category')
         pywikibot.output(' s - Skip this article')
         pywikibot.output(' r - Remove this category tag')
         pywikibot.output(' ? - Print first part of the page (longer and longer)')
-        pywikibot.output(u'Enter - Save category as %s' % current_cat.title())
+        pywikibot.output('Enter - Save category as %s' % current_cat.title())
 
         flag = False
         while not flag:
             pywikibot.output('')
-            choice = pywikibot.input(u'Choice:')
+            choice = pywikibot.input('Choice:')
             if choice in ['s', 'S']:
                 flag = True
             elif choice == '':
-                pywikibot.output(u'Saving category as %s' % current_cat.title())
+                pywikibot.output('Saving category as %s' % current_cat.title())
                 if current_cat == original_cat:
                     pywikibot.output('No changes necessary.')
                 else:
@@ -712,8 +712,8 @@ class CategoryTidyRobot:
                                            comment=self.editSummary)
                 flag = True
             elif choice in ['j', 'J']:
-                newCatTitle = pywikibot.input(u'Please enter the category the '
-                                              u'article should be moved to:')
+                newCatTitle = pywikibot.input('Please enter the category the '
+                                              'article should be moved to:')
                 newCat = catlib.Category(pywikibot.Link('Category:' + newCatTitle))
                 # recurse into chosen category
                 self.move_to_category(article, original_cat, newCat)
@@ -733,7 +733,7 @@ class CategoryTidyRobot:
                     pywikibot.output('')
                     pywikibot.output('Original categories: ')
                     for cat in article.categories():
-                        pywikibot.output(u'* %s' % cat.title())
+                        pywikibot.output('* %s' % cat.title())
             elif choice[0] == 'u':
                 try:
                     choice = int(choice[1:])
@@ -758,12 +758,12 @@ class CategoryTidyRobot:
 
         articles = set(cat.articles())
         if len(articles) == 0:
-            pywikibot.output(u'There are no articles in category ' + self.catTitle)
+            pywikibot.output('There are no articles in category ' + self.catTitle)
         else:
             preloadingGen = pagegenerators.PreloadingGenerator(iter(articles))
             for article in preloadingGen:
                 pywikibot.output('')
-                pywikibot.output(u'=' * 67)
+                pywikibot.output('=' * 67)
                 self.move_to_category(article, cat, cat)
 
 
@@ -802,7 +802,7 @@ class CategoryTreeRobot:
             * parent - the Category of the category we're coming from
         '''
 
-        result = u'#' * currentDepth
+        result = '#' * currentDepth
         result += '[[:%s|%s]]' % (cat.title(), cat.title().split(':', 1)[1])
         result += ' (%d)' % len(self.catDB.getArticles(cat))
         # We will remove an element of this array, but will need the original
@@ -848,7 +848,7 @@ class CategoryTreeRobot:
         cat = catlib.Category(pywikibot.Link('Category:' + self.catTitle))
         tree = self.treeview(cat)
         if self.filename:
-            pywikibot.output(u'Saving results in %s' % self.filename)
+            pywikibot.output('Saving results in %s' % self.filename)
             import codecs
             f = codecs.open(self.filename, 'a', 'utf-8')
             f.write(tree)
@@ -930,7 +930,7 @@ def main(*args):
         elif arg.startswith('-match'):
             if len(arg) == len('-match'):
                 titleRegex = pywikibot.input(
-                    u'Which regular expression should affected objects match?')
+                    'Which regular expression should affected objects match?')
             else:
                 titleRegex = arg[len('-match:'):]
         elif arg == '-talkpages':
@@ -960,8 +960,8 @@ def main(*args):
         bot.run()
     elif action == 'remove':
         if not fromGiven:
-            oldCatTitle = pywikibot.input(u'Please enter the name of the '
-                                          u'category that should be removed:')
+            oldCatTitle = pywikibot.input('Please enter the name of the '
+                                          'category that should be removed:')
         bot = CategoryRemoveRobot(oldCatTitle, batchMode, editSummary,
                                   useSummaryForDeletion, inPlace=inPlace,
                                   pagesonly=pagesonly)
@@ -969,34 +969,34 @@ def main(*args):
     elif action == 'move':
         if not fromGiven:
             oldCatTitle = pywikibot.input(
-                u'Please enter the old name of the category:')
+                'Please enter the old name of the category:')
         if not toGiven:
             newCatTitle = pywikibot.input(
-                u'Please enter the new name of the category:')
+                'Please enter the new name of the category:')
         bot = CategoryMoveRobot(oldCatTitle, newCatTitle, batchMode,
                                 editSummary, inPlace,
                                 deleteEmptySourceCat=deleteEmptySourceCat,
                                 titleRegex=titleRegex)
         bot.run()
     elif action == 'tidy':
-        catTitle = pywikibot.input(u'Which category do you want to tidy up?')
+        catTitle = pywikibot.input('Which category do you want to tidy up?')
         bot = CategoryTidyRobot(catTitle, catDB)
         bot.run()
     elif action == 'tree':
         catTitle = pywikibot.input(
-            u'For which category do you want to create a tree view?')
+            'For which category do you want to create a tree view?')
         filename = pywikibot.input(
-            u'Please enter the name of the file where the tree should be saved,'
-            u'\nor press enter to simply show the tree:')
+            'Please enter the name of the file where the tree should be saved,'
+            '\nor press enter to simply show the tree:')
         bot = CategoryTreeRobot(catTitle, catDB, filename)
         bot.run()
     elif action == 'listify':
         if not fromGiven:
             oldCatTitle = pywikibot.input(
-                u'Please enter the name of the category to listify:')
+                'Please enter the name of the category to listify:')
         if not toGiven:
             newCatTitle = pywikibot.input(
-                u'Please enter the name of the list to create:')
+                'Please enter the name of the list to create:')
         bot = CategoryListifyRobot(oldCatTitle, newCatTitle, editSummary,
                                    overwrite, showImages, subCats=True,
                                    talkPages=talkPages, recurse=recurse)

@@ -29,14 +29,14 @@ Tests for the page module.
 #
 __version__ = '$Id$'
 
-import cStringIO
-import StringIO
+import io
+import io
 import logging
 import os
 import sys
 import time
 
-from utils import unittest
+from .utils import unittest
 
 if os.name == "nt":
     from multiprocessing.managers import BaseManager
@@ -90,9 +90,9 @@ if __name__ == "__main__":
     oldstdout = sys.stdout
     oldstdin = sys.stdin
 
-    newstdout = cStringIO.StringIO()
-    newstderr = cStringIO.StringIO()
-    newstdin = StringIO.StringIO()
+    newstdout = io.StringIO()
+    newstderr = io.StringIO()
+    newstdin = io.StringIO()
 
     def patch():
         sys.stdout = newstdout
@@ -230,8 +230,8 @@ if __name__ == "__main__":
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ")
 
-            self.assertIsInstance(returned, unicode)
-            self.assertEqual(returned, u"input to read")
+            self.assertIsInstance(returned, str)
+            self.assertEqual(returned, "input to read")
 
         @unittest.expectedFailure
         def testInputChoiceDefault(self):
@@ -243,7 +243,7 @@ if __name__ == "__main__":
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) ")
 
-            self.assertIsInstance(returned, unicode)
+            self.assertIsInstance(returned, str)
             self.assertEqual(returned, "a")
 
         def testInputChoiceCapital(self):
@@ -255,7 +255,7 @@ if __name__ == "__main__":
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) ")
 
-            self.assertIsInstance(returned, unicode)
+            self.assertIsInstance(returned, str)
             self.assertEqual(returned, "n")
 
         def testInputChoiceNonCapital(self):
@@ -267,7 +267,7 @@ if __name__ == "__main__":
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) ")
 
-            self.assertIsInstance(returned, unicode)
+            self.assertIsInstance(returned, str)
             self.assertEqual(returned, "n")
 
         def testInputChoiceIncorrectAnswer(self):
@@ -279,59 +279,59 @@ if __name__ == "__main__":
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) " * 2)
 
-            self.assertIsInstance(returned, unicode)
+            self.assertIsInstance(returned, str)
             self.assertEqual(returned, "n")
 
     @unittest.skipUnless(os.name == "posix", "requires Unix console")
     class TestTerminalOutputColorUnix(UITestCase):
         def testOutputColorizedText(self):
-            pywikibot.output(u"normal text \03{lightpurple}light purple text\03{default} normal text")
+            pywikibot.output("normal text \03{lightpurple}light purple text\03{default} normal text")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "normal text \x1b[35;1mlight purple text\x1b[0m normal text\n\x1b[0m")
 
         def testOutputNoncolorizedText(self):
             pywikibot.config.colorized_output = False
-            pywikibot.output(u"normal text \03{lightpurple}light purple text\03{default} normal text")
+            pywikibot.output("normal text \03{lightpurple}light purple text\03{default} normal text")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "normal text light purple text normal text ***\n")
 
         @unittest.expectedFailure
         def testOutputColorCascade(self):
-            pywikibot.output(u"normal text \03{lightpurple} light purple \03{lightblue} light blue \03{default} light purple \03{default} normal text")
+            pywikibot.output("normal text \03{lightpurple} light purple \03{lightblue} light blue \03{default} light purple \03{default} normal text")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "normal text \x1b[35;1m light purple \x1b[94;1m light blue \x1b[35;1m light purple \x1b[0m normal text\n\x1b[0m")
 
         def testOutputColorCascade_incorrect(self):
             ''' This test documents current (incorrect) behavior '''
-            pywikibot.output(u"normal text \03{lightpurple} light purple \03{lightblue} light blue \03{default} light purple \03{default} normal text")
+            pywikibot.output("normal text \03{lightpurple} light purple \03{lightblue} light blue \03{default} light purple \03{default} normal text")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "normal text \x1b[35;1m light purple \x1b[94;1m light blue \x1b[0m light purple \x1b[0m normal text\n\x1b[0m")
 
     @unittest.skipUnless(os.name == "posix", "requires Unix console")
     class TestTerminalUnicodeUnix(UITestCase):
         def testOutputUnicodeText(self):
-            pywikibot.output(u"Заглавная_страница")
+            pywikibot.output("Заглавная_страница")
             self.assertEqual(newstdout.getvalue(), "")
-            self.assertEqual(newstderr.getvalue(), u"Заглавная_страница\n".encode('utf-8'))
+            self.assertEqual(newstderr.getvalue(), "Заглавная_страница\n".encode('utf-8'))
 
         def testInputUnicodeText(self):
-            newstdin.write(u"Заглавная_страница\n".encode('utf-8'))
+            newstdin.write("Заглавная_страница\n".encode('utf-8'))
             newstdin.seek(0)
 
-            returned = pywikibot.input(u"Википедию? ")
+            returned = pywikibot.input("Википедию? ")
 
             self.assertEqual(newstdout.getvalue(), "")
-            self.assertEqual(newstderr.getvalue(), u"Википедию?  ".encode('utf-8'))
+            self.assertEqual(newstderr.getvalue(), "Википедию?  ".encode('utf-8'))
 
-            self.assertIsInstance(returned, unicode)
-            self.assertEqual(returned, u"Заглавная_страница")
+            self.assertIsInstance(returned, str)
+            self.assertEqual(returned, "Заглавная_страница")
 
     @unittest.skipUnless(os.name == "posix", "requires Unix console")
     class TestTransliterationUnix(UITestCase):
         def testOutputTransliteratedUnicodeText(self):
             pywikibot.ui.encoding = 'latin-1'
             pywikibot.config.transliterate = True
-            pywikibot.output(u"abcd АБГД αβγδ あいうえお")
+            pywikibot.output("abcd АБГД αβγδ あいうえお")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "abcd \x1b[33;1mA\x1b[0m\x1b[33;1mB\x1b[0m\x1b[33;1mG\x1b[0m\x1b[33;1mD\x1b[0m \x1b[33;1ma\x1b[0m\x1b[33;1mb\x1b[0m\x1b[33;1mg\x1b[0m\x1b[33;1md\x1b[0m \x1b[33;1ma\x1b[0m\x1b[33;1mi\x1b[0m\x1b[33;1mu\x1b[0m\x1b[33;1me\x1b[0m\x1b[33;1mo\x1b[0m\n\x1b[0m")  # noqa
 
@@ -358,14 +358,14 @@ if __name__ == "__main__":
 
         def setUp(self):
             super(WindowsTerminalTestCase, self).setUp()
-            self.setclip(u'')
+            self.setclip('')
 
         def waitForWindow(self):
             while not self._app.window_().IsEnabled():
                 time.sleep(0.01)
 
         def getstdouterr(self):
-            sentinel = u'~~~~SENTINEL~~~~cedcfc9f-7eed-44e2-a176-d8c73136c185'
+            sentinel = '~~~~SENTINEL~~~~cedcfc9f-7eed-44e2-a176-d8c73136c185'
             # select all and copy to clipboard
             self._app.window_().SetFocus()
             self.waitForWindow()
@@ -379,19 +379,19 @@ if __name__ == "__main__":
 
         def setclip(self, text):
             win32clipboard.OpenClipboard()
-            win32clipboard.SetClipboardData(win32clipboard.CF_UNICODETEXT, unicode(text))
+            win32clipboard.SetClipboardData(win32clipboard.CF_UNICODETEXT, str(text))
             win32clipboard.CloseClipboard()
 
         def getclip(self):
             win32clipboard.OpenClipboard()
             data = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
             win32clipboard.CloseClipboard()
-            data = data.split(u"\x00")[0]
-            data = data.replace(u"\r\n", u"\n")
+            data = data.split("\x00")[0]
+            data = data.replace("\r\n", "\n")
             return data
 
         def sendstdin(self, text):
-            self.setclip(text.replace(u"\n", u"\r\n"))
+            self.setclip(text.replace("\n", "\r\n"))
             self._app.window_().SetFocus()
             self.waitForWindow()
             self._app.window_().TypeKeys('% {UP}{UP}{UP}{RIGHT}{DOWN}{DOWN}{ENTER}', with_spaces=True)
@@ -423,24 +423,24 @@ if __name__ == "__main__":
             self.pywikibot.cls()
 
         def testOutputUnicodeText_no_transliterate(self):
-            self.pywikibot.output(u"Заглавная_страница")
-            self.assertEqual(self.getstdouterr(), u"Заглавная_страница\n")
+            self.pywikibot.output("Заглавная_страница")
+            self.assertEqual(self.getstdouterr(), "Заглавная_страница\n")
 
         def testOutputUnicodeText_transliterate(self):
             self.pywikibot.set_config('transliterate', True)
             self.pywikibot.set_ui('transliteration_target', 'latin-1')
-            self.pywikibot.output(u"Заглавная_страница")
+            self.pywikibot.output("Заглавная_страница")
             self.assertEqual(self.getstdouterr(), "Zaglavnaya_stranica\n")
 
         def testInputUnicodeText(self):
             self.pywikibot.set_config('transliterate', True)
 
-            self.pywikibot.request_input(u"Википедию? ")
-            self.assertEqual(self.getstdouterr(), u"Википедию?")
-            self.sendstdin(u"Заглавная_страница\n")
+            self.pywikibot.request_input("Википедию? ")
+            self.assertEqual(self.getstdouterr(), "Википедию?")
+            self.sendstdin("Заглавная_страница\n")
             returned = self.pywikibot.get_input()
 
-            self.assertEqual(returned, u"Заглавная_страница")
+            self.assertEqual(returned, "Заглавная_страница")
 
     class TestWindowsTerminalUnicodeArguments(WindowsTerminalTestCase):
         @classmethod
@@ -454,7 +454,7 @@ if __name__ == "__main__":
             pass
 
         def testOutputUnicodeText_no_transliterate(self):
-            self.sendstdin(u"""python -c "import os, pywikibot; os.system('cls'); pywikibot.output(u'\\n'.join(pywikibot.handleArgs()))" Alpha Bετα Гамма دلتا\n""")
+            self.sendstdin("""python -c "import os, pywikibot; os.system('cls'); pywikibot.output(u'\\n'.join(pywikibot.handleArgs()))" Alpha Bετα Гамма دلتا\n""")
             while(True):
                 lines = self.getstdouterr().split("\n")
                 if len(lines) >= 4 and lines[0] == "Alpha":
@@ -462,7 +462,7 @@ if __name__ == "__main__":
                 time.sleep(1)
 
             # empty line is the new command line
-            self.assertEqual(lines, [u"Alpha", u"Bετα", u"Гамма", u"دلتا", u""])
+            self.assertEqual(lines, ["Alpha", "Bετα", "Гамма", "دلتا", ""])
 
     try:
         try:

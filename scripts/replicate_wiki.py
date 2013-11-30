@@ -30,13 +30,12 @@ import sys
 #import re
 from pywikibot import getSite, config, Page
 import pywikibot 
-from itertools import imap
+
 
 
 def namespaces(site):
     '''dict from namespace number to prefix'''
-    ns = dict(map(lambda n: (site.getNamespaceIndex(n), n),
-                  site.namespaces()))
+    ns = dict([(site.getNamespaceIndex(n), n) for n in site.namespaces()])
     ns[0] = ''
     return ns
 
@@ -73,7 +72,7 @@ class SyncSites:
                 pywikibot.output('%s %s' % (k, nsd[k]))
             sys.exit()
 
-        self.sites = map(lambda s: getSite(s, family), sites)
+        self.sites = [getSite(s, family) for s in sites]
 
         self.differences = {}
         self.user_diff = {}
@@ -127,7 +126,7 @@ class SyncSites:
         '''Check an entire namespace'''
 
         pywikibot.output("\nCHECKING NAMESPACE %s" % namespace)
-        pages = imap(lambda p: p.title(),
+        pages = map(lambda p: p.title(),
                      self.original.allpages('!', namespace=namespace))
         for p in pages:
             if not p in ['MediaWiki:Sidebar', 'MediaWiki:Mainpage',
@@ -146,13 +145,13 @@ class SyncSites:
             sync_overview_page = Page(site, 'User:' + site.loggedInAs() + '/sync.py overview')
             output = "== Pages that differ from original ==\n\n"
             if self.differences[site]:
-                output += "".join(map(lambda l: '* [[:' + l + "]]\n", self.differences[site]))
+                output += "".join(['* [[:' + l + "]]\n" for l in self.differences[site]])
             else:
                 output += "All important pages are the same"
 
             output += "\n\n== Admins from original that are missing here ==\n\n"
             if self.user_diff[site]:
-                output += "".join(map(lambda l: '* ' + l.replace('_', ' ') + "\n", self.user_diff[site]))
+                output += "".join(['* ' + l.replace('_', ' ') + "\n" for l in self.user_diff[site]])
             else:
                 output += "All users from original are also present on this wiki"
 

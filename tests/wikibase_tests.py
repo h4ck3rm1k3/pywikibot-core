@@ -13,7 +13,7 @@ import os
 import pywikibot
 import json
 
-from utils import PywikibotTestCase, unittest
+from .utils import PywikibotTestCase, unittest
 
 site = pywikibot.Site('en', 'wikipedia')
 mainpage = pywikibot.Page(pywikibot.page.Link("Main Page", site))
@@ -65,7 +65,7 @@ class TestLinks(PywikibotTestCase):
 
     def test_iterlinks_page_object(self):
         page = [pg for pg in self.wdp.iterlinks() if pg.site.language() == 'af'][0]
-        self.assertEquals(page, pywikibot.Page(pywikibot.getSite('af', 'wikipedia'), u'New York Stad'))
+        self.assertEquals(page, pywikibot.Page(pywikibot.getSite('af', 'wikipedia'), 'New York Stad'))
 
     def test_iterlinks_filtering(self):
         wikilinks = list(self.wdp.iterlinks('wikipedia'))

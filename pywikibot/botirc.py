@@ -59,8 +59,8 @@ class IRCBot(pywikibot.Bot, SingleServerIRCBot):
         self.channel = channel
         self.site = site
         self.other_ns = re.compile(
-            u'14\[\[07(' + u'|'.join([item[0] for item in
-                                        list(site.namespaces().values()) if item[0]]) + u')')
+            '14\[\[07(' + '|'.join([item[0] for item in
+                                        list(site.namespaces().values()) if item[0]]) + ')')
         self.api_url = self.site.family.apipath(self.site.lang)
         self.api_url += '?action=query&meta=siteinfo&siprop=statistics&format=xml'
         self.api_found = re.compile(r'articles="(.*?)"')
@@ -83,12 +83,12 @@ class IRCBot(pywikibot.Bot, SingleServerIRCBot):
         if not ('N' in match.group('flags')):
                 return
         try:
-            msg = unicode(e.arguments()[0], 'utf-8')
+            msg = str(e.arguments()[0], 'utf-8')
         except UnicodeDecodeError:
             return
         if self.other_ns.match(msg):
             return
-        name = msg[8:msg.find(u'14', 9)]
+        name = msg[8:msg.find('14', 9)]
         text = pywikibot.comms.http.request(self.site, self.api_url)
         entry = self.api_found.findall(text)
         page = pywikibot.Page(self.site, name)

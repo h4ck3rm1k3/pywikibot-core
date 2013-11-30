@@ -95,7 +95,7 @@ class ClaimRobot:
         Fetches the sources from the onwiki list
         and stores it internally
         """
-        page = pywikibot.Page(self.repo, u'Wikidata:List of wikis/python')
+        page = pywikibot.Page(self.repo, 'Wikidata:List of wikis/python')
         self.source_values = json.loads(page.get())
         self.source_values = self.source_values['wikipedia']
         for source_lang in self.source_values:
@@ -194,7 +194,7 @@ def main():
         elif claim.getType() == 'string':
             target = commandline_claims[i + 1]
         elif claim.getType() == 'globecoordinate':
-            coord_args = map(float, commandline_claims[i + 1].split(','))
+            coord_args = list(map(float, commandline_claims[i + 1].split(',')))
             if len(coord_args) >= 3:
                 precision = coord_args[2]
             else:

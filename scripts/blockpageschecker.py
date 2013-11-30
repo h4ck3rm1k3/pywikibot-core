@@ -86,8 +86,8 @@ templateSemiProtection = {
     'en': None,
     'it': [r'\{\{(?:[Tt]emplate:|)[Aa]vvisobloccoparziale(?:|[ _]scad\|.*?|\|.*?)\}\}',
            r'\{\{(?:[Tt]emplate:|)[Aa]bp(?:|[ _]scad\|(?:.*?))\}\}'],
-    'fr': [r'\{\{(?:[Tt]emplate:|' + u'[Mm]odèle:' + r'|)[Ss]emi[- ]?protection(|[^\}]*)\}\}'],
-    'ja': [r'(?<!\<nowiki\>)\{\{(?:[Tt]emplate:|)' + u'半保護' + r'(?:[Ss]|)(?:\|.+|)\}\}(?!\<\/nowiki\>)\s*(?:\r\n|)*'],
+    'fr': [r'\{\{(?:[Tt]emplate:|' + '[Mm]odèle:' + r'|)[Ss]emi[- ]?protection(|[^\}]*)\}\}'],
+    'ja': [r'(?<!\<nowiki\>)\{\{(?:[Tt]emplate:|)' + '半保護' + r'(?:[Ss]|)(?:\|.+|)\}\}(?!\<\/nowiki\>)\s*(?:\r\n|)*'],
 }
 # Regex to get the total-protection template
 templateTotalProtection = {
@@ -95,23 +95,23 @@ templateTotalProtection = {
     'it': [r'\{\{(?:[Tt]emplate:|)[Aa]vvisoblocco(?:|[ _]scad\|(?:.*?)|minaccia|cancellata)\}\}',
            r'\{\{(?:[Tt]emplate:|)(?:[Cc][Tt]|[Cc]anc fatte|[Cc][Ee])\}\}',
            r'<div class="toccolours[ _]itwiki[ _]template[ _]avviso">(?:\s|\n)*?[Qq]uesta pagina'],
-    'fr': [r'\{\{(?:[Tt]emplate:|' + u'[Mm]odèle:' + r'|)[Pp]rotection(|[^\}]*)\}\}',
-           r'\{\{(?:[Tt]emplate:|' + u'[Mm]odèle:' + r'|)(?:[Pp]age|[Aa]rchive|' + u'[Mm]odèle) protégée' + r'?(|[^\}]*)\}\}'],
-    'ja': [r'(?<!\<nowiki\>)\{\{(?:[Tt]emplate:|)' + u'保護(?:性急|)' + r'(?:[Ss]|)(?:\|.+|)\}\}(?!\<\/nowiki\>)\s*(?:\r\n|)*'],
+    'fr': [r'\{\{(?:[Tt]emplate:|' + '[Mm]odèle:' + r'|)[Pp]rotection(|[^\}]*)\}\}',
+           r'\{\{(?:[Tt]emplate:|' + '[Mm]odèle:' + r'|)(?:[Pp]age|[Aa]rchive|' + '[Mm]odèle) protégée' + r'?(|[^\}]*)\}\}'],
+    'ja': [r'(?<!\<nowiki\>)\{\{(?:[Tt]emplate:|)' + '保護(?:性急|)' + r'(?:[Ss]|)(?:\|.+|)\}\}(?!\<\/nowiki\>)\s*(?:\r\n|)*'],
 }
 
 # Regex to get the semi-protection move template
 templateSemiMoveProtection = {
     'en': None,
     'it': [r'\{\{(?:[Tt]emplate:|)[Aa]vvisobloccospostamento(?:|[ _]scad\|.*?|\|.*?)\}\}'],
-    'ja': [r'(?<!\<nowiki\>)\{\{(?:[Tt]emplate:|)' + u'移動半保護' + r'(?:[Ss]|)(?:\|.+|)\}\}(?!\<\/nowiki\>)\s*(?:\r\n|)*'],
+    'ja': [r'(?<!\<nowiki\>)\{\{(?:[Tt]emplate:|)' + '移動半保護' + r'(?:[Ss]|)(?:\|.+|)\}\}(?!\<\/nowiki\>)\s*(?:\r\n|)*'],
 }
 
 # Regex to get the total-protection move template
 templateTotalMoveProtection = {
     'en': None,
     'it': [r'\{\{(?:[Tt]emplate:|)[Aa]vvisobloccospostamento(?:|[ _]scad\|.*?|\|.*?)\}\}'],
-    'ja': [r'(?<!\<nowiki\>)\{\{(?:[Tt]emplate:|)' + u'移動保護' + r'(?:[Ss]|)(?:\|.+|)\}\}(?!\<\/nowiki\>)\s*(?:\r\n|)*'],
+    'ja': [r'(?<!\<nowiki\>)\{\{(?:[Tt]emplate:|)' + '移動保護' + r'(?:[Ss]|)(?:\|.+|)\}\}(?!\<\/nowiki\>)\s*(?:\r\n|)*'],
 }
 
 # If you use only one template for all the type of protection, put it here.
@@ -128,25 +128,25 @@ templateNoRegex = {
     'it': ['{{Avvisobloccoparziale}}', '{{Avvisoblocco}}', None, None,
            '{{Protetta}}'],
     'fr': ['{{Semi-protection}}', '{{Protection}}', None, None, None],
-    'ja': [u'{{半保護}}', u'{{保護}}', u'{{移動半保護}}', u'{{移動保護}}', None],
+    'ja': ['{{半保護}}', '{{保護}}', '{{移動半保護}}', '{{移動保護}}', None],
 }
 
 # Category where the bot will check
 categoryToCheck = {
-    'en': [u'Category:Protected'],
-    'ar': [u'تصنيف:محتويات محمية'],
-    'fr': [u'Category:Page semi-protégée', u'Category:Page protégée',
-           u'Catégorie:Article protégé'],
-    'he': [u'קטגוריה:ויקיפדיה: דפים מוגנים',
-           u'קטגוריה:ויקיפדיה: דפים מוגנים חלקית'],
-    'it': [u'Categoria:Pagine protette - scadute',
-           u'Categoria:Pagine semiprotette', u'Categoria:Voci protette'],
-    'ja': [u'Category:編集保護中の記事', u'Category:編集半保護中の記事',
-           u'Category:移動保護中の記事'],
-    'pt': [u'Category:!Páginas protegidas',
-           u'Category:!Páginas semiprotegidas'],
-    'zh': [u'Category:被保护的页面', u'Category:被保護的模板',
-           u'Category:暂时不能移动的页面', u'Category:被半保护的页面'],
+    'en': ['Category:Protected'],
+    'ar': ['تصنيف:محتويات محمية'],
+    'fr': ['Category:Page semi-protégée', 'Category:Page protégée',
+           'Catégorie:Article protégé'],
+    'he': ['קטגוריה:ויקיפדיה: דפים מוגנים',
+           'קטגוריה:ויקיפדיה: דפים מוגנים חלקית'],
+    'it': ['Categoria:Pagine protette - scadute',
+           'Categoria:Pagine semiprotette', 'Categoria:Voci protette'],
+    'ja': ['Category:編集保護中の記事', 'Category:編集半保護中の記事',
+           'Category:移動保護中の記事'],
+    'pt': ['Category:!Páginas protegidas',
+           'Category:!Páginas semiprotegidas'],
+    'zh': ['Category:被保护的页面', 'Category:被保護的模板',
+           'Category:暂时不能移动的页面', 'Category:被半保护的页面'],
 }
 
 # Check list to block the users that haven't set their preferences
@@ -189,7 +189,7 @@ def understandBlock(text, TTP, TSP, TSMP, TTMP, TU):
 
 
 def showQuest(site, page):
-    quest = pywikibot.inputChoice(u'Do you want to open the page?',
+    quest = pywikibot.inputChoice('Do you want to open the page?',
                                   ['with browser', 'with gui', 'no'],
                                   ['b', 'g', 'n'], 'n')
     pathWiki = site.family.nicepath(site.lang)
@@ -241,8 +241,8 @@ def main():
             genFactory.handleArg(arg)
 
     if config.mylang not in project_inserted:
-        pywikibot.output(u"Your project is not supported by this script.\n"
-                         u"You have to edit the script and add it!")
+        pywikibot.output("Your project is not supported by this script.\n"
+                         "You have to edit the script and add it!")
         return
     site = pywikibot.getSite()
     site.login()
@@ -262,7 +262,7 @@ def main():
         generator = genFactory.getCombinedGenerator()
     if not generator:
         generator = list()
-        pywikibot.output(u'Loading categories...')
+        pywikibot.output('Loading categories...')
         # Define the category if no other generator has been setted
         for CAT in category:
             cat = pywikibot.Category(site, CAT)
@@ -270,7 +270,7 @@ def main():
             gen = pagegenerators.CategorizedPageGenerator(cat)
             for pageCat in gen:
                 generator.append(pageCat)
-        pywikibot.output(u'Categories loaded, start!')
+        pywikibot.output('Categories loaded, start!')
     # Main Loop
     preloadingGen = pagegenerators.PreloadingGenerator(generator, step=60)
     for page in preloadingGen:
@@ -295,7 +295,7 @@ def main():
             pywikibot.output("%s is sysop-protected : this account can't edit it! Skipping..." % pagename)
             continue
         """
-        if 'edit' in restrictions.keys():
+        if 'edit' in list(restrictions.keys()):
             editRestr = restrictions['edit']
         else:
             editRestr = None
@@ -303,8 +303,8 @@ def main():
             try:
                 config.sysopnames[site.family.name][site.lang]
             except:
-                pywikibot.output(u"%s is sysop-protected: "
-                                 u"this account can't edit it! Skipping..."
+                pywikibot.output("%s is sysop-protected: "
+                                 "this account can't edit it! Skipping..."
                                  % pagename)
                 continue
 
@@ -320,17 +320,17 @@ def main():
             # page is not edit-protected
             # Deleting the template because the page doesn't need it.
             if TU:
-                replaceToPerform = u'|'.join(TTP + TSP + TU)
+                replaceToPerform = '|'.join(TTP + TSP + TU)
             else:
-                replaceToPerform = u'|'.join(TTP + TSP)
+                replaceToPerform = '|'.join(TTP + TSP)
             text, changes = re.subn('<noinclude>(%s)</noinclude>'
                                     % replaceToPerform, '', text)
             if changes == 0:
                 text, changes = re.subn('(%s)' % replaceToPerform, '', text)
-            msg = u'The page is editable for all'
+            msg = 'The page is editable for all'
             if not moveBlockCheck:
-                msg += u', deleting the template..'
-            pywikibot.output(u'%s.' % msg)
+                msg += ', deleting the template..'
+            pywikibot.output('%s.' % msg)
 
         elif editRestr[0] == 'sysop':
             # total edit protection
@@ -341,8 +341,8 @@ def main():
                     msg += ', skipping...'
                 pywikibot.output(msg)
             else:
-                pywikibot.output(u'The page is protected to the sysop, but the '
-                                 u'template seems not correct. Fixing...')
+                pywikibot.output('The page is protected to the sysop, but the '
+                                 'template seems not correct. Fixing...')
                 if TU:
                     text, changes = re.subn(TemplateInThePage[1], TNR[4], text)
                 else:
@@ -357,9 +357,9 @@ def main():
                     msg += ', skipping...'
                 pywikibot.output(msg)
             else:
-                pywikibot.output(u'The page is editable only for the '
-                                 u'autoconfirmed users, but the template '
-                                 u'seems not correct. Fixing...')
+                pywikibot.output('The page is editable only for the '
+                                 'autoconfirmed users, but the template '
+                                 'seems not correct. Fixing...')
                 if TU:
                     text, changes = re.subn(TemplateInThePage[1], TNR[4], text)
                 else:
@@ -378,13 +378,13 @@ def main():
             changes = -1
 
             if not moveRestr:
-                pywikibot.output(u'The page is movable for all, deleting the '
-                                 u'template...')
+                pywikibot.output('The page is movable for all, deleting the '
+                                 'template...')
                 # Deleting the template because the page doesn't need it.
                 if TU:
-                    replaceToPerform = u'|'.join(TSMP + TTMP + TU)
+                    replaceToPerform = '|'.join(TSMP + TTMP + TU)
                 else:
-                    replaceToPerform = u'|'.join(TSMP + TTMP)
+                    replaceToPerform = '|'.join(TSMP + TTMP)
                 text, changes = re.subn('<noinclude>(%s)</noinclude>'
                                         % replaceToPerform, '', text)
                 if changes == 0:
@@ -393,15 +393,15 @@ def main():
                 # move-total-protection
                 if (TemplateInThePage[0] == 'sysop-move' and TTMP) or \
                    (TemplateInThePage[0] == 'unique' and TU):
-                    pywikibot.output(u'The page is protected from moving to '
-                                     u'the sysop, skipping...')
+                    pywikibot.output('The page is protected from moving to '
+                                     'the sysop, skipping...')
                     if TU:
                         # no changes needed, better to revert the old text.
                         text = oldtext
                 else:
-                    pywikibot.output(u'The page is protected from moving to '
-                                     u'the sysop, but the template seems not '
-                                     u'correct. Fixing...')
+                    pywikibot.output('The page is protected from moving to '
+                                     'the sysop, but the template seems not '
+                                     'correct. Fixing...')
                     if TU:
                         text, changes = re.subn(TemplateInThePage[1], TNR[4],
                                                 text)
@@ -414,15 +414,15 @@ def main():
                 # move-semi-protection
                 if TemplateInThePage[0] == 'autoconfirmed-move' or \
                    TemplateInThePage[0] == 'unique':
-                    pywikibot.output(u'The page is movable only for the '
-                                     u'autoconfirmed users, skipping...')
+                    pywikibot.output('The page is movable only for the '
+                                     'autoconfirmed users, skipping...')
                     if TU:
                         # no changes needed, better to revert the old text.
                         text = oldtext
                 else:
-                    pywikibot.output(u'The page is movable only for the '
-                                     u'autoconfirmed users, but the template '
-                                     u'seems not correct. Fixing...')
+                    pywikibot.output('The page is movable only for the '
+                                     'autoconfirmed users, but the template '
+                                     'seems not correct. Fixing...')
                     if TU:
                         text, changes = re.subn(TemplateInThePage[1], TNR[4],
                                                 text)
@@ -436,12 +436,12 @@ def main():
 
         if oldtext != text:
             # Ok, asking if the change has to be performed and do it if yes.
-            pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+            pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                              % page.title())
             pywikibot.showDiff(oldtext, text)
             if not always:
-                choice = pywikibot.inputChoice(u'Do you want to accept these '
-                                               u'changes?',
+                choice = pywikibot.inputChoice('Do you want to accept these '
+                                               'changes?',
                                                ['Yes', 'No', 'All'],
                                                ['y', 'N', 'a'], 'N')
                 if choice == 'a':
@@ -451,31 +451,31 @@ def main():
                     try:
                         page.put(text, commentUsed, force=True)
                     except pywikibot.EditConflict:
-                        pywikibot.output(u'Edit conflict! skip!')
+                        pywikibot.output('Edit conflict! skip!')
                         break
                     except pywikibot.ServerError:
                         # Sometimes there is this error that's quite annoying
                         # because can block the whole process for nothing.
                         errorCount += 1
                         if errorCount < 5:
-                            pywikibot.output(u'Server Error! Wait..')
+                            pywikibot.output('Server Error! Wait..')
                             time.sleep(3)
                             continue
                         else:
                             # Prevent Infinite Loops
-                            raise pywikibot.ServerError(u'Fifth Server Error!')
+                            raise pywikibot.ServerError('Fifth Server Error!')
                     except pywikibot.SpamfilterError as e:
-                        pywikibot.output(u'Cannot change %s because of '
-                                         u'blacklist entry %s'
+                        pywikibot.output('Cannot change %s because of '
+                                         'blacklist entry %s'
                                          % (page.title(), e.url))
                         break
                     except pywikibot.PageNotSaved as error:
-                        pywikibot.output(u'Error putting page: %s'
+                        pywikibot.output('Error putting page: %s'
                                          % (error.args,))
                         break
                     except pywikibot.LockedPage:
-                        pywikibot.output(u'The page is still protected. '
-                                         u'Skipping...')
+                        pywikibot.output('The page is still protected. '
+                                         'Skipping...')
                         break
                     else:
                         # Break only if the errors are one after the other

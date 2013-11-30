@@ -71,7 +71,7 @@ class Throttle(object):
         global pid
         self.lock.acquire()
         mysite = self.mysite
-        pywikibot.debug(u"Checking multiplicity: pid = %(pid)s" % globals(),
+        pywikibot.debug("Checking multiplicity: pid = %(pid)s" % globals(),
                         _logger)
         try:
             processes = []
@@ -128,11 +128,11 @@ class Throttle(object):
             self.process_multiplicity = count
             if self.verbosedelay:
                 pywikibot.output(
-                    u"Found %(count)s %(mysite)s processes running, including this one."
+                    "Found %(count)s %(mysite)s processes running, including this one."
                     % locals())
             else:
                 pywikibot.log(
-                    u"Found %(count)s %(mysite)s processes running, including this one."
+                    "Found %(count)s %(mysite)s processes running, including this one."
                     % locals())
         finally:
             self.lock.release()
@@ -251,14 +251,14 @@ class Throttle(object):
             if wait > 0:
                 if wait > config.noisysleep or self.verbosedelay:
                     pywikibot.output(
-                        u"Sleeping for %(wait).1f seconds, %(now)s"
+                        "Sleeping for %(wait).1f seconds, %(now)s"
                         % {'wait': wait,
                            'now':  time.strftime("%Y-%m-%d %H:%M:%S",
                                                  time.localtime())
                            })
                 else:
                     pywikibot.log(
-                        u"Sleeping for %(wait).1f seconds, %(now)s"
+                        "Sleeping for %(wait).1f seconds, %(now)s"
                         % {'wait': wait,
                            'now':  time.strftime("%Y-%m-%d %H:%M:%S",
                                                  time.localtime())
@@ -289,14 +289,14 @@ class Throttle(object):
             if wait > 0:
                 if wait > config.noisysleep:
                     pywikibot.output(
-                        u"Sleeping for %(wait).1f seconds, %(now)s"
+                        "Sleeping for %(wait).1f seconds, %(now)s"
                         % {'wait': wait,
                            'now': time.strftime("%Y-%m-%d %H:%M:%S",
                                                 time.localtime())
                            })
                 else:
                     pywikibot.log(
-                        u"Sleeping for %(wait).1f seconds, %(now)s"
+                        "Sleeping for %(wait).1f seconds, %(now)s"
                         % {'wait': wait,
                            'now': time.strftime("%Y-%m-%d %H:%M:%S",
                                                 time.localtime())

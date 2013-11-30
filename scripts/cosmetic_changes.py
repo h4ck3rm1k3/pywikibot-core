@@ -76,7 +76,7 @@ __version__ = '$Id$'
 import sys
 import re
 import pywikibot
-import isbn
+from . import isbn
 from pywikibot import pagegenerators
 from pywikibot import i18n
 from pywikibot import config2 as config
@@ -95,31 +95,31 @@ docuReplacements = {
 # This is from interwiki.py;
 # move it to family file and implement global instances
 moved_links = {
-    'ca': (u'ús de la plantilla', u'/ús'),
-    'cs': (u'dokumentace', u'/doc'),
-    'de': (u'dokumentation', u'/Meta'),
-    'en': ([u'documentation',
-            u'template documentation',
-            u'template doc',
-            u'doc',
-            u'documentation, template'], u'/doc'),
-    'es': ([u'documentación', u'documentación de plantilla'], u'/doc'),
-    'fa': ([u'documentation', u'توضیحات', u'توضیحات الگو',
-            u'doc'], u'/توضیحات'),
-    'fr': (u'/documentation', u'/Documentation'),
-    'hu': (u'sablondokumentáció', u'/doc'),
-    'id': (u'template doc', u'/doc'),
-    'ja': (u'documentation', u'/doc'),
-    'ka': (u'თარგის ინფო', u'/ინფო'),
-    'ko': (u'documentation', u'/설명문서'),
-    'ms': (u'documentation', u'/doc'),
-    'pl': (u'dokumentacja', u'/opis'),
-    'pt': ([u'documentação', u'/doc'], u'/doc'),
-    'ro': (u'documentaţie', u'/doc'),
-    'ru': (u'doc', u'/doc'),
-    'sv': (u'dokumentation', u'/dok'),
-    'vi': (u'documentation', u'/doc'),
-    'zh': ([u'documentation', u'doc'], u'/doc'),
+    'ca': ('ús de la plantilla', '/ús'),
+    'cs': ('dokumentace', '/doc'),
+    'de': ('dokumentation', '/Meta'),
+    'en': (['documentation',
+            'template documentation',
+            'template doc',
+            'doc',
+            'documentation, template'], '/doc'),
+    'es': (['documentación', 'documentación de plantilla'], '/doc'),
+    'fa': (['documentation', 'توضیحات', 'توضیحات الگو',
+            'doc'], '/توضیحات'),
+    'fr': ('/documentation', '/Documentation'),
+    'hu': ('sablondokumentáció', '/doc'),
+    'id': ('template doc', '/doc'),
+    'ja': ('documentation', '/doc'),
+    'ka': ('თარგის ინფო', '/ინფო'),
+    'ko': ('documentation', '/설명문서'),
+    'ms': ('documentation', '/doc'),
+    'pl': ('dokumentacja', '/opis'),
+    'pt': (['documentação', '/doc'], '/doc'),
+    'ro': ('documentaţie', '/doc'),
+    'ru': ('doc', '/doc'),
+    'sv': ('dokumentation', '/dok'),
+    'vi': ('documentation', '/doc'),
+    'zh': (['documentation', 'doc'], '/doc'),
 }
 
 # Template which should be replaced or removed.
@@ -142,10 +142,10 @@ moved_links = {
 deprecatedTemplates = {
     'wikipedia': {
         'de': [
-            (u'Belege', u'Belege fehlen\g<parameters>'),
-            (u'Quelle', u'Belege fehlen\g<parameters>'),
-            (u'Quellen', u'Belege fehlen\g<parameters>'),
-            (u'Quellen fehlen', u'Belege fehlen\g<parameters>'),
+            ('Belege', 'Belege fehlen\g<parameters>'),
+            ('Quelle', 'Belege fehlen\g<parameters>'),
+            ('Quellen', 'Belege fehlen\g<parameters>'),
+            ('Quellen fehlen', 'Belege fehlen\g<parameters>'),
         ],
     }
 }
@@ -167,7 +167,7 @@ class CosmeticChangesToolkit:
         Given a wiki source code text, return the cleaned up version.
         """
         oldText = text
-        if self.site.sitename() == u'commons:commons' and self.namespace == 6:
+        if self.site.sitename() == 'commons:commons' and self.namespace == 6:
             text = self.commonsfiledesc(text)
         text = self.fixSelfInterwiki(text)
         text = self.standardizePageFooter(text)
@@ -192,7 +192,7 @@ class CosmeticChangesToolkit:
         try:
             text = isbn.hyphenateIsbnNumbers(text)
         except isbn.InvalidIsbnException as error:
-            pywikibot.log(u"ISBN error: %s" % error)
+            pywikibot.log("ISBN error: %s" % error)
             pass
         if self.debug:
             pywikibot.showDiff(oldText, text)
@@ -223,32 +223,32 @@ class CosmeticChangesToolkit:
 
         """
         starsList = [
-            u'bueno',
-            u'bom interwiki',
-            u'cyswllt[ _]erthygl[ _]ddethol', u'dolen[ _]ed',
-            u'destacado', u'destaca[tu]',
-            u'enllaç[ _]ad',
-            u'enllaz[ _]ad',
-            u'leam[ _]vdc',
-            u'legătură[ _]a[bcf]',
-            u'liamm[ _]pub',
-            u'lien[ _]adq',
-            u'lien[ _]ba',
-            u'liên[ _]kết[ _]bài[ _]chất[ _]lượng[ _]tốt',
-            u'liên[ _]kết[ _]chọn[ _]lọc',
-            u'ligam[ _]adq',
-            u'ligoelstara',
-            u'ligoleginda',
-            u'link[ _][afgu]a', u'link[ _]adq', u'link[ _]f[lm]', u'link[ _]km',
-            u'link[ _]sm', u'linkfa',
-            u'na[ _]lotura',
-            u'nasc[ _]ar',
-            u'tengill[ _][úg]g',
-            u'ua',
-            u'yüm yg',
-            u'רא',
-            u'وصلة مقالة جيدة',
-            u'وصلة مقالة مختارة',
+            'bueno',
+            'bom interwiki',
+            'cyswllt[ _]erthygl[ _]ddethol', 'dolen[ _]ed',
+            'destacado', 'destaca[tu]',
+            'enllaç[ _]ad',
+            'enllaz[ _]ad',
+            'leam[ _]vdc',
+            'legătură[ _]a[bcf]',
+            'liamm[ _]pub',
+            'lien[ _]adq',
+            'lien[ _]ba',
+            'liên[ _]kết[ _]bài[ _]chất[ _]lượng[ _]tốt',
+            'liên[ _]kết[ _]chọn[ _]lọc',
+            'ligam[ _]adq',
+            'ligoelstara',
+            'ligoleginda',
+            'link[ _][afgu]a', 'link[ _]adq', 'link[ _]f[lm]', 'link[ _]km',
+            'link[ _]sm', 'linkfa',
+            'na[ _]lotura',
+            'nasc[ _]ar',
+            'tengill[ _][úg]g',
+            'ua',
+            'yüm yg',
+            'רא',
+            'وصلة مقالة جيدة',
+            'وصلة مقالة مختارة',
         ]
 
         categories = None
@@ -308,7 +308,7 @@ class CosmeticChangesToolkit:
             allstars.sort()
             for element in allstars:
                 text += '%s%s' % (element.strip(), config.line_separator)
-                pywikibot.log(u'%s' % element.strip())
+                pywikibot.log('%s' % element.strip())
         # Adding the interwiki
         if interwikiLinks:
             text = pywikibot.replaceLanguageLinks(text, interwikiLinks,
@@ -340,19 +340,19 @@ class CosmeticChangesToolkit:
                 if self.site.lang in ('en', 'fr') and \
                    family.versionnumber(self.site.lang) >= 14:
                     # do not change "Image" on en-wiki and fr-wiki
-                    assert u'Image' in namespaces
-                    namespaces.remove(u'Image')
+                    assert 'Image' in namespaces
+                    namespaces.remove('Image')
                 if self.site.lang == 'hu':
                     # do not change "Kép" on hu-wiki
-                    assert u'Kép' in namespaces
-                    namespaces.remove(u'Kép')
+                    assert 'Kép' in namespaces
+                    namespaces.remove('Kép')
                 elif self.site.lang == 'pt':
                     # bug #3346901 should be implemented
                     continue
             # lowerspaced and underscored namespaces
             for i in range(len(namespaces)):
                 item = namespaces[i].replace(' ', '[ _]')
-                item = u'[%s%s]' % (item[0], item[0].lower()) + item[1:]
+                item = '[%s%s]' % (item[0], item[0].lower()) + item[1:]
                 namespaces[i] = item
             namespaces.append(thisNs[0].lower() + thisNs[1:])
             if thisNs and namespaces:
@@ -706,18 +706,18 @@ class CosmeticChangesToolkit:
                       'startspace', 'gallery', 'hyperlink', 'interwiki', 'link']
         # change <number> ccm -> <number> cm³
         text = pywikibot.replaceExcept(text, r'(\d)\s*&nbsp;ccm',
-                                       r'\1&nbsp;' + u'cm³', exceptions)
-        text = pywikibot.replaceExcept(text, r'(\d)\s*ccm', r'\1&nbsp;' + u'cm³',
+                                       r'\1&nbsp;' + 'cm³', exceptions)
+        text = pywikibot.replaceExcept(text, r'(\d)\s*ccm', r'\1&nbsp;' + 'cm³',
                                        exceptions)
         # Solve wrong Nº sign with °C or °F
         # additional exception requested on fr-wiki for this stuff
-        pattern = re.compile(u'«.*?»', re.UNICODE)
+        pattern = re.compile('«.*?»', re.UNICODE)
         exceptions.append(pattern)
-        text = pywikibot.replaceExcept(text, r'(\d)\s*&nbsp;' + u'[º°]([CF])',
-                                       r'\1&nbsp;' + u'°' + r'\2', exceptions)
-        text = pywikibot.replaceExcept(text, r'(\d)\s*' + u'[º°]([CF])',
-                                       r'\1&nbsp;' + u'°' + r'\2', exceptions)
-        text = pywikibot.replaceExcept(text, u'º([CF])', u'°' + r'\1', exceptions)
+        text = pywikibot.replaceExcept(text, r'(\d)\s*&nbsp;' + '[º°]([CF])',
+                                       r'\1&nbsp;' + '°' + r'\2', exceptions)
+        text = pywikibot.replaceExcept(text, r'(\d)\s*' + '[º°]([CF])',
+                                       r'\1&nbsp;' + '°' + r'\2', exceptions)
+        text = pywikibot.replaceExcept(text, 'º([CF])', '°' + r'\1', exceptions)
         return text
 
     def fixArabicLetters(self, text):
@@ -738,40 +738,40 @@ class CosmeticChangesToolkit:
         ]
         # valid digits
         digits = {
-            'ckb': u'٠١٢٣٤٥٦٧٨٩',
-            'fa': u'۰۱۲۳۴۵۶۷۸۹',
+            'ckb': '٠١٢٣٤٥٦٧٨٩',
+            'fa': '۰۱۲۳۴۵۶۷۸۹',
         }
-        faChrs = u'ءاآأإئؤبپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیةيك' + digits['fa']
+        faChrs = 'ءاآأإئؤبپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیةيك' + digits['fa']
         new = digits.pop(self.site.lang)
         # This only works if there are only two items in digits dict
-        old = digits[digits.keys()[0]]
+        old = digits[list(digits.keys())[0]]
         # do not change inside file links
         namespaces = list(self.site.namespace(6, all=True))
-        pattern = re.compile(u'\[\[(' + '|'.join(namespaces) + '):.+?\.\w+? *(\|((\[\[.*?\]\])|.)*)?\]\]',
+        pattern = re.compile('\[\[(' + '|'.join(namespaces) + '):.+?\.\w+? *(\|((\[\[.*?\]\])|.)*)?\]\]',
                              re.UNICODE)
         #not to let bot edits in latin content
-        exceptions.append(re.compile(u"[^%(fa)s] *?\"*? *?, *?[^%(fa)s]"
+        exceptions.append(re.compile("[^%(fa)s] *?\"*? *?, *?[^%(fa)s]"
                                      % {'fa': faChrs}))
         exceptions.append(pattern)
-        text = pywikibot.replaceExcept(text, u',', u'،', exceptions)
+        text = pywikibot.replaceExcept(text, ',', '،', exceptions)
         if self.site.lang == 'ckb':
             text = pywikibot.replaceExcept(text,
-                                           u'\u0647([.\u060c_<\\]\\s])',
-                                           u'\u06d5\\1', exceptions)
-            text = pywikibot.replaceExcept(text, u'ه‌', u'ە', exceptions)
-            text = pywikibot.replaceExcept(text, u'ه', u'ھ', exceptions)
-        text = pywikibot.replaceExcept(text, u'ك', u'ک', exceptions)
-        text = pywikibot.replaceExcept(text, u'[ىي]', u'ی', exceptions)
+                                           '\u0647([.\u060c_<\\]\\s])',
+                                           '\u06d5\\1', exceptions)
+            text = pywikibot.replaceExcept(text, 'ه‌', 'ە', exceptions)
+            text = pywikibot.replaceExcept(text, 'ه', 'ھ', exceptions)
+        text = pywikibot.replaceExcept(text, 'ك', 'ک', exceptions)
+        text = pywikibot.replaceExcept(text, '[ىي]', 'ی', exceptions)
         return text
         # replace persian/arabic digits
         ## deactivated due to bug #3539407
         for i in range(0, 10):
             text = pywikibot.replaceExcept(text, old[i], new[i], exceptions)
         # do not change digits in class, style and table params
-        pattern = re.compile(u'\w+=(".+?"|\d+)', re.UNICODE)
+        pattern = re.compile('\w+=(".+?"|\d+)', re.UNICODE)
         exceptions.append(pattern)
         # do not change digits inside html-tags
-        pattern = re.compile(u'<[/]*?[^</]+?[/]*?>', re.UNICODE)
+        pattern = re.compile('<[/]*?[^</]+?[/]*?>', re.UNICODE)
         exceptions.append(pattern)
         exceptions.append('table')  # exclude tables for now
         # replace digits
@@ -832,7 +832,7 @@ class CosmeticChangesToolkit:
 
 class CosmeticChangesBot:
     def __init__(self, generator, acceptall=False,
-                 comment=u'Robot: Cosmetic changes', async=False):
+                 comment='Robot: Cosmetic changes', async=False):
         self.generator = generator
         self.acceptall = acceptall
         self.comment = comment
@@ -843,7 +843,7 @@ class CosmeticChangesBot:
         try:
             # Show the title of the page we're working on.
             # Highlight the title in purple.
-            pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+            pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                              % page.title())
             ccToolkit = CosmeticChangesToolkit(page.site, debug=True,
                                                namespace=page.namespace(),
@@ -852,7 +852,7 @@ class CosmeticChangesBot:
             if changedText.strip() != page.get().strip():
                 if not self.acceptall:
                     choice = pywikibot.inputChoice(
-                        u'Do you want to accept these changes?',
+                        'Do you want to accept these changes?',
                         ['Yes', 'No', 'All', 'Quit'], ['y', 'n', 'a', 'q'], 'n')
                     if choice == 'a':
                         self.acceptall = True

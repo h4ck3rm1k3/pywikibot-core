@@ -10,7 +10,7 @@ __version__ = '$Id$'
 import sys
 import threading
 import time
-import Queue
+import queue
 
 
 class ThreadedGenerator(threading.Thread):
@@ -57,7 +57,7 @@ class ThreadedGenerator(threading.Thread):
             raise RuntimeError("No generator for ThreadedGenerator to run.")
         self.args, self.kwargs = args, kwargs
         threading.Thread.__init__(self, group=group, name=name)
-        self.queue = Queue.Queue(qsize)
+        self.queue = queue.Queue(qsize)
         self.finished = threading.Event()
 
     def __iter__(self):
@@ -68,7 +68,7 @@ class ThreadedGenerator(threading.Thread):
         while not self.finished.isSet():
             try:
                 yield self.queue.get(True, 0.25)
-            except Queue.Empty:
+            except queue.Empty:
                 pass
             except KeyboardInterrupt:
                 self.stop()
@@ -86,7 +86,7 @@ class ThreadedGenerator(threading.Thread):
                     return
                 try:
                     self.queue.put_nowait(result)
-                except Queue.Full:
+                except queue.Full:
                     time.sleep(0.25)
                     continue
                 break
@@ -141,7 +141,7 @@ class ThreadList(list):
     ...
 
     """
-    def __init__(self, limit=sys.maxint, *args):
+    def __init__(self, limit=sys.maxsize, *args):
         self.limit = limit
         list.__init__(self, *args)
         for item in list(self):

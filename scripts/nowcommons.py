@@ -59,11 +59,11 @@ __version__ = '$Id$'
 import sys
 import re
 import webbrowser
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import pywikibot
 from pywikibot import i18n
 from pywikibot import pagegenerators as pg
-import image
+from . import image
 # only for nowCommonsMessage
 # from imagetransfer import nowCommonsMessage
 # nowCommonsMessage defined on line #163
@@ -71,119 +71,119 @@ import image
 
 nowCommons = {
     '_default': [
-        u'NowCommons'
+        'NowCommons'
     ],
     'ar': [
-        u'الآن كومنز',
-        u'الآن كومونز',
+        'الآن كومنز',
+        'الآن كومونز',
     ],
     'de': [
-        u'NowCommons',
-        u'NC',
-        u'NCT',
-        u'Nowcommons',
-        u'NowCommons/Mängel',
-        u'NowCommons-Überprüft',
+        'NowCommons',
+        'NC',
+        'NCT',
+        'Nowcommons',
+        'NowCommons/Mängel',
+        'NowCommons-Überprüft',
     ],
     'en': [
-        u'NowCommons',
-        u'Ncd',
+        'NowCommons',
+        'Ncd',
     ],
     'eo': [
-        u'Nun en komunejo',
-        u'NowCommons',
+        'Nun en komunejo',
+        'NowCommons',
     ],
     'fa': [
-        u'موجود در انبار',
-        u'NowCommons',
+        'موجود در انبار',
+        'NowCommons',
     ],
     'fr': [
-        u'Image sur Commons',
-        u'DoublonCommons',
-        u'Déjà sur Commons',
-        u'Maintenant sur commons',
-        u'Désormais sur Commons',
-        u'NC',
-        u'NowCommons',
-        u'Nowcommons',
-        u'Sharedupload',
-        u'Sur Commons',
-        u'Sur Commons2',
+        'Image sur Commons',
+        'DoublonCommons',
+        'Déjà sur Commons',
+        'Maintenant sur commons',
+        'Désormais sur Commons',
+        'NC',
+        'NowCommons',
+        'Nowcommons',
+        'Sharedupload',
+        'Sur Commons',
+        'Sur Commons2',
     ],
     'he': [
-        u'גם בוויקישיתוף'
+        'גם בוויקישיתוף'
     ],
     'hu': [
-        u'Azonnali-commons',
-        u'NowCommons',
-        u'Nowcommons',
-        u'NC'
+        'Azonnali-commons',
+        'NowCommons',
+        'Nowcommons',
+        'NC'
     ],
     'ia': [
-        u'OraInCommons'
+        'OraInCommons'
     ],
     'it': [
-        u'NowCommons',
+        'NowCommons',
     ],
     'ja': [
-        u'NowCommons',
+        'NowCommons',
     ],
     'ko': [
-        u'NowCommons',
-        u'공용중복',
-        u'공용 중복',
-        u'Nowcommons',
+        'NowCommons',
+        '공용중복',
+        '공용 중복',
+        'Nowcommons',
     ],
     'nds-nl': [
-        u'NoenCommons',
-        u'NowCommons',
+        'NoenCommons',
+        'NowCommons',
     ],
     'nl': [
-        u'NuCommons',
-        u'Nucommons',
-        u'NowCommons',
-        u'Nowcommons',
-        u'NCT',
-        u'Nct',
+        'NuCommons',
+        'Nucommons',
+        'NowCommons',
+        'Nowcommons',
+        'NCT',
+        'Nct',
     ],
     'ro': [
-        u'NowCommons'
+        'NowCommons'
     ],
     'ru': [
-        u'NowCommons',
-        u'NCT',
-        u'Nowcommons',
-        u'Now Commons',
-        u'Db-commons',
-        u'Перенесено на Викисклад',
-        u'На Викискладе',
+        'NowCommons',
+        'NCT',
+        'Nowcommons',
+        'Now Commons',
+        'Db-commons',
+        'Перенесено на Викисклад',
+        'На Викискладе',
     ],
     'zh': [
-        u'NowCommons',
-        u'Nowcommons',
-        u'NCT',
+        'NowCommons',
+        'Nowcommons',
+        'NCT',
     ],
 }
 
 nowCommonsMessage = {
-    'ar': u'Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø¢Ù† Ù…ØªÙˆÙØ± ÙÙŠ ÙˆÙŠÙƒÙŠÙ…ÙŠØ¯ÙŠØ§ ÙƒÙˆÙ…Ù†Ø².',
-    'de': u'Datei ist jetzt auf Wikimedia Commons verfÃ¼gbar.',
-    'en': u'File is now available on Wikimedia Commons.',
-    'eo': u'Dosiero nun estas havebla en la Wikimedia-Komunejo.',
-    'fa': u'Ù¾Ø±ÙˆÙ†Ø¯Ù‡ Ø§Ú©Ù†ÙˆÙ† Ø¯Ø± Ø§Ù†Ø¨Ø§Ø± Ø§Ø³Øª',
-    'he': u'×”×§×•×‘×¥ ×–×ž×™×Ÿ ×›×¢×ª ×‘×•×•×™×§×™×©×™×ª×•×£.',
-    'hu': u'A fÃ¡jl most mÃ¡r elÃ©rhetÅ‘ a Wikimedia Commonson',
-    'ia': u'Le file es ora disponibile in Wikimedia Commons.',
-    'ja': u'ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã‚¦ã‚£ã‚­ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ»ã‚³ãƒ¢ãƒ³ã‚ºã«ã‚ã‚Šã¾ã™',
-    'it': u'L\'immagine Ã¨ adesso disponibile su Wikimedia Commons.',
-    'kk': u'Ð¤Ð°Ð¹Ð»Ð´Ñ‹ ÐµÐ½Ð´Ñ– Wikimedia ÐžÑ€Ñ‚Ð°Ò›Ò›Ð¾Ñ€Ñ‹Ð½Ð°Ð½ Ò›Ð°Ñ‚Ñ‹Ð½Ð°ÑƒÒ“Ð° Ð±Ð¾Ð»Ð°Ð´Ñ‹.',
-    'lt': u'Failas Ä¯keltas Ä¯ Wikimedia Commons projektÄ….',
-    'nl': u'Dit bestand staat nu op [[w:nl:Wikimedia Commons|Wikimedia Commons]].',
-    'pl': u'Plik jest teraz dostÄ™pny na Wikimedia Commons.',
-    'pt': u'Arquivo estÃ¡ agora na Wikimedia Commons.',
-    'ru': u'[[Ð’ÐŸ:ÐšÐ‘Ð£#Ð¤8|Ð¤.8]]: Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¾ Ð½Ð° [[Ð’Ð¸ÐºÐ¸ÑÐºÐ»Ð°Ð´]]Ðµ',
-    'sr': u'Ð¡Ð»Ð¸ÐºÐ° Ñ˜Ðµ ÑÐ°Ð´Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð° Ð¸ Ð½Ð° Ð’Ð¸ÐºÐ¸Ð¼ÐµÐ´Ð¸Ñ˜Ð° ÐžÑÑ‚Ð°Ð²Ð¸.',
-    'zh': u'æª”æ¡ˆå·²å­˜åœ¨æ–¼ç¶­åŸºå…±äº«è³‡æºã€‚',
+    'ar': 'Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø¢Ù† Ù…ØªÙˆÙØ± ÙÙŠ ÙˆÙŠÙƒÙŠÙ…ÙŠØ¯ÙŠØ§ ÙƒÙˆÙ…Ù†Ø².',
+    'de': 'Datei ist jetzt auf Wikimedia Commons verfÃ¼gbar.',
+    'en': 'File is now available on Wikimedia Commons.',
+    'eo': 'Dosiero nun estas havebla en la Wikimedia-Komunejo.',
+    'fa': 'Ù¾Ø±ÙˆÙ†Ø¯Ù‡ Ø§Ú©Ù†ÙˆÙ† Ø¯Ø± Ø§Ù†Ø¨Ø§Ø± Ø§Ø³Øª',
+    'he': '×”×§×•×‘×¥ ×–×ž×™×Ÿ ×›×¢×ª ×‘×•×•×™×§×™×©×™×ª×•×£.',
+    'hu': 'A fÃ¡jl most mÃ¡r elÃ©rhetÅ‘ a Wikimedia Commonson',
+    'ia': 'Le file es ora disponibile in Wikimedia Commons.',
+    'ja': 'ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã‚¦ã‚£ã‚­ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ»ã‚³ãƒ¢ãƒ³ã‚ºã«ã‚ã‚Šã¾ã™',
+    'it': 'L\'immagine Ã¨ adesso disponibile su Wikimedia Commons.',
+    'kk': 'Ð¤Ð°Ð¹Ð»Ð´Ñ‹ ÐµÐ½Ð´Ñ– Wikimedia ÐžÑ€Ñ‚Ð°Ò›Ò›Ð¾Ñ€Ñ‹Ð½Ð°Ð½ Ò›Ð°Ñ‚Ñ‹Ð½Ð°ÑƒÒ“Ð° Ð±Ð¾Ð»Ð°Ð´Ñ‹.',
+    'lt': 'Failas Ä¯keltas Ä¯ Wikimedia Commons projektÄ….',
+    'nl': 'Dit bestand staat nu op [[w:nl:Wikimedia Commons|Wikimedia Commons]].',
+    'pl': 'Plik jest teraz dostÄ™pny na Wikimedia Commons.',
+    'pt': 'Arquivo estÃ¡ agora na Wikimedia Commons.',
+    'ru': '[[Ð’ÐŸ:ÐšÐ‘Ð£#Ð¤8|Ð¤.8]]: Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¾ Ð½Ð° [[Ð’Ð¸ÐºÐ¸ÑÐºÐ»Ð°Ð´]]Ðµ',
+    'sr': 'Ð¡Ð»Ð¸ÐºÐ° Ñ˜Ðµ ÑÐ°Ð´Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð° Ð¸ Ð½Ð° Ð’Ð¸ÐºÐ¸Ð¼ÐµÐ´Ð¸Ñ˜Ð° ÐžÑÑ‚Ð°Ð²Ð¸.',
+    'zh': 'æª”æ¡ˆå·²å­˜åœ¨æ–¼ç¶­åŸºå…±äº«è³‡æºã€‚',
 }
 
 namespaceInTemplate = [
@@ -252,19 +252,19 @@ class NowCommonsDeleteBot:
                     continue
                 url_local = x.group('urllocal')
                 url_commons = x.group('urlcommons')
-                pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+                pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                                  % image_local)
-                pywikibot.output(u'Local: %s\nCommons: %s\n'
+                pywikibot.output('Local: %s\nCommons: %s\n'
                                  % (url_local, url_commons))
                 result1 = webbrowser.open(url_local, 0, 1)
                 result2 = webbrowser.open(url_commons, 0, 1)
                 if image_local.split('Image:')[1] == image_commons:
                     choice = pywikibot.inputChoice(
-                        u'The local and the commons images have the same name, continue?',
+                        'The local and the commons images have the same name, continue?',
                         ['Yes', 'No'], ['y', 'N'], 'N')
                 else:
                     choice = pywikibot.inputChoice(
-                        u'Are the two images equal?',
+                        'Are the two images equal?',
                         ['Yes', 'No'], ['y', 'N'], 'N')
                 if choice.lower() in ['y', 'yes']:
                     yield [image_local, image_commons]
@@ -329,7 +329,7 @@ class NowCommonsDeleteBot:
         """
         title = talk_page.replace(" ", "_")
         encodedTitle = title.encode(self.site.encoding())
-        return urllib.quote(encodedTitle)
+        return urllib.parse.quote(encodedTitle)
 
     def run(self):
         commons = pywikibot.getSite('commons', 'commons')
@@ -344,12 +344,12 @@ class NowCommonsDeleteBot:
                 # If use_hash is true, we have already print this before, no need
                 # Show the title of the page we're working on.
                 # Highlight the title in purple.
-                pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+                pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                                  % page.title())
             try:
                 localImagePage = pywikibot.ImagePage(self.site, page.title())
                 if localImagePage.fileIsOnCommons():
-                    pywikibot.output(u'File is already on Commons.')
+                    pywikibot.output('File is already on Commons.')
                     continue
                 md5 = localImagePage.getFileMd5Sum()
                 if use_hash:
@@ -358,25 +358,25 @@ class NowCommonsDeleteBot:
                     filenameOnCommons = self.findFilenameOnCommons(
                         localImagePage)
                 if not filenameOnCommons and not use_hash:
-                    pywikibot.output(u'NowCommons template not found.')
+                    pywikibot.output('NowCommons template not found.')
                     continue
                 commonsImagePage = pywikibot.ImagePage(commons, 'Image:%s'
                                                        % filenameOnCommons)
                 if localImagePage.title(withNamespace=False) == \
                  commonsImagePage.title(withNamespace=False) and use_hash:
                     pywikibot.output(
-                        u'The local and the commons images have the same name')
+                        'The local and the commons images have the same name')
                 if localImagePage.title(withNamespace=False) != \
                  commonsImagePage.title(withNamespace=False):
                     usingPages = list(localImagePage.usingPages())
                     if usingPages and usingPages != [localImagePage]:
                         pywikibot.output(
-                            u'\"\03{lightred}%s\03{default}\" is still used in %i pages.'
+                            '\"\03{lightred}%s\03{default}\" is still used in %i pages.'
                             % (localImagePage.title(withNamespace=False),
                                len(usingPages)))
                         if replace is True:
                                 pywikibot.output(
-                                    u'Replacing \"\03{lightred}%s\03{default}\" by \
+                                    'Replacing \"\03{lightred}%s\03{default}\" by \
                                     \"\03{lightgreen}%s\03{default}\".'
                                     % (localImagePage.title(withNamespace=False),
                                        commonsImagePage.title(withNamespace=False)))
@@ -407,40 +407,40 @@ class NowCommonsDeleteBot:
                                 if usingPages > 0 and use_hash:
                                     # just an enter
                                     pywikibot.input(
-                                        u'There are still %s pages with this \
+                                        'There are still %s pages with this \
                                         image, confirm the manual removal from them please.'
                                         % usingPages)
 
                         else:
-                            pywikibot.output(u'Please change them manually.')
+                            pywikibot.output('Please change them manually.')
                         continue
                     else:
                         pywikibot.output(
-                            u'No page is using \"\03{lightgreen}%s\03{default}\" anymore.'
+                            'No page is using \"\03{lightgreen}%s\03{default}\" anymore.'
                             % localImagePage.title(withNamespace=False))
                 commonsText = commonsImagePage.get()
                 if replaceonly is False:
                     if md5 == commonsImagePage.getFileMd5Sum():
                         pywikibot.output(
-                            u'The image is identical to the one on Commons.')
+                            'The image is identical to the one on Commons.')
                         if len(localImagePage.getFileVersionHistory()) > 1 and not use_hash:
                             pywikibot.output(
-                                u"This image has a version history. Please \
+                                "This image has a version history. Please \
                                 delete it manually after making sure that the \
                                 old versions are not worth keeping.""")
                             continue
                         if autonomous is False:
                             pywikibot.output(
-                                u'\n\n>>>> Description on \03{lightpurple}%s\03{default} <<<<\n'
+                                '\n\n>>>> Description on \03{lightpurple}%s\03{default} <<<<\n'
                                 % page.title())
                             pywikibot.output(localImagePage.get())
                             pywikibot.output(
-                                u'\n\n>>>> Description on \03{lightpurple}%s\03{default} <<<<\n'
+                                '\n\n>>>> Description on \03{lightpurple}%s\03{default} <<<<\n'
                                 % commonsImagePage.title())
                             pywikibot.output(commonsText)
-                            choice = pywikibot.inputChoice(u'Does the description \
+                            choice = pywikibot.inputChoice('Does the description \
                                                            on Commons contain all required source and license\n'
-                                                           u'information?',
+                                                           'information?',
                                                            ['yes', 'no'], ['y', 'N'], 'N')
                             if choice.lower() in ['y', 'yes']:
                                 localImagePage.delete(
@@ -452,9 +452,9 @@ class NowCommonsDeleteBot:
                                 % filenameOnCommons, prompt=False)
                     else:
                         pywikibot.output(
-                            u'The image is not identical to the one on Commons.')
+                            'The image is not identical to the one on Commons.')
             except (pywikibot.NoPage, pywikibot.IsRedirectPage) as e:
-                pywikibot.output(u'%s' % e[0])
+                pywikibot.output('%s' % e[0])
                 continue
 
 

@@ -1189,7 +1189,7 @@ class ISBN:
                 break
 
         # Determine the group
-        for groupNumber in ranges.iterkeys():
+        for groupNumber in ranges.keys():
             if rest.startswith(groupNumber):
                 result += groupNumber + '-'
                 rest = rest[len(groupNumber):]
@@ -1334,7 +1334,7 @@ def getIsbn(code):
         try:
             i = ISBN10(code)
         except InvalidIsbnException as e10:
-            raise InvalidIsbnException(u'ISBN-13: %s / ISBN-10: %s'
+            raise InvalidIsbnException('ISBN-13: %s / ISBN-10: %s'
                                        % (e13, e10))
     return i
 
@@ -1407,24 +1407,24 @@ class IsbnBot:
                 newText = self.isbnR.sub(_hyphenateIsbnNumber, newText)
             self.save(page, newText)
         except pywikibot.NoPage:
-            pywikibot.output(u"Page %s does not exist?!"
+            pywikibot.output("Page %s does not exist?!"
                              % page.title(asLink=True))
         except pywikibot.IsRedirectPage:
-            pywikibot.output(u"Page %s is a redirect; skipping."
+            pywikibot.output("Page %s is a redirect; skipping."
                              % page.title(asLink=True))
         except pywikibot.LockedPage:
-            pywikibot.output(u"Page %s is locked?!" % page.title(asLink=True))
+            pywikibot.output("Page %s is locked?!" % page.title(asLink=True))
 
     def save(self, page, text):
         if text != page.get():
             # Show the title of the page we're working on.
             # Highlight the title in purple.
-            pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+            pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                              % page.title())
             pywikibot.showDiff(page.get(), text)
             if not self.always:
                 choice = pywikibot.inputChoice(
-                    u'Do you want to accept these changes?',
+                    'Do you want to accept these changes?',
                     ['Yes', 'No', 'Always yes'], ['y', 'N', 'a'], 'N')
                 if choice == 'n':
                     return
@@ -1435,14 +1435,14 @@ class IsbnBot:
                 try:
                     page.put(text, comment=self.comment)
                 except pywikibot.EditConflict:
-                    pywikibot.output(u'Skipping %s because of edit conflict'
+                    pywikibot.output('Skipping %s because of edit conflict'
                                      % (page.title(),))
                 except pywikibot.SpamfilterError as e:
                     pywikibot.output(
-                        u'Cannot change %s because of blacklist entry %s'
+                        'Cannot change %s because of blacklist entry %s'
                         % (page.title(), e.url))
                 except pywikibot.LockedPage:
-                    pywikibot.output(u'Skipping %s (locked page)'
+                    pywikibot.output('Skipping %s (locked page)'
                                      % (page.title(),))
             else:
                 # Save the page in the background. No need to catch exceptions.

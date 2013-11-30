@@ -55,7 +55,7 @@ class DeletionRobot:
         """ Starts the robot's action. """
         #Loop through everything in the page generator and delete it.
         for page in self.generator:
-            pywikibot.output(u'Processing page %s' % page.title())
+            pywikibot.output('Processing page %s' % page.title())
             if self.undelete:
                 page.undelete(self.summary, throttle=True)
             else:
@@ -84,7 +84,7 @@ def main():
             always = True
         elif arg.startswith('-summary'):
             if len(arg) == len('-summary'):
-                summary = pywikibot.input(u'Enter a reason for the deletion:')
+                summary = pywikibot.input('Enter a reason for the deletion:')
             else:
                 summary = arg[len('-summary:'):]
                 #        elif arg.startswith('-nosubcats'):
@@ -94,7 +94,7 @@ def main():
             doImages = True
             if len(arg) == len('-images'):
                 pageName = pywikibot.input(
-                    u'Enter the page with the images to delete:')
+                    'Enter the page with the images to delete:')
             else:
                 pageName = arg[len('-images'):]
         elif arg.startswith('-undelete'):
@@ -118,7 +118,7 @@ def main():
         page = pywikibot.Page(mysite, pageName)
         generator = pagegenerators.ImagesPageGenerator(page)
     if not summary:
-        summary = pywikibot.input(u'Enter a reason for the %sdeletion:'
+        summary = pywikibot.input('Enter a reason for the %sdeletion:'
                                   % ['', 'un'][undelete])
     if not generator:
         generator = genFactory.getCombinedGenerator()

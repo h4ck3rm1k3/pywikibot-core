@@ -13,7 +13,7 @@ __version__ = '$Id$'
 import os
 import time
 import datetime
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import subprocess
 from generate_user_files import get_base_dir
 
@@ -158,7 +158,7 @@ def getversion_onlinerepo(repo=None):
     url = repo or 'https://git.wikimedia.org/feed/pywikibot/core'
     hsh = None
     try:
-        buf = urllib.urlopen(url).readlines()
+        buf = urllib.request.urlopen(url).readlines()
         hsh = buf[13].split('/')[5][:-1]
     except:
         raise ParseError
@@ -185,6 +185,6 @@ def getfileversion(filename):
         stat = os.stat(fn)
         mtime = datetime.datetime.fromtimestamp(stat.st_mtime).isoformat(' ')
     if mtime and __version__:
-        return u'%s %s %s' % (filename, __version__[5:-1][:7], mtime)
+        return '%s %s %s' % (filename, __version__[5:-1][:7], mtime)
     else:
         return None

@@ -141,7 +141,7 @@ def UserEditFilterGenerator(generator, username, timestamp=None, skip=False):
         if found and not skip or not found and skip:
             yield page
         else:
-            pywikibot.output(u'Skipping %s' % page.title(asLink=True))
+            pywikibot.output('Skipping %s' % page.title(asLink=True))
 
 
 class XmlDumpTemplatePageGenerator:
@@ -216,11 +216,11 @@ class TemplateRobot:
         site = pywikibot.Site()
         if self.addedCat:
             self.addedCat = pywikibot.Category(
-                site, u'%s:%s' % (site.namespace(14), self.addedCat))
+                site, '%s:%s' % (site.namespace(14), self.addedCat))
 
         # get edit summary message if it's empty
         if (self.editSummary == ''):
-            Param = {'list': (', ').join(self.templates.keys()),
+            Param = {'list': (', ').join(list(self.templates.keys())),
                      'num': len(self.templates)}
             if self.remove:
                 self.editSummary = i18n.twntranslate(
@@ -245,7 +245,7 @@ class TemplateRobot:
         replacements = []
         exceptions = {}
         site = pywikibot.getSite()
-        for old, new in self.templates.iteritems():
+        for old, new in self.templates.items():
             namespaces = list(site.namespace(10, all=True))
             if not site.nocapitalize:
                 pattern = '[' + \
@@ -309,7 +309,7 @@ def main(*args):
         elif arg.startswith('-xml'):
             if len(arg) == 4:
                 xmlfilename = pywikibot.input(
-                    u'Please enter the XML dump\'s filename: ')
+                    'Please enter the XML dump\'s filename: ')
             else:
                 xmlfilename = arg[5:]
         elif arg.startswith('-category:'):
@@ -338,12 +338,12 @@ def main(*args):
                 templates[templateNames[i]] = templateNames[i + 1]
         except IndexError:
             pywikibot.output(
-u'Unless using solely -subst or -remove, you must give an even number of template names.')
+'Unless using solely -subst or -remove, you must give an even number of template names.')
             return
 
     oldTemplates = []
     ns = pywikibot.Site().template_namespace()
-    for templateName in templates.keys():
+    for templateName in list(templates.keys()):
         oldTemplate = pywikibot.Page(pywikibot.Site(), templateName, ns=10)
         oldTemplates.append(oldTemplate)
 

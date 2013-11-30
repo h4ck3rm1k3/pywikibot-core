@@ -27,11 +27,11 @@ _logger = "wiki.login"
 # second parameter, otherwise it must be None
 botList = {
     'wikipedia': {
-        'en': [u'Wikipedia:Bots/Status/active bots', 'BotS'],
-        'simple': [u'Wikipedia:Bots', '/links']
+        'en': ['Wikipedia:Bots/Status/active bots', 'BotS'],
+        'simple': ['Wikipedia:Bots', '/links']
     },
     'gentoo': {
-        'en': [u'Help:Bots', None],
+        'en': ['Help:Bots', None],
     }
 }
 
@@ -52,7 +52,7 @@ class LoginManager:
                     self.site.family.name][self.site.code]
             except KeyError:
                 raise NoUsername(
-u"""ERROR: Sysop username for %(fam_name)s:%(wiki_code)s is undefined.
+"""ERROR: Sysop username for %(fam_name)s:%(wiki_code)s is undefined.
 If you have a sysop account for that site, please add a line to user-config.py:
 
 sysopnames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
@@ -64,7 +64,7 @@ sysopnames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
                     self.site.family.name][self.site.code]
             except:
                 raise NoUsername(
-u"""ERROR: Username for %(fam_name)s:%(wiki_code)s is undefined.
+"""ERROR: Username for %(fam_name)s:%(wiki_code)s is undefined.
 If you have an account for that site, please add a line to user-config.py:
 
 usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
@@ -119,7 +119,7 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
         """
         # THIS IS OVERRIDDEN IN data/api.py
         filename = config.datafilepath('pywikibot.lwp')
-        pywikibot.debug(u"Storing cookies to %s" % filename,
+        pywikibot.debug("Storing cookies to %s" % filename,
                         _logger)
         f = open(filename, 'w')
         f.write(data)
@@ -166,24 +166,24 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
             # As we don't want the password to appear on the screen, we set
             # password = True
             self.password = pywikibot.input(
-                u'Password for user %(name)s on %(site)s (no characters will be shown):'
+                'Password for user %(name)s on %(site)s (no characters will be shown):'
                 % {'name': self.username, 'site': self.site},
                 password=True)
 #        self.password = self.password.encode(self.site.encoding())
 
-        pywikibot.output(u"Logging in to %(site)s as %(name)s"
+        pywikibot.output("Logging in to %(site)s as %(name)s"
                          % {'name': self.username, 'site': self.site})
         try:
             cookiedata = self.getCookie()
         except pywikibot.data.api.APIError as e:
-            pywikibot.error(u"Login failed (%s)." % e.code)
+            pywikibot.error("Login failed (%s)." % e.code)
             if retry:
                 self.password = None
                 return self.login(retry=True)
             else:
                 return False
         self.storecookiedata(cookiedata)
-        pywikibot.log(u"Should be logged in now")
+        pywikibot.log("Should be logged in now")
 ##        # Show a warning according to the local bot policy
 ##   FIXME: disabled due to recursion; need to move this to the Site object after
 ##   login

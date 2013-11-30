@@ -29,15 +29,15 @@ __version__ = '$Id$'
 
 import os
 import time
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 import tempfile
 import pywikibot
 from pywikibot import config
 
 
 class UploadRobot:
-    def __init__(self, url, urlEncoding=None, description=u'',
+    def __init__(self, url, urlEncoding=None, description='',
                  useFilename=None, keepFilename=False,
                  verifyDescription=True, ignoreWarning=False,
                  targetSite=None, uploadByUrl=False):
@@ -70,22 +70,22 @@ class UploadRobot:
 
     def read_file_content(self):
         """Return name of temp file in which remote file is saved."""
-        pywikibot.output(u'Reading file %s' % self.url)
+        pywikibot.output('Reading file %s' % self.url)
         resume = False
         dt = 15
-        uo = urllib.URLopener()
+        uo = urllib.request.URLopener()
         retrieved = False
         _contents=""
         rlen=0
         while not retrieved:
             if resume:
-                pywikibot.output(u"Resume download...")
+                pywikibot.output("Resume download...")
                 uo.addheader('Range', 'bytes=%s-' % rlen)
 
             infile = uo.open(self.url)
 
             if 'text/html' in infile.info().getheader('Content-Type'):
-                pywikibot.output(u"Couldn't download the image: the requested URL was not found on server.")
+                pywikibot.output("Couldn't download the image: the requested URL was not found on server.")
                 return
 
             content_len = infile.info().getheader('Content-Length')
@@ -105,11 +105,11 @@ class UploadRobot:
                 if rlen < content_len:
                     retrieved = False
                     pywikibot.output(
-                        u"Connection closed at byte %s (%s left)"
+                        "Connection closed at byte %s (%s left)"
                         % (rlen, content_len))
                     if accept_ranges and rlen > 0:
                         resume = True
-                    pywikibot.output(u"Sleeping for %d seconds..." % dt)
+                    pywikibot.output("Sleeping for %d seconds..." % dt)
                     time.sleep(dt)
                     if dt <= 60:
                         dt += 15
@@ -117,7 +117,7 @@ class UploadRobot:
                         dt += 60
             else:
                 pywikibot.log(
-                    u"WARNING: No check length to retrieved data is possible.")
+                    "WARNING: No check length to retrieved data is possible.")
         handle, tempname = tempfile.mkstemp()
         t = os.fdopen(handle, "wb")
         t.write(_contents)
@@ -131,24 +131,24 @@ class UploadRobot:
         # Filename may be either a local file path or a URL
         if "://" in filename:
             # extract the path portion of the URL
-            filename = urlparse.urlparse(filename).path
+            filename = urllib.parse.urlparse(filename).path
         filename = os.path.basename(filename)
 
         if self.useFilename:
             filename = self.useFilename
         if not self.keepFilename:
             pywikibot.output(
-                u"The filename on the target wiki will default to: %s"
+                "The filename on the target wiki will default to: %s"
                 % filename)
             # FIXME: these 2 belong somewhere else, presumably in family
             forbidden = '/'  # to be extended
-            allowed_formats = (u'gif', u'jpg', u'jpeg', u'mid', u'midi',
-                               u'ogg', u'png', u'svg', u'xcf', u'djvu',
-                               u'ogv', u'oga', u'tif', u'tiff')
+            allowed_formats = ('gif', 'jpg', 'jpeg', 'mid', 'midi',
+                               'ogg', 'png', 'svg', 'xcf', 'djvu',
+                               'ogv', 'oga', 'tif', 'tiff')
             # ask until it's valid
             while True:
                 newfn = pywikibot.input(
-                    u'Enter a better name, or press enter to accept:')
+                    'Enter a better name, or press enter to accept:')
                 if newfn == "":
                     newfn = filename
                     break
@@ -161,8 +161,8 @@ class UploadRobot:
                     continue
                 if ext not in allowed_formats:
                     choice = pywikibot.inputChoice(
-                        u"File format is not one of [%s], but %s. Continue?"
-                        % (u' '.join(allowed_formats), ext),
+                        "File format is not one of [%s], but %s. Continue?"
+                        % (' '.join(allowed_formats), ext),
                         ['yes', 'no'], ['y', 'N'], 'N')
                     if choice == 'n':
                         continue
@@ -170,12 +170,12 @@ class UploadRobot:
             if newfn != '':
                 filename = newfn
         # A proper description for the submission.
-        pywikibot.output(u"The suggested description is:")
+        pywikibot.output("The suggested description is:")
         pywikibot.output(self.description)
         if self.verifyDescription:
-            newDescription = u''
+            newDescription = ''
             choice = pywikibot.inputChoice(
-                u'Do you want to change this description?',
+                'Do you want to change this description?',
                 ['Yes', 'No'], ['y', 'N'], 'n')
             if choice == 'y':
                 from pywikibot import editor as editarticle
@@ -200,7 +200,7 @@ class UploadRobot:
         imagepage = pywikibot.ImagePage(site, filename)  # normalizes filename
         imagepage.text = self.description
 
-        pywikibot.output(u'Uploading file to %s via API....' % site)
+        pywikibot.output('Uploading file to %s via API....' % site)
 
         try:
             if self.uploadByUrl:
@@ -215,16 +215,16 @@ class UploadRobot:
                             ignore_warnings=self.ignoreWarning)
 
         except pywikibot.UploadWarning as warn:
-            pywikibot.output(u"We got a warning message: ", newline=False)
+            pywikibot.output("We got a warning message: ", newline=False)
             pywikibot.output(str(warn))
-            answer = pywikibot.inputChoice(u"Do you want to ignore?",
+            answer = pywikibot.inputChoice("Do you want to ignore?",
                                            ['Yes', 'No'], ['y', 'N'], 'N')
             if answer == "y":
                 self.ignoreWarning = 1
                 self.keepFilename = True
                 return self.upload_image(debug)
             else:
-                pywikibot.output(u"Upload aborted.")
+                pywikibot.output("Upload aborted.")
                 return
 
         except Exception as e:
@@ -233,21 +233,21 @@ class UploadRobot:
 
         else:
             #No warning, upload complete.
-            pywikibot.output(u"Upload successful.")
+            pywikibot.output("Upload successful.")
             return filename  # data['filename']
 
     def run(self):
         while not self.urlOK():
             if not self.url:
-                pywikibot.output(u'No input filename given')
+                pywikibot.output('No input filename given')
             else:
-                pywikibot.output(u'Invalid input filename given. Try again.')
-            self.url = pywikibot.input(u'File or URL where image is now:')
+                pywikibot.output('Invalid input filename given. Try again.')
+            self.url = pywikibot.input('File or URL where image is now:')
         return self.upload_image()
 
 
 def main(*args):
-    url = u''
+    url = ''
     description = []
     keepFilename = False
     useFilename = None
@@ -263,11 +263,11 @@ def main(*args):
                 useFilename = arg[10:]
             elif arg.startswith('-noverify'):
                 verifyDescription = False
-            elif url == u'':
+            elif url == '':
                 url = arg
             else:
                 description.append(arg)
-    description = u' '.join(description)
+    description = ' '.join(description)
     bot = UploadRobot(url, description=description, useFilename=useFilename,
                       keepFilename=keepFilename,
                       verifyDescription=verifyDescription)

@@ -72,7 +72,7 @@ def main(*args):
     for arg in pywikibot.handleArgs(*args):
         if arg.startswith("-pass"):
             if len(arg) == 5:
-                password = pywikibot.input(u'Password for all accounts (no characters will be shown):',
+                password = pywikibot.input('Password for all accounts (no characters will be shown):',
                                            password=True)
             else:
                 password = arg[6:]
@@ -81,7 +81,7 @@ def main(*args):
         elif arg == "-all":
             logall = True
         elif arg == "-force":
-            pywikibot.output(u"To force a re-login, please delete the revelant lines from '%s' (or the entire file) and try again." %
+            pywikibot.output("To force a re-login, please delete the revelant lines from '%s' (or the entire file) and try again." %
                              join(config.base_dir, 'pywikibot.lwp'))
         elif arg == "-logout":
             logout = True
@@ -106,15 +106,15 @@ def main(*args):
                     site.login()
                 user = site.user()
                 if user:
-                    pywikibot.output(u"Logged in on %(site)s as %(user)s." % locals())
+                    pywikibot.output("Logged in on %(site)s as %(user)s." % locals())
                 else:
                     if logout:
-                        pywikibot.output(u"Logged out of %(site)s." % locals())
+                        pywikibot.output("Logged out of %(site)s." % locals())
                     else:
-                        pywikibot.output(u"Not logged in on %(site)s." % locals())
+                        pywikibot.output("Not logged in on %(site)s." % locals())
             except NoSuchSite:
-                pywikibot.output(u'%s.%s is not a valid site, please remove it'
-                                 u' from your config' % (lang, familyName))
+                pywikibot.output('%s.%s is not a valid site, please remove it'
+                                 ' from your config' % (lang, familyName))
 if __name__ == "__main__":
     try:
         main()

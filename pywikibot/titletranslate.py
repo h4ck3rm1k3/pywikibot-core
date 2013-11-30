@@ -49,14 +49,14 @@ def translate(page, hints=None, auto=True, removebrackets=False, site=None, fami
                     continue
                 ns = page.namespace()
                 if ns:
-                    newname = u'%s:%s' % (family.namespace('_default', ns),
+                    newname = '%s:%s' % (family.namespace('_default', ns),
                                           page.title(withNamespace=False))
                 else:
                     # article in the main namespace
                     newname = page.title()
                 # ... unless we do want brackets
                 if removebrackets:
-                    newname = re.sub(re.compile(r"\W*?\(.*?\)\W*?", re.UNICODE), u" ", newname)
+                    newname = re.sub(re.compile(r"\W*?\(.*?\)\W*?", re.UNICODE), " ", newname)
             try:
                 number = int(codes)
                 codes = site.family.languages_by_size[:number]
@@ -75,7 +75,7 @@ def translate(page, hints=None, auto=True, removebrackets=False, site=None, fami
                             result.append(x)
                 else:
                     if pywikibot.verbose:
-                        pywikibot.output(u"Ignoring unknown language code %s"
+                        pywikibot.output("Ignoring unknown language code %s"
                                          % newcode)
 
     # Autotranslate dates into all other languages, the rest will come from
@@ -92,9 +92,9 @@ def translate(page, hints=None, auto=True, removebrackets=False, site=None, fami
                      page.site.code in date.maxyearAD and
                      value > date.maxyearAD[page.site.code]):
                 pywikibot.output(
-                    u'TitleTranslate: %s was recognized as %s with value %d'
+                    'TitleTranslate: %s was recognized as %s with value %d'
                     % (page.title(), dictName, value))
-                for entryLang, entry in date.formats[dictName].items():
+                for entryLang, entry in list(date.formats[dictName].items()):
                     if entryLang != page.site.code:
                         if (dictName == 'yearsBC' and
                                 entryLang in date.maxyearBC and
@@ -114,12 +114,12 @@ def translate(page, hints=None, auto=True, removebrackets=False, site=None, fami
                                 result.append(x)  # add new page
     return result
 
-bcDateErrors = [u'[[ko:%d년]]']
+bcDateErrors = ['[[ko:%d년]]']
 
 
 def appendFormatedDates(result, dictName, value):
-    for code, func in date.formats[dictName].items():
-        result.append(u'[[%s:%s]]' % (code, func(value)))
+    for code, func in list(date.formats[dictName].items()):
+        result.append('[[%s:%s]]' % (code, func(value)))
 
 
 def getPoisonedLinks(pl):
@@ -127,10 +127,10 @@ def getPoisonedLinks(pl):
 
     """
     result = []
-    pywikibot.output(u'getting poisoned links for %s' % pl.title())
+    pywikibot.output('getting poisoned links for %s' % pl.title())
     dictName, value = date.getAutoFormat(pl.site.code, pl.title())
     if dictName is not None:
-        pywikibot.output(u'date found in %s' % dictName)
+        pywikibot.output('date found in %s' % dictName)
         # errors in year BC
         if dictName in date.bcFormats:
             for fmt in bcDateErrors:

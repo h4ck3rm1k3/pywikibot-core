@@ -171,7 +171,7 @@ class UI:
         self._print(text, targetStream)
 
     def _raw_input(self):
-        return input()
+        return eval(input())
 
     def input(self, question, password=False):
         """

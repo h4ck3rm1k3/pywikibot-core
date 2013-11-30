@@ -15,6 +15,7 @@ __version__ = '$Id$'
 #
 
 from pywikibot.exceptions import Error
+import collections
 try:
     import mwparserfromhell
 except ImportError:
@@ -22,7 +23,7 @@ except ImportError:
 import pywikibot
 import re
 try:
-    from HTMLParser import HTMLParser
+    from html.parser import HTMLParser
 except ImportError:
     from html.parser import HTMLParser
 
@@ -101,14 +102,14 @@ def replaceExcept(text, old, new, exceptions, caseInsensitive=False,
         # Module invocations (currently only Lua)
         'invoke':       re.compile(r'(?i)\{\{\s*#invoke:.*?}\}'),
         # categories
-        'category':     re.compile(u'\[\[ *(?:%s)\s*:.*?\]\]' % u'|'.join(site.namespace(14, all=True))),
+        'category':     re.compile('\[\[ *(?:%s)\s*:.*?\]\]' % '|'.join(site.namespace(14, all=True))),
         #files
-        'file':         re.compile(u'\[\[ *(?:%s)\s*:.*?\]\]' % u'|'.join(site.namespace(6, all=True))),
+        'file':         re.compile('\[\[ *(?:%s)\s*:.*?\]\]' % '|'.join(site.namespace(6, all=True))),
 
     }
 
     # if we got a string, compile it as a regular expression
-    if isinstance(old, basestring):
+    if isinstance(old, str):
         if caseInsensitive:
             old = re.compile(old, re.IGNORECASE | re.UNICODE)
         else:
@@ -117,7 +118,7 @@ def replaceExcept(text, old, new, exceptions, caseInsensitive=False,
     dontTouchRegexes = []
     except_templates = False
     for exc in exceptions:
-        if isinstance(exc, basestring):
+        if isinstance(exc, str):
             # assume it's a reference to the exceptionRegexes dictionary
             # defined above.
             if exc in exceptionRegexes:
@@ -141,7 +142,7 @@ def replaceExcept(text, old, new, exceptions, caseInsensitive=False,
     # don't care about mw variables and parser functions
     if except_templates:
         marker1 = findmarker(text)
-        marker2 = findmarker(text, u'##', u'#')
+        marker2 = findmarker(text, '##', '#')
         Rvalue = re.compile('{{{.+?}}}')
         Rmarker1 = re.compile('%(mark)s(\d+)%(mark)s' % {'mark': marker1})
         Rmarker2 = re.compile('%(mark)s(\d+)%(mark)s' % {'mark': marker2})
@@ -154,7 +155,7 @@ def replaceExcept(text, old, new, exceptions, caseInsensitive=False,
             count += 1
             # If we have digits between brackets, restoring from dict may fail.
             # So we need to change the index. We have to search in the origin.
-            while u'}}}%d{{{' % count in origin:
+            while '}}}%d{{{' % count in origin:
                 count += 1
             item = m.group()
             text = text.replace(item, '%s%d%s' % (marker2, count, marker2))
@@ -169,7 +170,7 @@ def replaceExcept(text, old, new, exceptions, caseInsensitive=False,
                     continue  # speed up
                 seen.add(item)
                 count += 1
-                while u'}}%d{{' % count in origin:
+                while '}}%d{{' % count in origin:
                     count += 1
                 text = text.replace(item, '%s%d%s' % (marker1, count, marker1))
 
@@ -203,7 +204,7 @@ def replaceExcept(text, old, new, exceptions, caseInsensitive=False,
             index = nextExceptionMatch.end()
         else:
             # We found a valid match. Replace it.
-            if callable(new):
+            if isinstance(new, collections.Callable):
                 # the parameter new can be a function which takes the match
                 # as a parameter.
                 replacement = new(match)
@@ -312,7 +313,7 @@ def removeHTMLParts(text, keeptags=['tt', 'nowiki', 'small', 'sup']):
 
 # thanks to http://docs.python.org/library/htmlparser.html
 class _GetDataHTML(HTMLParser):
-    textdata = u''
+    textdata = ''
     keeptags = []
 
     def handle_data(self, data):
@@ -320,11 +321,11 @@ class _GetDataHTML(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if tag in self.keeptags:
-            self.textdata += u"<%s>" % tag
+            self.textdata += "<%s>" % tag
 
     def handle_endtag(self, tag):
         if tag in self.keeptags:
-            self.textdata += u"</%s>" % tag
+            self.textdata += "</%s>" % tag
 
 
 def isDisabled(text, index, tags=['*']):
@@ -340,10 +341,10 @@ def isDisabled(text, index, tags=['*']):
     return (marker not in text)
 
 
-def findmarker(text, startwith=u'@@', append=None):
+def findmarker(text, startwith='@@', append=None):
     # find a string which is not part of text
     if not append:
-        append = u'@'
+        append = '@'
     mymarker = startwith
     while mymarker in text:
         mymarker += append
@@ -444,8 +445,8 @@ def getLanguageLinks(text, insite=None, pageLink="[[]]",
             try:
                 result[site] = pywikibot.Page(site, pagetitle, insite=insite)
             except pywikibot.InvalidTitle:
-                pywikibot.output(u'[getLanguageLinks] Text contains invalid '
-                                 u'interwiki link [[%s:%s]].'
+                pywikibot.output('[getLanguageLinks] Text contains invalid '
+                                 'interwiki link [[%s:%s]].'
                                  % (lang, pagetitle))
                 continue
     return result
@@ -488,7 +489,7 @@ def removeLanguageLinksAndSeparator(text, site=None, marker='', separator=''):
 
     """
     if separator:
-        mymarker = findmarker(text, u'@L@')
+        mymarker = findmarker(text, '@L@')
         newtext = removeLanguageLinks(text, site, mymarker)
         mymarker = expandmarker(newtext, mymarker, separator)
         return newtext.replace(mymarker, marker)
@@ -521,10 +522,10 @@ def replaceLanguageLinks(oldtext, new, site=None, addOnly=False,
     s = interwikiFormat(new, insite=site)
     if s:
         if site.language() in site.family.interwiki_attop or \
-           u'<!-- interwiki at top -->' in oldtext:
+           '<!-- interwiki at top -->' in oldtext:
             #do not add separator if interwiki links are on one line
             newtext = (s +
-                       [u''
+                       [''
                         if site.language() in site.family.interwiki_on_one_line
                         else separator] +
                        s2.replace(marker, '').strip())
@@ -576,7 +577,7 @@ def replaceLanguageLinks(oldtext, new, site=None, addOnly=False,
                         # Put the langlinks at the end, inside noinclude's
                         newtext = (s2.replace(marker, '').strip() +
                                    separator +
-                                   u'%s\n%s%s\n' % (includeOn, s, includeOff)
+                                   '%s\n%s%s\n' % (includeOn, s, includeOff)
                                    )
                 else:
                     newtext = s2.replace(marker, '').strip() + separator + s
@@ -604,12 +605,12 @@ def interwikiFormat(links, insite=None):
     s = []
     for site in ar:
         try:
-            link = unicode(links[site]).replace('[[:', '[[')
+            link = str(links[site]).replace('[[:', '[[')
             s.append(link)
         except AttributeError:
             s.append(getSite(site).linkto(links[site], othersite=insite))
     if insite.lang in insite.family.interwiki_on_one_line:
-        sep = u' '
+        sep = ' '
     else:
         sep = config.line_separator
     s = sep.join(s) + config.line_separator
@@ -710,7 +711,7 @@ def removeCategoryLinksAndSeparator(text, site=None, marker='', separator=''):
     if site is None:
         site = pywikibot.getSite()
     if separator:
-        mymarker = findmarker(text, u'@C@')
+        mymarker = findmarker(text, '@C@')
         newtext = removeCategoryLinks(text, site, mymarker)
         mymarker = expandmarker(newtext, mymarker, separator)
         return newtext.replace(mymarker, marker)
@@ -840,7 +841,7 @@ def categoryFormat(categories, insite=None):
     if insite is None:
         insite = pywikibot.getSite()
 
-    if isinstance(categories[0], basestring):
+    if isinstance(categories[0], str):
         if categories[0][0] == '[':
             catLinks = categories
         else:
@@ -923,8 +924,8 @@ def extract_templates_and_params(text):
     for template in code.filter_templates(recursive=True):
         params = {}
         for param in template.params:
-            params[unicode(param.name)] = unicode(param.value)
-        result.append((unicode(template.name.strip()), params))
+            params[str(param.name)] = str(param.value)
+        result.append((str(template.name.strip()), params))
     return result
 
 
@@ -943,13 +944,13 @@ def extract_templates_and_params_regex(text):
     marker1 = findmarker(thistxt)
 
     # marker for links
-    marker2 = findmarker(thistxt, u'##', u'#')
+    marker2 = findmarker(thistxt, '##', '#')
 
     # marker for math
-    marker3 = findmarker(thistxt, u'%%', u'%')
+    marker3 = findmarker(thistxt, '%%', '%')
 
     # marker for value parameter
-    marker4 = findmarker(thistxt, u'§§', u'§')
+    marker4 = findmarker(thistxt, '§§', '§')
 
     result = []
     Rmath = re.compile(r'<math>[^<]+</math>')
@@ -974,7 +975,7 @@ def extract_templates_and_params_regex(text):
         count += 1
         # If we have digits between brackets, restoring from dict may fail.
         # So we need to change the index. We have to search in the origin text.
-        while u'}}}%d{{{' % count in text:
+        while '}}}%d{{{' % count in text:
             count += 1
         item = m.group()
         thistxt = thistxt.replace(item, '%s%d%s' % (marker4, count, marker4))
@@ -991,7 +992,7 @@ def extract_templates_and_params_regex(text):
                 continue  # speed up
             seen.add(item)
             count += 1
-            while u'}}%d{{' % count in text:
+            while '}}%d{{' % count in text:
                 count += 1
             thistxt = thistxt.replace(item,
                                       '%s%d%s' % (marker1, count, marker1))
@@ -1062,7 +1063,7 @@ def extract_templates_and_params_regex(text):
                     if "=" in param:
                         param_name, param_val = param.split("=", 1)
                     else:
-                        param_name = unicode(numbered_param)
+                        param_name = str(numbered_param)
                         param_val = param
                         numbered_param += 1
                     count = len(inside)
@@ -1094,11 +1095,11 @@ def glue_template_and_params(template_and_params):
 
     """
     (template, params) = template_and_params
-    text = u''
+    text = ''
     for item in params:
-        text += u'|%s=%s\n' % (item, params[item])
+        text += '|%s=%s\n' % (item, params[item])
 
-    return u'{{%s\n%s}}' % (template, text)
+    return '{{%s\n%s}}' % (template, text)
 
 
 #----------------------------------

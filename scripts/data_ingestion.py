@@ -13,11 +13,11 @@ __version__ = '$Id$'
 
 import pywikibot
 import posixpath
-import urlparse
-import urllib
+import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import hashlib
 import base64
-import StringIO
+import io
 
 
 class Photo(object):
@@ -33,7 +33,7 @@ class Photo(object):
         self.URL = URL
         self.metadata = metadata
         self.metadata["_url"] = URL
-        self.metadata["_filename"] = filename = posixpath.split(urlparse.urlparse(URL)[2])[1]
+        self.metadata["_filename"] = filename = posixpath.split(urllib.parse.urlparse(URL)[2])[1]
         self.metadata["_ext"] = ext = filename.split(".")[-1]
         if ext == filename:
             self.metadata["_ext"] = ext = None
@@ -46,11 +46,11 @@ class Photo(object):
         TODO: Add exception handling
         '''
         if not self.contents:
-            imageFile = urllib.urlopen(self.URL).read()
-            self.contents = StringIO.StringIO(imageFile)
+            imageFile = urllib.request.urlopen(self.URL).read()
+            self.contents = io.StringIO(imageFile)
         return self.contents
 
-    def findDuplicateImages(self, site=pywikibot.getSite(u'commons', u'commons')):
+    def findDuplicateImages(self, site=pywikibot.getSite('commons', 'commons')):
         '''
         Takes the photo, calculates the SHA1 hash and asks the mediawiki api for a list of duplicates.
 
@@ -74,12 +74,12 @@ class Photo(object):
         params = {}
         params.update(self.metadata)
         params.update(extraparams)
-        description = u'{{%s\n' % template
+        description = '{{%s\n' % template
         for key in sorted(params.keys()):
             value = params[key]
             if not key.startswith("_"):
-                description = description + (u'|%s=%s' % (key, self._safeTemplateValue(value))) + "\n"
-        description = description + u'}}'
+                description = description + ('|%s=%s' % (key, self._safeTemplateValue(value))) + "\n"
+        description = description + '}}'
 
         return description
 
@@ -94,10 +94,10 @@ def CSVReader(fileobj, urlcolumn, *args, **kwargs):
     for line in reader:
         yield Photo(line[urlcolumn], line)
 
-import upload
+from . import upload
 
 class DataIngestionBot:
-    def __init__(self, reader, titlefmt, pagefmt, site=pywikibot.getSite(u'commons', u'commons')):
+    def __init__(self, reader, titlefmt, pagefmt, site=pywikibot.getSite('commons', 'commons')):
         self.reader = reader
         self.titlefmt = titlefmt
         self.pagefmt = pagefmt
@@ -106,7 +106,7 @@ class DataIngestionBot:
     def _doUpload(self, photo):
         duplicates = photo.findDuplicateImages(self.site)
         if duplicates:
-            pywikibot.output(u"Skipping duplicate of %r" % (duplicates, ))
+            pywikibot.output("Skipping duplicate of %r" % (duplicates, ))
             return duplicates[0]
 
         title = photo.getTitle(self.titlefmt)
@@ -125,7 +125,7 @@ class DataIngestionBot:
         return title
 
     def doSingle(self):
-        return self._doUpload(self.reader.next())
+        return self._doUpload(next(self.reader))
 
     def run(self):
         for photo in self.reader:

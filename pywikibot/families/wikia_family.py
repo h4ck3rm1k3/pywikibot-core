@@ -10,14 +10,14 @@ from pywikibot import family
 class Family(family.Family):
     def __init__(self):
         family.Family.__init__(self)
-        self.name = u'wikia'
+        self.name = 'wikia'
 
         self.langs = {
-            u'wikia': None,
+            'wikia': None,
         }
 
     def hostname(self, code):
-        return u'www.wikia.com'
+        return 'www.wikia.com'
 
     def version(self, code):
         return "1.19.6"

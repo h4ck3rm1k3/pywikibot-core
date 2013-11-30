@@ -10,41 +10,41 @@ class Family(family.Family):
         family.Family.__init__(self)
         self.name = 'oldwikivoyage'
         self.langs = {
-            'de': u'www.wikivoyage-old.org',
-            'en': u'en.wikivoyage-old.org',
-            'fr': u'fr.wikivoyage-old.org',
-            'it': u'www.wikivoyage-old.org',
-            'nl': u'nl.wikivoyage-old.org',
-            'ru': u'ru.wikivoyage-old.org',
-            'shared': u'www.wikivoyage-old.org',
-            'sv': u'sv.wikivoyage-old.org',
-            'wts': u'wts.wikivoyage-old.org',
+            'de': 'www.wikivoyage-old.org',
+            'en': 'en.wikivoyage-old.org',
+            'fr': 'fr.wikivoyage-old.org',
+            'it': 'www.wikivoyage-old.org',
+            'nl': 'nl.wikivoyage-old.org',
+            'ru': 'ru.wikivoyage-old.org',
+            'shared': 'www.wikivoyage-old.org',
+            'sv': 'sv.wikivoyage-old.org',
+            'wts': 'wts.wikivoyage-old.org',
         }
 
     def scriptpath(self, code):
         return {
-            'de': u'/w/de',
-            'en': u'/w',
-            'fr': u'/w',
-            'it': u'/w/it',
-            'nl': u'/w',
-            'ru': u'/w',
-            'shared': u'/w/shared',
-            'sv': u'/w',
-            'wts': u'/w',
+            'de': '/w/de',
+            'en': '/w',
+            'fr': '/w',
+            'it': '/w/it',
+            'nl': '/w',
+            'ru': '/w',
+            'shared': '/w/shared',
+            'sv': '/w',
+            'wts': '/w',
         }[code]
 
     def version(self, code):
         return {
-            'de': u'1.13.1',
-            'en': u'1.19.1',
-            'fr': u'1.19.1',
-            'it': u'1.13.1',
-            'nl': u'1.19.1',
-            'ru': u'1.19.1',
-            'sv': u'1.19.1',
-            'shared': u'1.13.1',
-            'wts': u'1.19.1',
+            'de': '1.13.1',
+            'en': '1.19.1',
+            'fr': '1.19.1',
+            'it': '1.13.1',
+            'nl': '1.19.1',
+            'ru': '1.19.1',
+            'sv': '1.19.1',
+            'shared': '1.13.1',
+            'wts': '1.19.1',
         }[code]
 
     def shared_image_repository(self, code):

@@ -39,7 +39,7 @@ __version__ = '$Id$'
 # Distributed under the terms of the MIT license.
 #
 import pywikibot
-import replace
+from . import replace
 from pywikibot import pagegenerators
 import re
 
@@ -51,46 +51,46 @@ class ImageRobot:
     """
     # Summary messages for replacing images
     msg_replace = {
-        'ar': u'روبوت - استبدال الصورة %s مع %s',
-        'de': u'Bot: Ersetze Bild %s durch %s',
-        'en': u'Robot: Replacing image %s with %s',
-        'es': u'Robot - Reemplazando imagen %s por %s',
-        'fa': u'ربات: جایگزین کردن تصویر %s با %s',
-        'fr': u'Bot: Remplace image %s par %s',
-        'he': u'בוט: מחליף את התמונה %s בתמונה %s',
-        'it': u"Bot: Sostituisco l'immagine %s con %s",
-        'ja': u'ロボットによる：画像置き換え %s から %s へ',
-        'ko': u'로봇 - 그림 %s을 %s로 치환',
-        'lt': u'robotas: vaizdas %s keičiamas į %s',
-        'nn': u'robot: erstatta biletet %s med %s',
-        'no': u'robot: erstatter bildet %s med %s',
-        'nl': u'Bot: afbeelding %s vervangen door %s',
-        'pl': u'Robot zamienia obraz %s na %s',
-        'pt': u'Bot: Alterando imagem %s para %s',
-        'ru': u'Бот: Замена файла %s на %s',
-        'zh': u'機器人：取代圖像 %s 至 %s',
+        'ar': 'روبوت - استبدال الصورة %s مع %s',
+        'de': 'Bot: Ersetze Bild %s durch %s',
+        'en': 'Robot: Replacing image %s with %s',
+        'es': 'Robot - Reemplazando imagen %s por %s',
+        'fa': 'ربات: جایگزین کردن تصویر %s با %s',
+        'fr': 'Bot: Remplace image %s par %s',
+        'he': 'בוט: מחליף את התמונה %s בתמונה %s',
+        'it': "Bot: Sostituisco l'immagine %s con %s",
+        'ja': 'ロボットによる：画像置き換え %s から %s へ',
+        'ko': '로봇 - 그림 %s을 %s로 치환',
+        'lt': 'robotas: vaizdas %s keičiamas į %s',
+        'nn': 'robot: erstatta biletet %s med %s',
+        'no': 'robot: erstatter bildet %s med %s',
+        'nl': 'Bot: afbeelding %s vervangen door %s',
+        'pl': 'Robot zamienia obraz %s na %s',
+        'pt': 'Bot: Alterando imagem %s para %s',
+        'ru': 'Бот: Замена файла %s на %s',
+        'zh': '機器人：取代圖像 %s 至 %s',
     }
 
     # Summary messages for removing images
     msg_remove = {
-        'ar': u'روبوت - إزالة الصورة %s',
-        'de': u'Bot: Entferne Bild %s',
-        'en': u'Robot: Removing image %s',
-        'es': u'Robot - Retirando imagen %s',
-        'fa': u'ربات: برداشتن تصویر %s',
-        'fr': u'Bot: Enleve image %s',
-        'he': u'בוט: מסיר את התמונה %s',
-        'it': u"Bot: Rimuovo l'immagine %s",
-        'ja': u'ロボットによる：画像削除 %s',
-        'ko': u'로봇 - %s 그림을 제거',
-        'lt': u'robotas: Šalinamas vaizdas %s',
-        'nl': u'Bot: afbeelding %s verwijderd',
-        'no': u'robot: fjerner bildet %s',
-        'nn': u'robot: fjerna biletet %s',
-        'pl': u'Robot usuwa obraz %s',
-        'pt': u'Bot: Alterando imagem %s',
-        'ru': u'Бот: удалил файл %s',
-        'zh': u'機器人：移除圖像 %s',
+        'ar': 'روبوت - إزالة الصورة %s',
+        'de': 'Bot: Entferne Bild %s',
+        'en': 'Robot: Removing image %s',
+        'es': 'Robot - Retirando imagen %s',
+        'fa': 'ربات: برداشتن تصویر %s',
+        'fr': 'Bot: Enleve image %s',
+        'he': 'בוט: מסיר את התמונה %s',
+        'it': "Bot: Rimuovo l'immagine %s",
+        'ja': 'ロボットによる：画像削除 %s',
+        'ko': '로봇 - %s 그림을 제거',
+        'lt': 'robotas: Šalinamas vaizdas %s',
+        'nl': 'Bot: afbeelding %s verwijderd',
+        'no': 'robot: fjerner bildet %s',
+        'nn': 'robot: fjerna biletet %s',
+        'pl': 'Robot usuwa obraz %s',
+        'pt': 'Bot: Alterando imagem %s',
+        'ru': 'Бот: удалил файл %s',
+        'zh': '機器人：移除圖像 %s',
     }
 
     def __init__(self, generator, oldImage, newImage=None, summary='',
@@ -176,7 +176,7 @@ def main():
             loose = True
         elif arg.startswith('-summary'):
             if len(arg) == len('-summary'):
-                summary = pywikibot.input(u'Choose an edit summary: ')
+                summary = pywikibot.input('Choose an edit summary: ')
             else:
                 summary = arg[len('-summary:'):]
         else:

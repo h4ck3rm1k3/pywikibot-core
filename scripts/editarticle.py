@@ -61,7 +61,7 @@ class ArticleEditor(object):
     def setpage(self):
         """Sets page and page title"""
         site = pywikibot.getSite()
-        pageTitle = self.options.page or pywikibot.input(u"Page to edit:")
+        pageTitle = self.options.page or pywikibot.input("Page to edit:")
         self.page = pywikibot.Page(pywikibot.Link(pageTitle, site))
         if not self.options.edit_redirect and self.page.isRedirectPage():
             self.page = self.page.getRedirectTarget()
@@ -72,7 +72,7 @@ class ArticleEditor(object):
         fp.write(new)
         fp.close()
         pywikibot.output(
-            u"An edit conflict has arisen. Your edit has been saved to %s. Please try again."
+            "An edit conflict has arisen. Your edit has been saved to %s. Please try again."
             % fn)
 
     def run(self):
@@ -84,7 +84,7 @@ class ArticleEditor(object):
         new = textEditor.edit(old)
         if new and old != new:
             pywikibot.showDiff(old, new)
-            changes = pywikibot.input(u"What did you change?")
+            changes = pywikibot.input("What did you change?")
             comment = i18n.twtranslate(pywikibot.getSite(), 'editarticle-edit',
                                        {'description': changes})
             try:
@@ -93,7 +93,7 @@ class ArticleEditor(object):
             except pywikibot.EditConflict:
                 self.handle_edit_conflict(new)
         else:
-            pywikibot.output(u"Nothing changed")
+            pywikibot.output("Nothing changed")
 
 
 def main(*args):

@@ -57,136 +57,136 @@ docuReplacements = {
 # or if that fails, the "See also" section, etc.
 placeBeforeSections = {
     'ar': [              # no explicit policy on where to put the references
-        u'وصلات خارجية',
-        u'انظر أيضا',
-        u'ملاحظات'
+        'وصلات خارجية',
+        'انظر أيضا',
+        'ملاحظات'
     ],
     'cs': [
-        u'Reference',
-        u'Poznámky',
+        'Reference',
+        'Poznámky',
     ],
     'da': [              # no explicit policy on where to put the references
-        u'Eksterne links'
+        'Eksterne links'
     ],
     'de': [              # no explicit policy on where to put the references
-        u'Literatur',
-        u'Weblinks',
-        u'Siehe auch',
-        u'Weblink',      # bad, but common singular form of Weblinks
+        'Literatur',
+        'Weblinks',
+        'Siehe auch',
+        'Weblink',      # bad, but common singular form of Weblinks
     ],
     'dsb': [
-        u'Nožki',
+        'Nožki',
     ],
     'en': [              # no explicit policy on where to put the references
-        u'Further reading',
-        u'External links',
-        u'See also',
-        u'Notes'
+        'Further reading',
+        'External links',
+        'See also',
+        'Notes'
     ],
     'ru': [
-        u'Ссылки',
-        u'Литература',
+        'Ссылки',
+        'Литература',
     ],
     'eo': [
-        u'Eksteraj ligiloj',
-        u'Ekstera ligilo',
-        u'Eksteraj ligoj',
-        u'Ekstera ligo',
-        u'Rete'
+        'Eksteraj ligiloj',
+        'Ekstera ligilo',
+        'Eksteraj ligoj',
+        'Ekstera ligo',
+        'Rete'
     ],
     'es': [
-        u'Enlaces externos',
-        u'Véase también',
-        u'Notas',
+        'Enlaces externos',
+        'Véase también',
+        'Notas',
     ],
     'fa': [
-        u'پیوند به بیرون',
-        u'پانویس',
-        u'جستارهای وابسته'
+        'پیوند به بیرون',
+        'پانویس',
+        'جستارهای وابسته'
     ],
     'fi': [
-        u'Kirjallisuutta',
-        u'Aiheesta muualla',
-        u'Ulkoiset linkit',
-        u'Linkkejä',
+        'Kirjallisuutta',
+        'Aiheesta muualla',
+        'Ulkoiset linkit',
+        'Linkkejä',
     ],
     'fr': [
-        u'Liens externes',
-        u'Voir aussi',
-        u'Notes'
+        'Liens externes',
+        'Voir aussi',
+        'Notes'
     ],
     'hsb': [
-        u'Nóžki',
+        'Nóžki',
     ],
     'hu': [
-        u'Külső hivatkozások',
-        u'Lásd még',
+        'Külső hivatkozások',
+        'Lásd még',
     ],
     'it': [
-        u'Bibliografia',
-        u'Voci correlate',
-        u'Altri progetti',
-        u'Collegamenti esterni',
-        u'Vedi anche',
+        'Bibliografia',
+        'Voci correlate',
+        'Altri progetti',
+        'Collegamenti esterni',
+        'Vedi anche',
     ],
     'ja': [
-        u'関連項目',
-        u'参考文献',
-        u'外部リンク',
+        '関連項目',
+        '参考文献',
+        '外部リンク',
     ],
     'ko': [              # no explicit policy on where to put the references
-        u'외부 링크',
-        u'외부링크',
-        u'바깥 고리',
-        u'바깥고리',
-        u'바깥 링크',
-        u'바깥링크'
-        u'외부 고리',
-        u'외부고리'
+        '외부 링크',
+        '외부링크',
+        '바깥 고리',
+        '바깥고리',
+        '바깥 링크',
+        '바깥링크'
+        '외부 고리',
+        '외부고리'
     ],
     'lt': [              # no explicit policy on where to put the references
-        u'Nuorodos'
+        'Nuorodos'
     ],
     'nl': [              # no explicit policy on where to put the references
-        u'Literatuur',
-        u'Zie ook',
-        u'Externe verwijzingen',
-        u'Externe verwijzing',
+        'Literatuur',
+        'Zie ook',
+        'Externe verwijzingen',
+        'Externe verwijzing',
     ],
     'pdc': [
-        u'Beweisunge',
-        u'Quelle unn Literatur',
-        u'Gwelle',
-        u'Gwuelle',
-        u'Auswenniche Gleecher',
-        u'Gewebbgleecher',
-        u'Guckt mol aa',
-        u'Seh aa',
+        'Beweisunge',
+        'Quelle unn Literatur',
+        'Gwelle',
+        'Gwuelle',
+        'Auswenniche Gleecher',
+        'Gewebbgleecher',
+        'Guckt mol aa',
+        'Seh aa',
     ],
     'pl': [
-        u'Źródła',
-        u'Bibliografia',
-        u'Zobacz też',
-        u'Linki zewnętrzne',
+        'Źródła',
+        'Bibliografia',
+        'Zobacz też',
+        'Linki zewnętrzne',
     ],
     'pt': [
-        u'Ligações externas',
-        u'Veja também',
-        u'Ver também',
-        u'Notas',
+        'Ligações externas',
+        'Veja também',
+        'Ver também',
+        'Notas',
     ],
     'sk': [
-        u'Pozri aj',
+        'Pozri aj',
     ],
     'szl': [
-        u'Przipisy',
-        u'Připisy',
+        'Przipisy',
+        'Připisy',
     ],
     'zh': [
-        u'外部链接',
-        u'外部連结',
-        u'外部連結',
-        u'外部连接',
+        '外部链接',
+        '外部連结',
+        '外部連結',
+        '外部连接',
     ],
 }
 
@@ -195,127 +195,127 @@ placeBeforeSections = {
 # will be used when a new section has to be created.
 referencesSections = {
     'ar': [             # not sure about which ones are preferred.
-        u'مراجع',
-        u'ملاحظات',
+        'مراجع',
+        'ملاحظات',
     ],
     'da': [
-        u'Noter',
+        'Noter',
     ],
     'de': [             # see [[de:WP:REF]]
-        u'Einzelnachweise',
-        u'Anmerkungen',
-        u'Belege',
-        u'Endnoten',
-        u'Fußnoten',
-        u'Fuß-/Endnoten',
-        u'Quellen',
-        u'Quellenangaben',
+        'Einzelnachweise',
+        'Anmerkungen',
+        'Belege',
+        'Endnoten',
+        'Fußnoten',
+        'Fuß-/Endnoten',
+        'Quellen',
+        'Quellenangaben',
     ],
     'dsb': [
-        u'Nožki',
+        'Nožki',
     ],
     'en': [             # not sure about which ones are preferred.
-        u'References',
-        u'Footnotes',
-        u'Notes',
+        'References',
+        'Footnotes',
+        'Notes',
     ],
     'ru': [
-        u'Примечания',
-        u'Сноски',
-        u'Источники',
+        'Примечания',
+        'Сноски',
+        'Источники',
     ],
     'eo': [
-        u'Referencoj',
+        'Referencoj',
     ],
     'es': [
-        u'Referencias',
-        u'Notas',
+        'Referencias',
+        'Notas',
     ],
     'fa': [
-        u'منابع',
-        u'منبع'
+        'منابع',
+        'منبع'
     ],
     'fi': [
-        u'Lähteet',
-        u'Viitteet',
+        'Lähteet',
+        'Viitteet',
     ],
     'fr': [             # [[fr:Aide:Note]]
-        u'Notes et références',
-        u'Références',
-        u'References',
-        u'Notes'
+        'Notes et références',
+        'Références',
+        'References',
+        'Notes'
     ],
     'he': [
-        u'הערות שוליים',
+        'הערות שוליים',
     ],
     'hsb': [
-        u'Nóžki',
+        'Nóžki',
     ],
     'hu': [
-        u'Források és jegyzetek',
-        u'Források',
-        u'Jegyzetek',
-        u'Hivatkozások',
-        u'Megjegyzések',
+        'Források és jegyzetek',
+        'Források',
+        'Jegyzetek',
+        'Hivatkozások',
+        'Megjegyzések',
     ],
     'is': [
-        u'Heimildir',
-        u'Tilvísanir',
+        'Heimildir',
+        'Tilvísanir',
     ],
     'it': [
-        u'Note',
-        u'Riferimenti',
+        'Note',
+        'Riferimenti',
     ],
     'ja': [
-        u'脚注',
-        u'脚注欄',
-        u'脚注・出典',
-        u'出典',
-        u'注釈',
-        u'註',
+        '脚注',
+        '脚注欄',
+        '脚注・出典',
+        '出典',
+        '注釈',
+        '註',
     ],
     'ko': [
-        u'주석',
-        u'각주'
-        u'주석 및 참고 자료'
-        u'주석 및 참고자료',
-        u'주석 및 참고 출처'
+        '주석',
+        '각주'
+        '주석 및 참고 자료'
+        '주석 및 참고자료',
+        '주석 및 참고 출처'
     ],
     'lt': [             # not sure about which ones are preferred.
-        u'Šaltiniai',
-        u'Literatūra',
+        'Šaltiniai',
+        'Literatūra',
     ],
     'nl': [             # not sure about which ones are preferred.
-        u'Voetnoten',
-        u'Voetnoot',
-        u'Referenties',
-        u'Noten',
-        u'Bronvermelding',
+        'Voetnoten',
+        'Voetnoot',
+        'Referenties',
+        'Noten',
+        'Bronvermelding',
     ],
     'pdc': [
-        u'Aamarrickunge',
+        'Aamarrickunge',
     ],
     'pl': [
-        u'Przypisy',
-        u'Uwagi',
+        'Przypisy',
+        'Uwagi',
     ],
     'pt': [
-        u'Referências',
+        'Referências',
     ],
     'sk': [
-        u'Referencie',
+        'Referencie',
     ],
     'szl': [
-        u'Przipisy',
-        u'Připisy',
+        'Przipisy',
+        'Připisy',
     ],
     'zh': [
-        u'參考資料',
-        u'参考资料',
-        u'參考文獻',
-        u'参考文献',
-        u'資料來源',
-        u'资料来源',
+        '參考資料',
+        '参考资料',
+        '參考文獻',
+        '参考文献',
+        '資料來源',
+        '资料来源',
     ],
 }
 
@@ -323,41 +323,41 @@ referencesSections = {
 # on your wiki, you don't have to enter anything here.
 referencesTemplates = {
     'wikipedia': {
-        'ar': [u'Reflist', u'ثبت المراجع', u'قائمة المراجع'],
-        'be': [u'Зноскі', u'Примечания', u'Reflist', u'Спіс заўваг',
-               u'Заўвагі'],
-        'be-x-old': [u'Зноскі'],
-        'da': [u'Reflist'],
-        'dsb': [u'Referency'],
-        'en': [u'Reflist', u'Refs', u'FootnotesSmall', u'Reference',
-               u'Ref-list', u'Reference list', u'References-small', u'Reflink',
-               u'Footnotes', u'FootnotesSmall'],
-        'eo': [u'Referencoj'],
+        'ar': ['Reflist', 'ثبت المراجع', 'قائمة المراجع'],
+        'be': ['Зноскі', 'Примечания', 'Reflist', 'Спіс заўваг',
+               'Заўвагі'],
+        'be-x-old': ['Зноскі'],
+        'da': ['Reflist'],
+        'dsb': ['Referency'],
+        'en': ['Reflist', 'Refs', 'FootnotesSmall', 'Reference',
+               'Ref-list', 'Reference list', 'References-small', 'Reflink',
+               'Footnotes', 'FootnotesSmall'],
+        'eo': ['Referencoj'],
         'es': ['Listaref', 'Reflist', 'muchasref'],
-        'fa': [u'Reflist', u'Refs', u'FootnotesSmall', u'Reference',
-               u'پانویس', u'پانویس‌ها ', u'پانویس ۲', u'پانویس۲',
-               u'فهرست منابع'],
-        'fi': [u'Viitteet', u'Reflist'],
-        'fr': [u'Références', u'Notes', u'References', u'Reflist'],
-        'hsb': [u'Referency'],
-        'hu': [u'reflist', u'források', u'references', u'megjegyzések'],
-        'is': [u'reflist'],
-        'it': [u'References'],
-        'ja': [u'Reflist', u'脚注リスト'],
-        'ko': [u'주석', u'Reflist'],
-        'lt': [u'Reflist', u'Ref', u'Litref'],
-        'nl': [u'Reflist', u'Refs', u'FootnotesSmall', u'Reference',
-               u'Ref-list', u'Reference list', u'References-small', u'Reflink',
-               u'Referenties', u'Bron', u'Bronnen/noten/referenties', u'Bron2',
-               u'Bron3', u'ref', u'references', u'appendix',
-               u'Noot', u'FootnotesSmall'],
-        'pl': [u'Przypisy', u'Przypisy-lista', u'Uwagi'],
-        'pt': [u'Notas', u'ref-section', u'Referências', u'Reflist'],
-        'ru': [u'Reflist', u'Ref-list', u'Refs', u'Sources',
-               u'Примечания', u'Список примечаний',
-               u'Сноска', u'Сноски'],
-        'szl': [u'Przipisy', u'Připisy'],
-        'zh': [u'Reflist', u'RefFoot', u'NoteFoot'],
+        'fa': ['Reflist', 'Refs', 'FootnotesSmall', 'Reference',
+               'پانویس', 'پانویس‌ها ', 'پانویس ۲', 'پانویس۲',
+               'فهرست منابع'],
+        'fi': ['Viitteet', 'Reflist'],
+        'fr': ['Références', 'Notes', 'References', 'Reflist'],
+        'hsb': ['Referency'],
+        'hu': ['reflist', 'források', 'references', 'megjegyzések'],
+        'is': ['reflist'],
+        'it': ['References'],
+        'ja': ['Reflist', '脚注リスト'],
+        'ko': ['주석', 'Reflist'],
+        'lt': ['Reflist', 'Ref', 'Litref'],
+        'nl': ['Reflist', 'Refs', 'FootnotesSmall', 'Reference',
+               'Ref-list', 'Reference list', 'References-small', 'Reflink',
+               'Referenties', 'Bron', 'Bronnen/noten/referenties', 'Bron2',
+               'Bron3', 'ref', 'references', 'appendix',
+               'Noot', 'FootnotesSmall'],
+        'pl': ['Przypisy', 'Przypisy-lista', 'Uwagi'],
+        'pt': ['Notas', 'ref-section', 'Referências', 'Reflist'],
+        'ru': ['Reflist', 'Ref-list', 'Refs', 'Sources',
+               'Примечания', 'Список примечаний',
+               'Сноска', 'Сноски'],
+        'szl': ['Przipisy', 'Připisy'],
+        'zh': ['Reflist', 'RefFoot', 'NoteFoot'],
     },
 }
 
@@ -365,17 +365,17 @@ referencesTemplates = {
 # Define this only if required by your wiki.
 referencesSubstitute = {
     'wikipedia': {
-        'be': u'{{зноскі}}',
-        'da': u'{{reflist}}',
-        'dsb': u'{{referency}}',
-        'fa': u'{{پانویس}}',
-        'fi': u'{{viitteet}}',
-        'hsb': u'{{referency}}',
-        'hu': u'{{Források}}',
-        'pl': u'{{Przypisy}}',
-        'ru': u'{{примечания}}',
-        'szl': u'{{Przipisy}}',
-        'zh': u'{{reflist}}',
+        'be': '{{зноскі}}',
+        'da': '{{reflist}}',
+        'dsb': '{{referency}}',
+        'fa': '{{پانویس}}',
+        'fi': '{{viitteet}}',
+        'hsb': '{{referency}}',
+        'hu': '{{Források}}',
+        'pl': '{{Przypisy}}',
+        'ru': '{{примечания}}',
+        'szl': '{{Przipisy}}',
+        'zh': '{{reflist}}',
     },
 }
 
@@ -384,17 +384,17 @@ referencesSubstitute = {
 # like pl.wiki where {{Przypisy}} generates
 # == Przypisy ==
 # <references />
-noTitleRequired = [u'pl', u'be', u'szl']
+noTitleRequired = ['pl', 'be', 'szl']
 
 maintenance_category = {
     'wikipedia': {
-        'be-x-old': u'Вікіпэдыя:Старонкі з адсутным сьпісам зносак',
-        'de': u'Wikipedia:Seite mit fehlendem References-Tag',
-        'en': u'Pages with missing references list',
-        'fa': u'صفحه‌های با یادکرد خراب (فقدان پانویس)',
-        'ja': u'Refタグがあるのにreferencesタグがないページ',
-        'simple': u'Wikipedia pages with broken references',
-        'zh': u'参考资料格式错误的页面',
+        'be-x-old': 'Вікіпэдыя:Старонкі з адсутным сьпісам зносак',
+        'de': 'Wikipedia:Seite mit fehlendem References-Tag',
+        'en': 'Pages with missing references list',
+        'fa': 'صفحه‌های با یادکرد خراب (فقدان پانویس)',
+        'ja': 'Refタグがあるのにreferencesタグがないページ',
+        'simple': 'Wikipedia pages with broken references',
+        'zh': '参考资料格式错误的页面',
     },
 }
 
@@ -444,7 +444,7 @@ class NoReferencesBot:
             self.referencesText = referencesSubstitute[
                 pywikibot.getSite().family.name][pywikibot.getSite().lang]
         except KeyError:
-            self.referencesText = u'<references />'
+            self.referencesText = '<references />'
 
     def lacksReferences(self, text, verbose=True):
         """
@@ -454,22 +454,22 @@ class NoReferencesBot:
         if self.referencesR.search(oldTextCleaned) or \
            self.referencesTagR.search(oldTextCleaned):
             if verbose:
-                pywikibot.output(u'No changes necessary: references tag found.')
+                pywikibot.output('No changes necessary: references tag found.')
             return False
         elif self.referencesTemplates:
-            templateR = u'{{(' + u'|'.join(self.referencesTemplates) + ')'
+            templateR = '{{(' + '|'.join(self.referencesTemplates) + ')'
             if re.search(templateR, oldTextCleaned, re.IGNORECASE | re.UNICODE):
                 if verbose:
                     pywikibot.output(
-                        u'No changes necessary: references template found.')
+                        'No changes necessary: references template found.')
                 return False
         if not self.refR.search(oldTextCleaned):
             if verbose:
-                pywikibot.output(u'No changes necessary: no ref tags found.')
+                pywikibot.output('No changes necessary: no ref tags found.')
             return False
         else:
             if verbose:
-                pywikibot.output(u'Found ref without references.')
+                pywikibot.output('Found ref without references.')
             return True
 
     def addReferences(self, oldText):
@@ -494,11 +494,11 @@ class NoReferencesBot:
                         index = match.end()
                     else:
                         pywikibot.output(
-                            u'Adding references tag to existing %s section...\n'
+                            'Adding references tag to existing %s section...\n'
                             % section)
                         newText = (
-                            oldText[:match.end()] + u'\n' +
-                            self.referencesText + u'\n' +
+                            oldText[:match.end()] + '\n' +
+                            self.referencesText + '\n' +
                             oldText[match.end():]
                         )
                         return newText
@@ -521,7 +521,7 @@ class NoReferencesBot:
                         index = match.end()
                     else:
                         pywikibot.output(
-                            u'Adding references section before %s section...\n'
+                            'Adding references section before %s section...\n'
                             % section)
                         index = match.start()
                         ident = match.group('ident')
@@ -561,17 +561,17 @@ class NoReferencesBot:
             else:
                 break
         pywikibot.output(
-            u'Found no section that can be preceeded by a new references '
-            u'section.\nPlacing it before interwiki links, categories, and '
-            u'bottom templates.')
+            'Found no section that can be preceeded by a new references '
+            'section.\nPlacing it before interwiki links, categories, and '
+            'bottom templates.')
         index = len(tmpText)
         return self.createReferenceSection(oldText, index)
 
     def createReferenceSection(self, oldText, index, ident='=='):
         if self.site.language() in noTitleRequired:
-            newSection = u'\n%s\n' % (self.referencesText)
+            newSection = '\n%s\n' % (self.referencesText)
         else:
-            newSection = u'\n%s %s %s\n%s\n' % (ident,
+            newSection = '\n%s %s %s\n%s\n' % (ident,
                                                 pywikibot.translate(
                                                     self.site,
                                                     referencesSections)[0],
@@ -585,7 +585,7 @@ class NoReferencesBot:
         pywikibot.showDiff(page.get(), newText)
         if not self.always:
             choice = pywikibot.inputChoice(
-                u'Do you want to accept these changes?',
+                'Do you want to accept these changes?',
                 ['Yes', 'No', 'Always yes'], ['y', 'N', 'a'], 'Y')
             if choice == 'n':
                 return
@@ -596,14 +596,14 @@ class NoReferencesBot:
             try:
                 page.put(newText)
             except pywikibot.EditConflict:
-                pywikibot.output(u'Skipping %s because of edit conflict'
+                pywikibot.output('Skipping %s because of edit conflict'
                                  % (page.title(),))
             except pywikibot.SpamfilterError as e:
                 pywikibot.output(
-                    u'Cannot change %s because of blacklist entry %s'
+                    'Cannot change %s because of blacklist entry %s'
                     % (page.title(), e.url))
             except pywikibot.LockedPage:
-                pywikibot.output(u'Skipping %s (locked page)' % (page.title(),))
+                pywikibot.output('Skipping %s (locked page)' % (page.title(),))
         else:
             # Save the page in the background. No need to catch exceptions.
             page.put_async(newText)
@@ -616,26 +616,26 @@ class NoReferencesBot:
         for page in self.generator:
             # Show the title of the page we're working on.
             # Highlight the title in purple.
-            pywikibot.output(u"\n\n>>> \03{lightpurple}%s\03{default} <<<"
+            pywikibot.output("\n\n>>> \03{lightpurple}%s\03{default} <<<"
                              % page.title())
             try:
                 text = page.get()
             except pywikibot.NoPage:
-                pywikibot.output(u"Page %s does not exist?!"
+                pywikibot.output("Page %s does not exist?!"
                                  % page.title(asLink=True))
                 continue
             except pywikibot.IsRedirectPage:
-                pywikibot.output(u"Page %s is a redirect; skipping."
+                pywikibot.output("Page %s is a redirect; skipping."
                                  % page.title(asLink=True))
                 continue
             except pywikibot.LockedPage:
-                pywikibot.output(u"Page %s is locked?!"
+                pywikibot.output("Page %s is locked?!"
                                  % page.title(asLink=True))
                 continue
             if pywikibot.getSite().sitename() == 'wikipedia:en' and \
                page.isIpEdit():
                 pywikibot.output(
-                    u"Page %s is edited by IP. Possible vandalized"
+                    "Page %s is edited by IP. Possible vandalized"
                     % page.title(asLink=True))
                 continue
             if self.lacksReferences(text):

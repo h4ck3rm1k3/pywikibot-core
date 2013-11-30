@@ -18,10 +18,10 @@ __version__ = '$Id$'
 
 import pywikibot
 import re
-import category
+from . import category
 
 # The location of the CFD working page.
-cfdPage = u'Wikipedia:Categories for discussion/Working'
+cfdPage = 'Wikipedia:Categories for discussion/Working'
 
 # A list of templates that are used on category pages as part of the CFD
 # process that contain information such as the link to the per-day discussion page.
@@ -146,7 +146,7 @@ def main():
 # parameter, which is essentially a fallback that is extracted from the
 # per-day subheadings on the working page.
 def findDay(pageTitle, oldDay):
-    page = pywikibot.Page(pywikibot.Site(), u"Category:" + pageTitle)
+    page = pywikibot.Page(pywikibot.Site(), "Category:" + pageTitle)
     try:
         pageSrc = page.get()
         m = findday.search(pageSrc)

@@ -17,23 +17,23 @@ class Family(family.WikimediaFamily):
         self.interwiki_forward = 'wikipedia'
 
         self.category_redirect_templates = {
-            'commons': (u'Category redirect',
-                        u'Categoryredirect',
-                        u'Synonym taxon category redirect',
-                        u'Invalid taxon category redirect',
-                        u'Monotypic taxon category redirect',
-                        u'See cat',
-                        u'Seecat',
-                        u'See category',
-                        u'Catredirect',
-                        u'Cat redirect',
-                        u'Cat-red',
-                        u'Catredir',
-                        u'Redirect category'),
+            'commons': ('Category redirect',
+                        'Categoryredirect',
+                        'Synonym taxon category redirect',
+                        'Invalid taxon category redirect',
+                        'Monotypic taxon category redirect',
+                        'See cat',
+                        'Seecat',
+                        'See category',
+                        'Catredirect',
+                        'Cat redirect',
+                        'Cat-red',
+                        'Catredir',
+                        'Redirect category'),
         }
 
         self.disambcatname = {
-            'commons':  u'Disambiguation'
+            'commons':  'Disambiguation'
         }
 
     def ssl_pathprefix(self, code):

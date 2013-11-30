@@ -53,53 +53,53 @@ from pywikibot import pagegenerators
 
 # Summary messages for protecting from a category.
 msg_simple_protect = {
-    'ar': u'بوت: حماية قائمة من الملفات.',
-    'en': u'Robot: Protecting a list of files.',
-    'it': u'Bot: Protezione di una lista di pagine.',
-    'fa': u'ربات:حفاظت فهرستی از صفحه‌ها',
-    'nl': u'Bot: lijst met bestanden beveiligd',
-    'pt': u'Bot: Protegendo uma lista de artigos.',
-    'zh': u'機器人:保護清單中的所有檔案',
+    'ar': 'بوت: حماية قائمة من الملفات.',
+    'en': 'Robot: Protecting a list of files.',
+    'it': 'Bot: Protezione di una lista di pagine.',
+    'fa': 'ربات:حفاظت فهرستی از صفحه‌ها',
+    'nl': 'Bot: lijst met bestanden beveiligd',
+    'pt': 'Bot: Protegendo uma lista de artigos.',
+    'zh': '機器人:保護清單中的所有檔案',
 }
 
 msg_protect_category = {
-    'ar': u'روبوت - حماية كل الصفحات من التصنيف %s',
-    'en': u'Robot: Protecting all pages from category %s',
-    'it': u'Bot: Protezione di tutte le pagine nella categoria %s.',
-    'fa': u'ربات:حفاظت تمام صفحه‌های رده %s',
-    'nl': u'Bot: alle pagina\'s uit categorie %s beveiligd',
-    'pt': u'Bot: Protegendo todos os artigos da categoria %s',
-    'zh': u'機器人: 保護目錄 %s 的所有頁面',
+    'ar': 'روبوت - حماية كل الصفحات من التصنيف %s',
+    'en': 'Robot: Protecting all pages from category %s',
+    'it': 'Bot: Protezione di tutte le pagine nella categoria %s.',
+    'fa': 'ربات:حفاظت تمام صفحه‌های رده %s',
+    'nl': 'Bot: alle pagina\'s uit categorie %s beveiligd',
+    'pt': 'Bot: Protegendo todos os artigos da categoria %s',
+    'zh': '機器人: 保護目錄 %s 的所有頁面',
 }
 
 msg_protect_links = {
-    'ar': u'روبوت - حماية كل الصفحات الموصولة من %s',
-    'en': u'Robot: Protecting all pages linked from %s',
-    'it': u'Bot: Protezione di tutte le pagine linkate da %s.',
-    'fa': u'ربات:حفاظت تمام صفحه‌هایی که در %s پیوند شده‌اند.',
-    'nl': u'Bot: alle pagina\'s met verwijzingen vanaf %s beveiligd',
-    'pt': u'Bot: Protegendo todos os artigos ligados a %s',
-    'zh': u'機器人: 保護所有從 %s 連結的頁面',
+    'ar': 'روبوت - حماية كل الصفحات الموصولة من %s',
+    'en': 'Robot: Protecting all pages linked from %s',
+    'it': 'Bot: Protezione di tutte le pagine linkate da %s.',
+    'fa': 'ربات:حفاظت تمام صفحه‌هایی که در %s پیوند شده‌اند.',
+    'nl': 'Bot: alle pagina\'s met verwijzingen vanaf %s beveiligd',
+    'pt': 'Bot: Protegendo todos os artigos ligados a %s',
+    'zh': '機器人: 保護所有從 %s 連結的頁面',
 }
 
 msg_protect_ref = {
-    'ar': u'روبوت - حماية كل الصفحات الراجعة من %s',
-    'en': u'Robot: Protecting all pages referring from %s',
-    'it': u'Bot: Protezione di tutte le pagine con link verso %s.',
-    'fa': u'ربات:حفاظت تمام صفحه‌هایی که به %s پیوند داده‌اند',
-    'nl': u'Bot: alle pagina\'s met een verwijzing op beveiligd',
-    'pt': u'Bot: Protegendo todos os artigos afluentes a %s',
-    'zh': u'機器人: 保護所有連至 %s 的頁面',
+    'ar': 'روبوت - حماية كل الصفحات الراجعة من %s',
+    'en': 'Robot: Protecting all pages referring from %s',
+    'it': 'Bot: Protezione di tutte le pagine con link verso %s.',
+    'fa': 'ربات:حفاظت تمام صفحه‌هایی که به %s پیوند داده‌اند',
+    'nl': 'Bot: alle pagina\'s met een verwijzing op beveiligd',
+    'pt': 'Bot: Protegendo todos os artigos afluentes a %s',
+    'zh': '機器人: 保護所有連至 %s 的頁面',
 }
 
 msg_protect_images = {
-    'ar': u'روبوت - حماية كل الصور في الصفحة %s',
-    'en': u'Robot: Protecting all images on page %s',
-    'it': u'Bot: Protezione di tutte le immagini presenti in %s.',
-    'fa': u'ربات:حفاظت تمام تصاویر به کار رفته در %s',
-    'nl': u'Bot: alle bestanden gebruikt op %s beveiligd',
-    'pt': u'Bot: Protegendo todas as imagens do artigo %s',
-    'zh': u'機器人: 保護頁面 %s 中的所有圖條',
+    'ar': 'روبوت - حماية كل الصور في الصفحة %s',
+    'en': 'Robot: Protecting all images on page %s',
+    'it': 'Bot: Protezione di tutte le immagini presenti in %s.',
+    'fa': 'ربات:حفاظت تمام تصاویر به کار رفته در %s',
+    'nl': 'Bot: alle bestanden gebruikt op %s beveiligd',
+    'pt': 'Bot: Protegendo todas as imagens do artigo %s',
+    'zh': '機器人: 保護頁面 %s 中的所有圖條',
 }
 
 
@@ -130,7 +130,7 @@ class ProtectionRobot:
         """
         #Loop through everything in the page generator and (un)protect it.
         for page in self.generator:
-            pywikibot.output(u'Processing page %s' % page.title())
+            pywikibot.output('Processing page %s' % page.title())
             #print self.edit, self.move#, self.create
             page.protect(unprotect=self.unprotect, reason=self.summary,
                          prompt=self.prompt, edit=self.edit,
@@ -141,7 +141,7 @@ class ProtectionRobot:
 # Returns the protection level chosen by user.
 def choiceProtectionLevel(operation, default):
     default = default[0]
-    firstChar = map(lambda level: level[0], protectionLevels)
+    firstChar = [level[0] for level in protectionLevels]
     choiceChar = pywikibot.inputChoice('Choice a protection level to %s:'
                                        % operation,
                                        protectionLevels, firstChar,
@@ -176,18 +176,18 @@ def main():
             always = True
         elif arg.startswith('-file'):
             if len(arg) == len('-file'):
-                fileName = pywikibot.input(u'Enter name of file to protect pages from:')
+                fileName = pywikibot.input('Enter name of file to protect pages from:')
             else:
                 fileName = arg[len('-file:'):]
         elif arg.startswith('-summary'):
             if len(arg) == len('-summary'):
-                summary = pywikibot.input(u'Enter a reason for the protection:')
+                summary = pywikibot.input('Enter a reason for the protection:')
             else:
                 summary = arg[len('-summary:'):]
         elif arg.startswith('-cat'):
             doCategory = True
             if len(arg) == len('-cat'):
-                pageName = pywikibot.input(u'Enter the category to protect from:')
+                pageName = pywikibot.input('Enter the category to protect from:')
             else:
                 pageName = arg[len('-cat:'):]
         elif arg.startswith('-nosubcats'):
@@ -195,25 +195,25 @@ def main():
         elif arg.startswith('-links'):
             doLinks = True
             if len(arg) == len('-links'):
-                pageName = pywikibot.input(u'Enter the page to protect from:')
+                pageName = pywikibot.input('Enter the page to protect from:')
             else:
                 pageName = arg[len('-links:'):]
         elif arg.startswith('-ref'):
             doRef = True
             if len(arg) == len('-ref'):
-                pageName = pywikibot.input(u'Enter the page to protect from:')
+                pageName = pywikibot.input('Enter the page to protect from:')
             else:
                 pageName = arg[len('-ref:'):]
         elif arg.startswith('-page'):
             doSinglePage = True
             if len(arg) == len('-page'):
-                pageName = pywikibot.input(u'Enter the page to protect:')
+                pageName = pywikibot.input('Enter the page to protect:')
             else:
                 pageName = arg[len('-page:'):]
         elif arg.startswith('-images'):
             doImages = True
             if len(arg) == len('-images'):
-                pageName = pywikibot.input(u'Enter the page with the images to protect:')
+                pageName = pywikibot.input('Enter the page with the images to protect:')
             else:
                 pageName = arg[len('-images:'):]
         elif arg.startswith('-unprotect'):
@@ -235,7 +235,7 @@ def main():
 
     if doSinglePage:
         if not summary:
-            summary = pywikibot.input(u'Enter a reason for the protection:')
+            summary = pywikibot.input('Enter a reason for the protection:')
         page = pywikibot.Page(mysite, pageName)
         gen = iter([page])
     elif doCategory:
@@ -279,7 +279,7 @@ def main():
         bot = ProtectionRobot(gen, summary, always, edit=edit, move=move)
         bot.run()
     else:
-        pywikibot.showHelp(u'protect')
+        pywikibot.showHelp('protect')
 
 if __name__ == "__main__":
     try:

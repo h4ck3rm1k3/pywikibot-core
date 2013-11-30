@@ -9,7 +9,7 @@ __version__ = '$Id$'
 import datetime
 import pywikibot
 import pywikibot.data.api as api
-from utils import PywikibotTestCase, unittest
+from .utils import PywikibotTestCase, unittest
 
 mysite = pywikibot.Site('en', 'wikipedia')
 
@@ -28,9 +28,9 @@ class TestApiFunctions(unittest.TestCase):
         self.assertEqual(req.params['one'], "1")
         # test compliance with dict interface
         # req.keys() should contain "action", "foo", "bar", "one"
-        self.assertEqual(len(req.keys()), 4)
-        self.assert_("test" in req.values())
-        self.assert_(all(len(item) == 2 for item in req.iteritems()))
+        self.assertEqual(len(list(req.keys())), 4)
+        self.assert_("test" in list(req.values()))
+        self.assert_(all(len(item) == 2 for item in req.items()))
 
 
 class TestPageGenerator(PywikibotTestCase):
