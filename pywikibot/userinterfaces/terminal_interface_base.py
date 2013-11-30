@@ -7,7 +7,7 @@
 __version__ = '$Id$'
 
 from . import transliteration
-import traceback
+#import traceback
 import re
 import sys
 import pywikibot as wikipedia
@@ -136,10 +136,10 @@ class UI:
             # Note: A transliteration replacement might be longer than the
             # original character, e.g. ч is transliterated to ch.
             prev = "-"
-            for i in xrange(len(codecedText)):
+            for i in range(len(codecedText)):
                 # work on characters that couldn't be encoded, but not on
                 # original question marks.
-                if codecedText[i] == '?' and text[i] != u'?':
+                if codecedText[i] == '?' and text[i] != '?':
                     try:
                         transliterated = transliterator.transliterate(
                             text[i], default='?', prev=prev, next=text[i + 1])
@@ -171,7 +171,7 @@ class UI:
         self._print(text, targetStream)
 
     def _raw_input(self):
-        return raw_input()
+        return input()
 
     def input(self, question, password=False):
         """
@@ -193,7 +193,7 @@ class UI:
             text = getpass.getpass('')
         else:
             text = self._raw_input()
-        text = unicode(text, self.encoding)
+        text = str(text, self.encoding)
         return text
 
     def inputChoice(self, question, options, hotkeys, default=None):
@@ -239,7 +239,7 @@ class UI:
         try:
             import gui
         except ImportError as e:
-            print('Could not load GUI modules: %s' % e)
+            print(('Could not load GUI modules: %s' % e))
             return text
         editor = gui.EditBoxWindow()
         return editor.edit(text, jumpIndex=jumpIndex, highlight=highlight)
@@ -248,21 +248,21 @@ class UI:
         """Show the user a CAPTCHA image and return the answer."""
         try:
             import webbrowser
-            wikipedia.output(u'Opening CAPTCHA in your web browser...')
+            wikipedia.output('Opening CAPTCHA in your web browser...')
             if webbrowser.open(url):
                 return wikipedia.input(
-                    u'What is the solution of the CAPTCHA that is shown in '
-                    u'your web browser?')
+                    'What is the solution of the CAPTCHA that is shown in '
+                    'your web browser?')
             else:
                 raise
         except:
-            wikipedia.output(u'Error in opening web browser: %s'
+            wikipedia.output('Error in opening web browser: %s'
                              % sys.exc_info()[0])
             wikipedia.output(
-                u'Please copy this url to your web browser and open it:\n %s'
+                'Please copy this url to your web browser and open it:\n %s'
                 % url)
             return wikipedia.input(
-                u'What is the solution of the CAPTCHA at this url ?')
+                'What is the solution of the CAPTCHA at this url ?')
 
     def argvu(self):
         return [s.decode(self.encoding) for s in self.argv]

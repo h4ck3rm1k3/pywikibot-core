@@ -368,7 +368,7 @@ class FeaturedBot(pywikibot.Bot):
             self.featuredWithInterwiki(fromsite, process)
 
     def featuredArticles(self, site, task, cache):
-           code = site.lang
+        code = site.lang
         articles = []
         if task == 'good':
             info = good_name

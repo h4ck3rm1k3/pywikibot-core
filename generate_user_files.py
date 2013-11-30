@@ -55,7 +55,7 @@ def get_base_dir():
             else:
                 base_dir = os.path.join(home, "." + NAME)
             if not os.path.isdir(base_dir):
-                os.makedirs(base_dir, mode=0700)
+                os.makedirs(base_dir, mode=0o700)
     if not os.path.isabs(base_dir):
         base_dir = os.path.normpath(os.path.join(os.getcwd(), base_dir))
     return base_dir
@@ -79,12 +79,12 @@ def listchoice(clist=[], message=None, default=None):
     message += ": "
 
     for n, i in enumerate(clist):
-        print ("%d: %s" % (n + 1, i))
+        print(("%d: %s" % (n + 1, i)))
 
     choice = "ERROR"
 
     while True:
-        choice = raw_input(message)
+        choice = input(message)
 
         if choice == '' and default:
             return default
@@ -92,7 +92,7 @@ def listchoice(clist=[], message=None, default=None):
             choice = int(choice)
         except ValueError:
             pass
-        if isinstance(choice, basestring):
+        if isinstance(choice, str):
             if not choice in clist:
                 print("Invalid response")
             else:
@@ -100,7 +100,7 @@ def listchoice(clist=[], message=None, default=None):
         try:
             return clist[int(choice) - 1]
         except:
-            if not isinstance(choice, basestring):
+            if not isinstance(choice, str):
                 print("Invalid response")
     return choice
 
@@ -109,7 +109,7 @@ def change_base_dir():
     """Create a new user directory."""
     global base_dir
     while True:
-        new_base = raw_input("New user directory? ")
+        new_base = input("New user directory? ")
         new_base = os.path.abspath(new_base)
         if os.path.exists(new_base):
             if os.path.isfile(new_base):
@@ -123,7 +123,7 @@ def change_base_dir():
             break
         else:
             try:
-                os.mkdir(new_base, 0700)
+                os.mkdir(new_base, 0o700)
             except Exception:
                 print("ERROR: directory creation failed")
                 continue
@@ -138,18 +138,18 @@ the environment variable "PYWIKIBOT2_DIR" equal to this directory name in
 your operating system. See your operating system documentation for how to
 set environment variables.""" % locals(), width=76)
     for line in msg:
-        print line
-    ok = raw_input("Is this OK? ([y]es, [N]o) ")
+        print(line)
+    ok = input("Is this OK? ([y]es, [N]o) ")
     if ok in ["Y", "y"]:
         base_dir = new_base
         return True
-    print "Aborting changes."
+    print("Aborting changes.")
     return False
 
 
 def file_exists(filename):
     if os.path.exists(filename):
-        print("'%s' already exists." % filename)
+        print(("'%s' already exists." % filename))
         return True
     return False
 
@@ -175,18 +175,18 @@ def get_site_and_lang():
                 rre = re.compile("self\.langs *\= *(.+?)\}", re.DOTALL)
                 if rre.findall(codesds):
                     import ast
-                    known_langs = ast.literal_eval(rre.findall(codesds)[0] + u"}").keys()
+                    known_langs = list(ast.literal_eval(rre.findall(codesds)[0] + "}").keys())
             else:
-                known_langs = eval(rre.findall(codesds)[0] + u"]")
-            print "This is the list of known language(s):"
-            print " ".join(sorted(known_langs))
-            mylang = raw_input("The language code of the site we're working on (default: 'en'): ") or 'en'
+                known_langs = eval(rre.findall(codesds)[0] + "]")
+            print("This is the list of known language(s):")
+            print(" ".join(sorted(known_langs)))
+            mylang = input("The language code of the site we're working on (default: 'en'): ") or 'en'
         else:
             mylang = fam
 
-        username = raw_input("Username (%s %s): "
+        username = input("Username (%s %s): "
                              % (mylang, fam))
-        username = unicode(username, console_encoding)
+        username = str(username, console_encoding)
         return fam, mylang, username
 
 
@@ -197,7 +197,7 @@ def create_user_config():
         mainusername = mainusername or "UnnamedBot"
 
         while True:
-            choice = raw_input("Which variant of user_config.py:\n[S]mall or [E]xtended (with further information)? ").upper()
+            choice = input("Which variant of user_config.py:\n[S]mall or [E]xtended (with further information)? ").upper()
             if choice in "SE":
                 break
 
@@ -252,7 +252,7 @@ family = '%s'
 mylang = '%s'
 usernames['%s']['%s'] = u'%s'
 """ % (fam, mylang, fam, mylang, mainusername))
-        while(raw_input("Do you want to add any other projects? (y/N)").upper() == "Y"):
+        while(input("Do you want to add any other projects? (y/N)").upper() == "Y"):
             fam, mylang, username = get_site_and_lang()
             username = username or mainusername
             # Escape ''s
@@ -260,7 +260,7 @@ usernames['%s']['%s'] = u'%s'
             f.write("usernames['%(fam)s']['%(mylang)s'] = u'%(username)s'\n" % locals())
 
         f.close()
-        print("'%s' written." % _fnc)
+        print(("'%s' written." % _fnc))
 
 
 def create_user_fixes():
@@ -285,12 +285,12 @@ fixes['example'] = {
 
 """)
         f.close()
-        print("'%s' written." % _fnf)
+        print(("'%s' written." % _fnf))
 
 if __name__ == "__main__":
     while True:
-        print('\nYour default user directory is "%s"' % base_dir)
-        ok = raw_input("How to proceed? ([K]eep [c]hange) ").upper().strip()
+        print(('\nYour default user directory is "%s"' % base_dir))
+        ok = input("How to proceed? ([K]eep [c]hange) ").upper().strip()
         if (not ok) or "KEEP".startswith(ok):
             break
         if "CHANGE".startswith(ok):
@@ -299,9 +299,9 @@ if __name__ == "__main__":
     while True:
         if os.path.exists(os.path.join(base_dir, "user-config.py")):
             break
-        do_copy = raw_input("Do you want to copy user files from an existing pywikipedia installation? ").upper().strip()
+        do_copy = input("Do you want to copy user files from an existing pywikipedia installation? ").upper().strip()
         if do_copy and "YES".startswith(do_copy):
-            oldpath = raw_input("Path to existing wikipedia.py? ")
+            oldpath = input("Path to existing wikipedia.py? ")
             if not os.path.exists(oldpath):
                 print("ERROR: Not a valid path")
                 continue
@@ -327,13 +327,13 @@ if __name__ == "__main__":
         elif do_copy and "NO".startswith(do_copy):
             break
     if not os.path.isfile(os.path.join(base_dir, "user-config.py")):
-        a = raw_input("Create user-config.py file? Required for running bots ([y]es, [N]o) ")
+        a = input("Create user-config.py file? Required for running bots ([y]es, [N]o) ")
         if a[:1] in ["Y", "y"]:
             create_user_config()
     else:
         print("NOTE: user-config.py already exists in the directory")
     if not os.path.isfile(os.path.join(base_dir, "user-fixes.py")):
-        a = raw_input("Create user-fixes.py file? Optional and for advanced users ([y]es, [N]o) ")
+        a = input("Create user-fixes.py file? Optional and for advanced users ([y]es, [N]o) ")
         if a[:1] in ["Y", "y"]:
             create_user_fixes()
     else:

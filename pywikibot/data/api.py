@@ -298,6 +298,7 @@ class Request(MutableMapping):
                 raise
             #TODO: what other exceptions can occur here?
             except Exception as e:
+                print(e)
                 # for any other error on the http request, wait and retry
                 pywikibot.error(traceback.format_exc())
                 pywikibot.log(u"%s, %s" % (uri, paramstring))
@@ -1001,7 +1002,7 @@ def update_page(page, pagedict):
 
 
 if __name__ == "__main__":
-    from pywikibot import Site, logging
+    from pywikibot import Site
     logging.getLogger("pywiki.data.api").setLevel(logging.DEBUG)
     mysite = Site("en", "wikipedia")
     pywikibot.output(u"starting test....")

@@ -430,7 +430,8 @@ class Page(object):
 
     def previousRevision(self):
         """Return the revision id for the previous revision of this Page."""
-        vh = self.getVersionHistory(total=2)
+        #vh = 
+        self.getVersionHistory(total=2)
         revkey = sorted(self._revisions, reverse=True)[1]
         return revkey
 
@@ -747,7 +748,7 @@ class Page(object):
                     return False
                 else:
                     bots = template[1][0].split(',')
-                    if 'all' in bots or calledModuleName() in bots \
+                    if 'all' in bots or pywikibot.calledModuleName() in bots \
                        or username in bots:
                         return False
             elif title == 'Bots':
@@ -761,9 +762,9 @@ class Page(object):
                     if ttype == 'deny':
                         return not ('all' in bots or username in bots)
                     if ttype == 'allowscript':
-                        return 'all' in bots or calledModuleName() in bots
+                        return 'all' in bots or pywikibot.calledModuleName() in bots
                     if ttype == 'denyscript':
-                        return not ('all' in bots or calledModuleName() in bots)
+                        return not ('all' in bots or pywikibot.calledModuleName() in bots)
         # no restricting template found
         return True
 

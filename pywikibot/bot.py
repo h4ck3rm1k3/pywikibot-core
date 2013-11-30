@@ -297,7 +297,7 @@ def writelogheader():
 # string indicating the debugging layer.
 
 # next bit filched from 1.5.2's inspect.py
-def currentframe():
+def mycurrentframe():
     """Return the frame object for the caller's stack frame."""
     try:
         raise Exception
@@ -311,6 +311,9 @@ if hasattr(sys, '_getframe'):
     # frame0 is this lambda, frame1 is logoutput() in this module,
     # frame2 is the convenience function (output(), etc.)
     # so frame3 is whatever called the convenience function
+else :
+    currentframe = mycurrentframe
+    
 
 # done filching
 
@@ -618,6 +621,7 @@ def handleArgs(*args):
                     raise TypeError
                 setattr(config, _arg, int(_val))
             except (ValueError, TypeError, AttributeError) as exc:
+                print(exc)
                 # argument not global -> specific bot script will take care
                 nonGlobalArgs.append(arg)
 

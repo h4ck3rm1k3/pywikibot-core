@@ -17,7 +17,7 @@ import math
 import re
 #import sys
 import threading
-from Queue import Queue
+from queue import Queue
 
 # Use pywikibot. prefix for all in-package imports; this is to prevent
 # confusion with similarly-named modules in version 1 framework, for users
@@ -25,7 +25,7 @@ from Queue import Queue
 
 import pywikibot
 from pywikibot import config2 as config
-from pywikibot.bot import warning, output, inputChoice
+from pywikibot.bot import warning, output, inputChoice, debug
 #from pywikibot.exceptions import *
 #from pywikibot.textlib import *
 #from pywikibot.i18n import translate
@@ -397,8 +397,8 @@ def Site(code=None, fam=None, user=None, sysop=None, interface=None):
 getSite = Site  # alias for backwards-compability
 
 
-from .page import Page, ImagePage, Category, Link, User, ItemPage, PropertyPage, Claim
-from .page import html2unicode, url2unicode, unicode2html
+#from .page import Page, ImagePage, Category, Link, User, ItemPage, PropertyPage, Claim
+#from .page import html2unicode, url2unicode, unicode2html
 
 
 link_regex = re.compile(r'\[\[(?P<title>[^\]|[<>{}]*)(\|.*?)?\]\]')
@@ -488,7 +488,7 @@ def stopme():
     _logger = "wiki"
 
     if not stopped:
-        pywikibot.debug(u"stopme() called", _logger)
+        debug(u"stopme() called", _logger)
 
         def remaining():
             import datetime

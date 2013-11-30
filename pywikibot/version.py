@@ -15,6 +15,7 @@ import time
 import datetime
 import urllib
 import subprocess
+from generate_user_files import get_base_dir
 
 cache = None
 
@@ -140,7 +141,7 @@ def getversion_git(path=None):
     return (tag, rev, date, hsh)
 
 
-from generate_user_files.py import get_base_dir
+
 
 def getversion_nightly():
     data = open(os.path.join(get_base_dir(), 'version'))

@@ -96,7 +96,8 @@ def main():
         if arg == '-always':
             always = True
         if arg == '-start':
-            start = True
+            #start = True
+            pass
 
     mysite = pywikibot.getSite()
     # If anything needs to be prepared, you can do it here

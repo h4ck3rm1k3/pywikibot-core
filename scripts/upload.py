@@ -75,7 +75,8 @@ class UploadRobot:
         dt = 15
         uo = urllib.URLopener()
         retrieved = False
-
+        _contents=""
+        rlen=0
         while not retrieved:
             if resume:
                 pywikibot.output(u"Resume download...")
@@ -227,6 +228,7 @@ class UploadRobot:
                 return
 
         except Exception as e:
+            print (e)
             pywikibot.error("Upload error: ", exc_info=True)
 
         else:

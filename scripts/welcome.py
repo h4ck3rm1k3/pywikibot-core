@@ -183,16 +183,16 @@ __version__ = '$Id$'
 
 import time
 import re
-import urllib
+#import urllib
 import locale
 import codecs
-from datetime import timedelta
+#from datetime import timedelta
 from random import choice
 from string import capitalize
 import pywikibot
 from pywikibot import i18n
 from pywikibot import config
-import query
+#import query
 
 locale.setlocale(locale.LC_ALL, '')
 
