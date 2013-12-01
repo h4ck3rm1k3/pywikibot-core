@@ -8,3 +8,8 @@ logs*
 *cache*
 .idea
 Pywikipediabot.egg-info/
+*.orig
+\#*
+*\#
+*~
+.#*
