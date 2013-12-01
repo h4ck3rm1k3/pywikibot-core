@@ -30,12 +30,11 @@ Tests for the page module.
 __version__ = '$Id$'
 
 import io
-import io
 import logging
 import os
 import sys
 import time
-
+import pywikibot.bot
 from .utils import unittest
 
 if os.name == "nt":
@@ -50,7 +49,7 @@ if os.name == "nt":
 
         def output(self, *args, **kwargs):
             import pywikibot
-            return pywikibot.output(*args, **kwargs)
+            return pywikibot.bot.output(*args, **kwargs)
 
         def request_input(self, *args, **kwargs):
             import pywikibot
@@ -180,17 +179,17 @@ if __name__ == "__main__":
             self.assertEqual(newstderr.getvalue(), "")
 
         def test_warning(self):
-            pywikibot.warning("warning")
+            pywikibot.bot.warning("warning")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "WARNING: warning\n")
 
         def test_error(self):
-            pywikibot.error("error")
+            pywikibot.bot.error("error")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "ERROR: error\n")
 
         def test_log(self):
-            pywikibot.log("log")
+            pywikibot.bot.log("log")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "")
 

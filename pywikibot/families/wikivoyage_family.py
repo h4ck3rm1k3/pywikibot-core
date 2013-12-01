@@ -4,12 +4,13 @@ __version__ = '$Id$'
 
 # The new wikivoyage family that is hosted at wikimedia
 
-from pywikibot import family
 
+from pywikibot.family import WikimediaFamily
 
-class Family(family.WikimediaFamily):
+class Family(WikimediaFamily):
     def __init__(self):
-        super(Family, self).__init__()
+        WikimediaFamily.__init__(self)
+
         self.name = 'wikivoyage'
         self.languages_by_size = [
             'en', 'de', 'pt', 'fr', 'it', 'nl', 'pl', 'ru', 'es', 'vi', 'sv',

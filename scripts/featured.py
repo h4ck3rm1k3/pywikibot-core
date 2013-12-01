@@ -75,7 +75,8 @@ import pywikibot
 from pywikibot import i18n
 #from pywikibot import config
 from pywikibot.pagegenerators import PreloadingGenerator
-
+interactive=None
+afterpage=None
 
 def CAT(site, name, hide):
     name = site.namespace(14) + ':' + name
@@ -368,6 +369,7 @@ class FeaturedBot(pywikibot.Bot):
             self.featuredWithInterwiki(fromsite, process)
 
     def featuredArticles(self, site, task, cache):
+
         code = site.lang
         articles = []
         if task == 'good':
@@ -609,6 +611,7 @@ class FeaturedBot(pywikibot.Bot):
                     pywikibot.output('Page %s is locked!'
                                      % atrans.title())
                 except pywikibot.PageNotSaved as e:
+                    print(e)
                     pywikibot.output("Page not saved")
 
 

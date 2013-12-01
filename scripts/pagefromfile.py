@@ -53,7 +53,7 @@ import re
 import codecs
 import pywikibot
 from pywikibot import config
-
+appendtops= False # TODO not set
 
 class NoTitle(Exception):
     """No title found"""

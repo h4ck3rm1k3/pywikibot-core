@@ -10,11 +10,18 @@ from . import transliteration
 #import traceback
 import re
 import sys
-import pywikibot as wikipedia
+#import pywikibot as wikipedia
 from pywikibot import config
-from pywikibot.bot import  VERBOSE, INFO, STDOUT, INPUT
+#from pywikibot.bot import  VERBOSE, INFO, STDOUT, INPUT
 #WARNING, DEBUG,
 import logging
+
+from pywikibot.bot import user_input
+from pywikibot.bot import calledModuleName
+from pywikibot.bot import log
+from pywikibot.bot import warning
+from pywikibot.bot import output
+from pywikibot.bot import inputChoice
 
 transliterator = transliteration.transliterator(config.console_encoding)
 
@@ -248,27 +255,24 @@ class UI:
         """Show the user a CAPTCHA image and return the answer."""
         try:
             import webbrowser
-            wikipedia.output('Opening CAPTCHA in your web browser...')
+            dooutput('Opening CAPTCHA in your web browser...')
             if webbrowser.open(url):
-                return wikipedia.input(
+                return user_input(
                     'What is the solution of the CAPTCHA that is shown in '
                     'your web browser?')
             else:
                 raise
         except:
-            wikipedia.output('Error in opening web browser: %s'
+            dooutput('Error in opening web browser: %s'
                              % sys.exc_info()[0])
-            wikipedia.output(
+            dooutput(
                 'Please copy this url to your web browser and open it:\n %s'
                 % url)
-            return wikipedia.input(
+            return user_input(
                 'What is the solution of the CAPTCHA at this url ?')
 
     def argvu(self):
-        try:
-            return [s.decode(self.encoding) for s in self.argv]
-        except AttributeError:  # in python 3, self.argv is unicode and thus cannot be decoded
-            return [s for s in self.argv]
+        return [s for s in self.argv]
 
 
 class TerminalHandler(logging.Handler):

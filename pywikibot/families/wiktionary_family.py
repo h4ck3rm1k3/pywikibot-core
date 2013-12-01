@@ -1,13 +1,19 @@
 # -*- coding: utf-8  -*-
-from pywikibot import family
+
 
 __version__ = '$Id$'
-
+from pywikibot.family import WikimediaFamily
 
 # The Wikimedia family that is known as Wiktionary
-class Family(family.WikimediaFamily):
+class Family(WikimediaFamily):
     def __init__(self):
-        super(Family, self).__init__()
+        self.alphabetic = []
+        self.alphabetic_revised = []
+        self.langs = {}
+        self.known_families={}
+        self.crossnamespace = {}
+        self.fyinterwiki = {}
+        WikimediaFamily.__init__(self)
         self.name = 'wiktionary'
 
         self.languages_by_size = [

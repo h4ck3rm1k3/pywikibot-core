@@ -16,10 +16,8 @@ __version__ = '$Id$'
 
 from pywikibot.exceptions import Error
 import collections
-try:
-    import mwparserfromhell
-except ImportError:
-    mwparserfromhell = False
+import mwparserfromhell
+
 import pywikibot
 import re
 try:
@@ -27,7 +25,7 @@ try:
 except ImportError:
     from html.parser import HTMLParser
 
-from . import config2 as config
+from pywikibot import config2 as config
 
 TEMP_REGEX = re.compile(
     '{{(?:msg:)?(?P<name>[^{\|]+?)(?:\|(?P<params>[^{]+?(?:{[^{]+?}[^{]*?)?))?}}')
@@ -608,7 +606,7 @@ def interwikiFormat(links, insite=None):
             link = str(links[site]).replace('[[:', '[[')
             s.append(link)
         except AttributeError:
-            s.append(getSite(site).linkto(links[site], othersite=insite))
+            s.append(pywikibot.getSite(site).linkto(links[site], othersite=insite))
     if insite.lang in insite.family.interwiki_on_one_line:
         sep = ' '
     else:

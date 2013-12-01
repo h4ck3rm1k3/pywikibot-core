@@ -16,9 +16,9 @@ __version__ = "$Id$"
 import sys
 import os
 import tempfile
-import pywikibot
+#import pywikibot
 from pywikibot import config2 as config
-
+from pywikibot.userinterfaces import UI
 
 class TextEditor(object):
     def __init__(self):
@@ -104,7 +104,7 @@ class TextEditor(object):
                 return self.restoreLinebreaks(newcontent)
         else:
             return self.restoreLinebreaks(
-                pywikibot.editText(
+                UI.editText(
                     text,
                     jumpIndex=jumpIndex,
                     highlight=highlight))

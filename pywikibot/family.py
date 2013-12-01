@@ -13,17 +13,22 @@ import re
 #import urllib
 import collections
 
-from . import config2 as config
+import config2 as config
 import pywikibot
 
 logger = logging.getLogger("pywiki.wiki.family")
-
+from pywikibot.page import Page
 
 # Parent class for all wiki families
 class Family(object):
     def __init__(self):
         if not hasattr(self, 'name'):
             self.name = None
+        self.alphabetic = []
+        self.alphabetic_revised = []
+        self.langs = {}
+        self.known_families={}
+        self.crossnamespace = {}
 
         # For interwiki sorting order see
         # http://meta.wikimedia.org/wiki/Interwiki_sorting_order
@@ -831,7 +836,7 @@ class Family(object):
     @property
     def iwkeys(self):
         if self.interwiki_forward:
-            return list(pywikibot.Family(self.interwiki_forward).langs.keys())
+            return list(Family(self.interwiki_forward).langs.keys())
         return list(self.langs.keys())
 
     def _addlang(self, code, location, namespaces={}):
@@ -878,7 +883,7 @@ class Family(object):
         if cr_template_list:
             cr_template = cr_template_list[0]
             # start with list of category redirect templates from family file
-            cr_page = pywikibot.Page(pywikibot.Site(code, self),
+            cr_page = Page(pywikibot.Site(code, self),
                                      "Template:" + cr_template)
             # retrieve all redirects to primary template from API,
             # add any that are not already on the list
@@ -996,9 +1001,9 @@ class Family(object):
 
     def __cmp__(self, otherfamily):
         try:
-            return cmp(self.name, otherfamily.name)
+            return self.__lt__(self.name, otherfamily.name)
         except AttributeError:
-            return cmp(id(self), id(otherfamily))
+            return self.__lt__(id(self), id(otherfamily))
 
     def __hash__(self):
         return hash(self.name)

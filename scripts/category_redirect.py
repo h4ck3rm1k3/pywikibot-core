@@ -189,7 +189,7 @@ class CategoryRedirectBot(object):
 
     def readyToEdit(self, cat):
         """Return True if cat not edited during cooldown period, else False."""
-        dateformat = "%Y-%m-%dT%H:%M:%SZ"
+        #dateformat = "%Y-%m-%dT%H:%M:%SZ"
         today = datetime.now()
         deadline = today + timedelta(days=-self.cooldown)
         if cat.editTime() is None:

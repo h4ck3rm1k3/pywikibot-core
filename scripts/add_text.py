@@ -74,12 +74,12 @@ __version__ = '$Id$'
 import re
 import webbrowser
 import codecs
-
+import time
 import pywikibot
 from pywikibot import config
 from pywikibot import i18n
 from pywikibot import pagegenerators
-
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
 docuReplacements = {
     '&params;': pagegenerators.parameterHelp,
 }
@@ -224,7 +224,7 @@ Match was: %s''' % result)
         # text in the page
         if putText:
             if not always:
-                choice = pywikibot.inputChoice(
+                choice = inputChoice(
                     'Do you want to accept these changes?',
                     ['Yes', 'No', 'All', 'open in Browser'],
                     ['y', 'n', 'a', 'b'], 'n')
@@ -237,7 +237,7 @@ Match was: %s''' % result)
                         page.site.hostname(),
                         page.site.nice_get_address(page.title())
                     ))
-                    pywikibot.input("Press Enter when finished in browser.")
+                    user_input("Press Enter when finished in browser.")
             if always or choice == 'y':
                 try:
                     if always:
@@ -297,35 +297,35 @@ def main():
     for arg in pywikibot.handleArgs():
         if arg.startswith('-textfile'):
             if len(arg) == 9:
-                textfile = pywikibot.input(
+                textfile = user_input(
                     'Which textfile do you want to add?')
             else:
                 textfile = arg[10:]
         elif arg.startswith('-text'):
             if len(arg) == 5:
-                addText = pywikibot.input('What text do you want to add?')
+                addText = user_input('What text do you want to add?')
             else:
                 addText = arg[6:]
         elif arg.startswith('-summary'):
             if len(arg) == 8:
-                summary = pywikibot.input('What summary do you want to use?')
+                summary = user_input('What summary do you want to use?')
             else:
                 summary = arg[9:]
         elif arg.startswith('-page'):
             if len(arg) == 5:
                 generator = [pywikibot.Page(
                     pywikibot.getSite(),
-                    pywikibot.input('What page do you want to use?'))]
+                    user_input('What page do you want to use?'))]
             else:
                 generator = [pywikibot.Page(pywikibot.getSite(), arg[6:])]
         elif arg.startswith('-excepturl'):
             if len(arg) == 10:
-                regexSkipUrl = pywikibot.input('What text should I skip?')
+                regexSkipUrl = user_input('What text should I skip?')
             else:
                 regexSkipUrl = arg[11:]
         elif arg.startswith('-except'):
             if len(arg) == 7:
-                regexSkip = pywikibot.input('What text should I skip?')
+                regexSkip = user_input('What text should I skip?')
             else:
                 regexSkip = arg[8:]
         elif arg == '-up':

@@ -39,6 +39,7 @@ class LogEntry(object):
     def __init__(self, apidata):
         """Initialize object from a logevent dict returned by MW API"""
         self.data = LogDict(apidata)
+        self._flags = None
         if self._expectedType is not None and self._expectedType != self.type():
             raise Error("Wrong log type! Expecting %s, received %s instead."
                         % (self._expectedType, self.type()))
@@ -90,8 +91,9 @@ class BlockEntry(LogEntry):
         # When an autoblock is removed, the "title" field is not a page title
         # ( https://bugzilla.wikimedia.org/show_bug.cgi?id=17781 )
         pos = self.data['title'].find('#')
-        self.isAutoblockRemoval = pos > 0
-        if self.isAutoblockRemoval:
+        self._isAutoblockRemoval = pos > 0
+        self._expiry = None
+        if self._isAutoblockRemoval:
             self._blockid = int(self.data['title'][pos + 1:])
 
     def title(self):
@@ -101,13 +103,13 @@ class BlockEntry(LogEntry):
         * Returns the blockid if this log reflects the removal of an autoblock
         """
         #TODO what for IP ranges ?
-        if self.isAutoblockRemoval:
+        if self._isAutoblockRemoval:
             return self._blockid
         else:
             return super(BlockEntry, self).title()
 
     def isAutoblockRemoval(self):
-        return self.isAutoblockRemoval
+        return self._isAutoblockRemoval
 
     def _getBlockDetails(self):
         try:

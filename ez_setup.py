@@ -21,7 +21,7 @@ import tarfile
 import optparse
 import subprocess
 import platform
-
+import pkg_resources
 from distutils import log
 
 try:
@@ -126,10 +126,10 @@ def use_setuptools(version=DEFAULT_VERSION, download_base=DEFAULT_URL,
     to_dir = os.path.abspath(to_dir)
     was_imported = 'pkg_resources' in sys.modules or \
         'setuptools' in sys.modules
-    try:
-        import pkg_resources
-    except ImportError:
-        return _do_download(version, download_base, to_dir, download_delay)
+    #try:
+    #    #import pkg_resources
+    #except ImportError:
+    #    return _do_download(version, download_base, to_dir, download_delay)
     try:
         pkg_resources.require("setuptools>=" + version)
         return
@@ -143,10 +143,10 @@ def use_setuptools(version=DEFAULT_VERSION, download_base=DEFAULT_URL,
             "'easy_install -U setuptools'."
             "\n\n(Currently using %r)\n" % (version, e.args[0]))
             sys.exit(2)
-        else:
-            del pkg_resources, sys.modules['pkg_resources']    # reload ok
-            return _do_download(version, download_base, to_dir,
-                                download_delay)
+        #else:
+            #del pkg_resources, sys.modules['pkg_resources']    # reload ok
+            #return _do_download(version, download_base, to_dir,
+            #                    download_delay)
     except pkg_resources.DistributionNotFound:
         return _do_download(version, download_base, to_dir,
                             download_delay)
@@ -305,7 +305,7 @@ def _extractall(self, path=".", members=None):
     # Reverse sort directories.
     if sys.version_info < (2, 4):
         def sorter(dir1, dir2):
-            return cmp(dir1.name, dir2.name)
+            return self.__lt__(dir1.name, dir2.name)
         directories.sort(sorter)
         directories.reverse()
     else:

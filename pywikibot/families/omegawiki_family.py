@@ -2,14 +2,21 @@
 
 __version__ = '$Id$'
 
-from pywikibot import family
+from pywikibot.family import Family as FamilyBase
 
 
 # Omegawiki, the Ultimate online dictionary
-class Family(family.Family):
+class Family(FamilyBase):
 
     def __init__(self):
-        family.Family.__init__(self)
+
+        self.alphabetic = []
+        self.alphabetic_revised = []
+        self.langs = {}
+        self.known_families={}
+        self.crossnamespace = {}
+
+        FamilyBase.__init__(self)
         self.name = 'omegawiki'
         self.langs['omegawiki'] = 'www.omegawiki.org'
 

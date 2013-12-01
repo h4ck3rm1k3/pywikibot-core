@@ -30,9 +30,11 @@ import httplib2
 class RedirectLimit (Exception):
     pass 
 
-import urllib.request, urllib.parse, urllib.error
+#import urllib.request, 
+from urllib.parse import urljoin, splittype, splithost, unquote
+#urllib.error
 import http.cookiejar
-import sys
+#import sys
 
 import pywikibot
 from pywikibot import config
@@ -122,7 +124,7 @@ class ConnectionPool(object):
                                 % (identifier, connection),
                                 _logger)
                 connection.close()
-                del connection
+                #del connection
             else:
                 self.connections[identifier].append(connection)
         finally:
@@ -270,7 +272,7 @@ class Http(httplib2.Http):
             location = response['location']
             (scheme, authority, path, query, fragment) = httplib2.parse_uri(location)
             if authority is None:
-                response['location'] = httplib2.urlparse.urljoin(uri, location)
+                response['location'] = urljoin(uri, location)
                 pywikibot.debug("Relative redirect: changed [%s] to [%s]"
                                 % (location, response['location']),
                                 _logger)
@@ -303,10 +305,12 @@ class HttpRequest(object):
 
     Usage:
 
+    >>> import queue
+    >>> queue = queue.Queue()
     >>> request = HttpRequest('http://www.google.com')
     >>> queue.put(request)
     >>> request.lock.acquire()
-    >>> print request.data
+    >>> print (request.data)
 
     C{request.lock.acquire()} will block until the data is available.
 
@@ -390,10 +394,10 @@ class DummyRequest(object):
         self.url = url
         self.headers = headers
         self.origin_req_host = http.cookiejar.request_host(self)
-        self.type, r = urllib.parse.splittype(url)
-        self.host, r = urllib.parse.splithost(r)
+        self.type, r = splittype(url)
+        self.host, r = splithost(r)
         if self.host:
-            self.host = urllib.parse.unquote(self.host)
+            self.host = unquote(self.host)
 
     def get_full_url(self):
         return self.url

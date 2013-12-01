@@ -64,10 +64,10 @@ __version__ = '$Id$'
 #
 
 import re
-
+from pywikibot.bot import log
 from . import add_text
 import pywikibot
-from pywikibot import config
+#from pywikibot import config
 from pywikibot import pagegenerators
 
 docuReplacements = {
@@ -444,7 +444,7 @@ class CommonscatBot:
         # In Pywikibot 2.0, page.interwiki() now returns Link objects, not Page objects
         for ipageLink in page.langlinks():
             ipage = pywikibot.page.Page(ipageLink)
-            pywikibot.log("Looking for template on %s" % (ipage.title()))
+            log("Looking for template on %s" % (ipage.title()))
             try:
                 if(ipage.exists() and not ipage.isRedirectPage()
                    and not ipage.isDisambig()):
@@ -499,7 +499,7 @@ class CommonscatBot:
         If the page doesnt exists the function will return an empty string
 
         """
-        pywikibot.log("getCommonscat: " + name)
+        log("getCommonscat: " + name)
         try:
             commonsSite = self.site.image_repository()
             #This can throw a pywikibot.BadTitle
@@ -527,17 +527,17 @@ class CommonscatBot:
                         return ''
                 return ''
             elif commonsPage.isRedirectPage():
-                pywikibot.log("getCommonscat: The category is a redirect")
+                log("getCommonscat: The category is a redirect")
                 return self.checkCommonscatLink(
                     commonsPage.getRedirectTarget().title(withNamespace=False))
             elif "Category redirect" in commonsPage.templates():
-                pywikibot.log("getCommonscat: The category is a category redirect")
+                log("getCommonscat: The category is a category redirect")
                 for template in commonsPage.templatesWithParams():
                     if (template[0] == "Category redirect" and
                             len(template[1]) > 0):
                         return self.checkCommonscatLink(template[1][0])
             elif commonsPage.isDisambig():
-                pywikibot.log("getCommonscat: The category is disambiguation")
+                log("getCommonscat: The category is disambiguation")
                 return ''
             else:
                 return commonsPage.title(withNamespace=False)
@@ -555,7 +555,7 @@ def main():
 
     summary = None
     generator = None
-    checkcurrent = False
+    #checkcurrent = False
     always = False
     ns = []
     ns.append(14)
@@ -569,7 +569,7 @@ def main():
             else:
                 summary = arg[9:]
         elif arg.startswith('-checkcurrent'):
-            checkcurrent = True
+            #checkcurrent = True
             primaryCommonscat, commonscatAlternatives = \
                 CommonscatBot.getCommonscatTemplate(
                     pywikibot.getSite().language())

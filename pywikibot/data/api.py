@@ -10,7 +10,7 @@ Interface functions to Mediawiki's api.php
 __version__ = '$Id$'
 
 from collections import MutableMapping
-from pywikibot.comms import http
+from pywikibot.comms.pybothttp import request
 from email.mime.multipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
 import datetime
@@ -27,19 +27,26 @@ import pprint
 import re
 import traceback
 import time
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+#urllib.parse
+#urllib.error
 #import warnings
-
+from pywikibot.bot import log, error
 import pywikibot
-from pywikibot import config, login
+from pywikibot import config
+#, login
+
+from pywikibot.login import LoginManager as LoginManagerBase
+#from pywikibot.page import Page, Category, ImagePage, Link
 from pywikibot.exceptions import (Server504Error, FatalServerError,Error)
+#, AutoblockUser
+#, UserActionRefuse
 
 _logger = "data.api"
 
 lagpattern = re.compile(r"Waiting for [\d.]+: (?P<lag>\d+) seconds? lagged")
 
-
-class APIError(pywikibot.Error):
+class APIError(Error):
     """The wiki site returned an error message."""
     def __init__(self, code, info, **kwargs):
         """Save error dict returned by MW API."""
@@ -60,11 +67,11 @@ class APIWarning(UserWarning):
     pass
 
 
-class TimeoutError(pywikibot.Error):
+class TimeoutError(Error):
     pass
 
 
-class Request(MutableMapping):
+class Request(MutableMapping, object):
     """A request to a Site's api.php interface.
 
     Attributes of this object (except for the special parameters listed
@@ -207,7 +214,7 @@ class Request(MutableMapping):
                 if isinstance(self.params[key], str):
                     self.params[key] = self.params[key].encode(self.site.encoding())
             except Exception:
-                pywikibot.error(
+                error(
                     "http_params: Key '%s' could not be encoded to '%s'; params=%r"
                     % (key, self.site.encoding(), self.params[key]))
         return urllib.parse.urlencode(self.params)
@@ -255,7 +262,7 @@ class Request(MutableMapping):
                             local_filename = self.params[key]
                             filetype = mimetypes.guess_type(local_filename)[0] \
                                 or 'application/octet-stream'
-                            file_content = file(local_filename, "rb").read()
+                            file_content = open(local_filename, "rb").read()
                             submsg = MIMENonMultipart(*filetype.split("/"))
                             submsg.add_header("Content-disposition",
                                               "form-data", name=key,
@@ -279,29 +286,29 @@ class Request(MutableMapping):
                     body = body[eoh + len(marker):]
                     # retrieve the headers from the MIME object
                     mimehead = dict(list(container.items()))
-                    rawdata = http.request(self.site, uri, ssl, method="POST",
+                    rawdata = request(self.site, uri, ssl, method="POST",
                                            headers=mimehead, body=body)
                 else:
-                    rawdata = http.request(self.site, uri, ssl, method="POST",
+                    rawdata = request(self.site, uri, ssl, method="POST",
                                            headers={'Content-Type': 'application/x-www-form-urlencoded'},
                                            body=paramstring)
 ##                import traceback
 ##                traceback.print_stack()
 ##                print rawdata
             except Server504Error:
-                pywikibot.log("Caught HTTP 504 error; retrying")
+                log("Caught HTTP 504 error; retrying")
                 self.wait()
                 continue
             except FatalServerError:
                 # This error is not going to be fixed by just waiting
-                pywikibot.error(traceback.format_exc())
+                error(traceback.format_exc())
                 raise
             #TODO: what other exceptions can occur here?
             except Exception as e:
                 print(e)
                 # for any other error on the http request, wait and retry
-                pywikibot.error(traceback.format_exc())
-                pywikibot.log("%s, %s" % (uri, paramstring))
+                error(traceback.format_exc())
+                log("%s, %s" % (uri, paramstring))
                 self.wait()
                 continue
             if not isinstance(rawdata, str):
@@ -382,7 +389,7 @@ class Request(MutableMapping):
             if code == "maxlag":
                 lag = lagpattern.search(info)
                 if lag:
-                    pywikibot.log(
+                    log(
                         "Pausing due to database lag: " + info)
                     self.site.throttle.lag(int(lag.group("lag")))
                     continue
@@ -391,9 +398,9 @@ class Request(MutableMapping):
                 continue
             # raise error
             try:
-                pywikibot.log("API Error: query=\n%s"
+                log("API Error: query=\n%s"
                               % pprint.pformat(self.params))
-                pywikibot.log("           response=\n%s"
+                log("           response=\n%s"
                               % result)
                 raise APIError(code, info, **result["error"])
             except TypeError:
@@ -660,7 +667,7 @@ class QueryGenerator(object):
                     old_limit = self.query_limit
                     if old_limit is None or old_limit < 2:
                         raise
-                    pywikibot.log("Setting query limit to %s" % (old_limit // 2))
+                    log("Setting query limit to %s" % (old_limit // 2))
                     self.set_query_increment(old_limit // 2)
                     continue
             if not self.data or not isinstance(self.data, dict):
@@ -671,7 +678,7 @@ class QueryGenerator(object):
                 return
             if "query" not in self.data:
                 pywikibot.debug(
-                    "%s: stopped iteration because 'query' not found in api response."
+                    "%s: stopped iteration because 'query' not found in api response. %s"
                     % (self.__class__.__name__, self.resultkey),
                     _logger)
                 pywikibot.debug(str(self.data), _logger)
@@ -718,7 +725,7 @@ class QueryGenerator(object):
             if not "query-continue" in self.data:
                 return
             if not self.continuekey in self.data["query-continue"]:
-                pywikibot.log(
+                log(
                     "Missing '%s' key in ['query-continue'] value."
                     % self.continuekey)
                 return
@@ -785,7 +792,7 @@ class PageGenerator(QueryGenerator):
         of object.
 
         """
-        p = pywikibot.Page(self.site, pagedata['title'], pagedata['ns'])
+        p = Page(self.site, pagedata['title'], pagedata['ns'])
         update_page(p, pagedata)
         return p
 
@@ -795,7 +802,7 @@ class CategoryPageGenerator(PageGenerator):
 
     def result(self, pagedata):
         p = PageGenerator.result(self, pagedata)
-        return pywikibot.Category(p)
+        return Category(p)
 
 
 class ImagePageGenerator(PageGenerator):
@@ -803,7 +810,7 @@ class ImagePageGenerator(PageGenerator):
 
     def result(self, pagedata):
         p = PageGenerator.result(self, pagedata)
-        image = pywikibot.ImagePage(p)
+        image = ImagePage(p)
         if 'imageinfo' in pagedata:
             image._imageinfo = pagedata['imageinfo'][0]
         return image
@@ -876,7 +883,12 @@ class LogEntryListGenerator(ListGenerator):
         return self.entryFactory.create(pagedata)
 
 
-class LoginManager(login.LoginManager):
+class LoginManager(LoginManagerBase):
+
+    def __init__(self):
+        self._waituntil = datetime.timedelta(seconds=0)
+        LoginManagerBase.__init__(self)
+
     """Supplies getCookie() method to use API interface."""
     def getCookie(self, remember=True, captchaId=None, captchaAnswer=None):
         """Login to the site.
@@ -892,11 +904,11 @@ class LoginManager(login.LoginManager):
                 pywikibot.warning("Too many tries, waiting %s seconds before retrying."
                                   % diff.seconds)
                 time.sleep(diff.seconds)
-        login_request = Request(site=self.site,
+        login_request = Request(site=LoginManagerBase.get_site(self),
                                 action="login",
-                                lgname=self.username,
-                                lgpassword=self.password)
-        self.site._loginstatus = -2
+                                lgname=LoginManagerBase.get_username(self),
+                                lgpassword=LoginManagerBase.get_password(self))
+        LoginManagerBase.get_site(self)._loginstatus = -2
         while True:
             login_result = login_request.submit()
             if "login" not in login_result:
@@ -972,13 +984,13 @@ def update_page(page, pagedict):
         page._catinfo = pagedict["categoryinfo"]
 
     if "templates" in pagedict:
-        page._templates = [pywikibot.Page(page.site, tl['title'])
+        page._templates = [Page(page.site, tl['title'])
                            for tl in pagedict['templates']]
 
     if "langlinks" in pagedict:
         links = []
         for ll in pagedict["langlinks"]:
-            link = pywikibot.Link.langlinkUnsafe(ll['lang'],
+            link = Link.langlinkUnsafe(ll['lang'],
                                                  ll['*'],
                                                  source=page.site)
             links.append(link)

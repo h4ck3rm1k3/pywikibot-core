@@ -2,13 +2,13 @@
 
 __version__ = '$Id$'
 
-from pywikibot import family
+from pywikibot.family import WikimediaFamily
 
 
 # The meta wikimedia family
-class Family(family.WikimediaFamily):
+class Family(WikimediaFamily):
     def __init__(self):
-        super(Family, self).__init__()
+        WikimediaFamily.__init__(self)
         self.name = 'meta'
         self.langs = {
             'meta': 'meta.wikimedia.org',

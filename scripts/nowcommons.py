@@ -68,6 +68,12 @@ from . import image
 # from imagetransfer import nowCommonsMessage
 # nowCommonsMessage defined on line #163
 # taken from imagetransfer.py (compat)
+autonomous = False
+replace = False
+replacealways = False
+replaceloose = False
+replaceonly = False
+use_hash = False
 
 nowCommons = {
     '_default': [
@@ -256,8 +262,10 @@ class NowCommonsDeleteBot:
                                  % image_local)
                 pywikibot.output('Local: %s\nCommons: %s\n'
                                  % (url_local, url_commons))
-                result1 = webbrowser.open(url_local, 0, 1)
-                result2 = webbrowser.open(url_commons, 0, 1)
+                #result1 = 
+                webbrowser.open(url_local, 0, 1)
+                #result2 = 
+                webbrowser.open(url_commons, 0, 1)
                 if image_local.split('Image:')[1] == image_commons:
                     choice = pywikibot.inputChoice(
                         'The local and the commons images have the same name, continue?',

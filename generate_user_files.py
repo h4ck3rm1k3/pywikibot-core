@@ -311,15 +311,15 @@ if __name__ == "__main__":
             if not os.path.isfile(os.path.join(oldpath, "user-config.py")):
                 print("ERROR: no user_config.py found in that directory")
                 continue
-            newf = file(os.path.join(base_dir, "user-config.py"), "wb")
-            oldf = file(os.path.join(oldpath, "user-config.py"), "rb")
+            newf = open(os.path.join(base_dir, "user-config.py"), "wb")
+            oldf = open(os.path.join(oldpath, "user-config.py"), "rb")
             newf.write(oldf.read())
             newf.close()
             oldf.close()
 
             if os.path.isfile(os.path.join(oldpath, "user-fixes.py")):
-                newfix = file(os.path.join(base_dir, "user-fixes.py"), "wb")
-                oldfix = file(os.path.join(oldpath, "user-fixes.py"), "rb")
+                newfix = open(os.path.join(base_dir, "user-fixes.py"), "wb")
+                oldfix = open(os.path.join(oldpath, "user-fixes.py"), "rb")
                 newfix.write(oldfix.read())
                 newfix.close()
                 oldfix.close()

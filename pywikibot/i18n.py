@@ -13,10 +13,11 @@ __version__ = '$Id$'
 
 import re
 import locale
-from pywikibot import Error
+from pywikibot.exceptions import Error
 from .plural import plural_rules
 import pywikibot
-from . import config2 as config
+import config2 as config
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
 
 PLURAL_PATTERN = '{{PLURAL:(?:%\()?([^\)]*?)(?:\)d)?\|(.*?)}}'
 
@@ -507,4 +508,4 @@ def input(twtitle, parameters=None, password=False):
     code = config.userinterface_lang or \
            locale.getdefaultlocale()[0].split('_')[0]
     trans = twtranslate(code, twtitle, parameters)
-    return pywikibot.input(trans, password)
+    return user_input(trans, password)

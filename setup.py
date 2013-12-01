@@ -21,22 +21,22 @@ from setuptools.command import install
 test_deps = []
 testcollector = "tests"
 
-if sys.version_info[0] == 2:
-    if sys.version_info[1] < 6:
-        raise RuntimeError("ERROR: Pywikipediabot only runs under Python 2.6 or higher")
-    elif sys.version_info[1] == 6:
-        test_deps = ['unittest2']
-        testcollector = "tests.utils.collector"
+# if sys.version_info[0] == 2:
+#     if sys.version_info[1] < 6:
+#         raise RuntimeError("ERROR: Pywikipediabot only runs under Python 2.6 or higher")
+#     elif sys.version_info[1] == 6:
+#         test_deps = ['unittest2']
+#         testcollector = "tests.utils.collector"
 
-if sys.version_info[0] == 3:
-    if "--python3ok" not in sys.argv:
-        # use setup.py test --python3ok  to run tests
-        print("ERROR: Pywikipediabot only runs under Python 2")
-        sys.exit(1)
-    sys.argv.remove('--python3ok')
-    if sys.version_info[1] < 3:
-        print("ERROR: Python 3.3 or higher is required!")
-        sys.exit(1)
+# if sys.version_info[0] == 3:
+#     if "--python3ok" not in sys.argv:
+#         # use setup.py test --python3ok  to run tests
+#         print("ERROR: Pywikipediabot only runs under Python 2")
+#         sys.exit(1)
+#     sys.argv.remove('--python3ok')
+#     if sys.version_info[1] < 3:
+#         print("ERROR: Python 3.3 or higher is required!")
+#         sys.exit(1)
 
 
 class pwb_install(install.install):
@@ -77,5 +77,5 @@ setup(
     cmdclass={
         'install': pwb_install
     },
-    use_2to3=False
+    #use_2to3=False
 )

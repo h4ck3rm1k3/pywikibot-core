@@ -22,14 +22,17 @@ from queue import Queue
 # Use pywikibot. prefix for all in-package imports; this is to prevent
 # confusion with similarly-named modules in version 1 framework, for users
 # who want to continue using both
-
+#from pywikibot.bot import log
 import pywikibot
 from pywikibot import config2 as config
-from pywikibot.bot import warning, output, inputChoice, debug
-#from pywikibot.exceptions import *
-#from pywikibot.textlib import *
-#from pywikibot.i18n import translate
-
+from pywikibot.bot import (warning, output, debug, inputChoice, log)
+from pywikibot.bot import (warning, output, debug, inputChoice, log)
+from pywikibot.bot import log, stdout, error
+from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse
+#from pywikibot.textlib import UnicodeToAsciiHtml
+from pywikibot.i18n import translate
+from pywikibot.page import Page, ImagePage, Category, Link, User, ItemPage, PropertyPage, Claim
+from pywikibot.page import html2unicode, url2unicode, unicode2html
 
 class Timestamp(datetime.datetime):
     """Class for handling Mediawiki timestamps.
@@ -397,9 +400,6 @@ def Site(code=None, fam=None, user=None, sysop=None, interface=None):
 getSite = Site  # alias for backwards-compability
 
 
-#from .page import Page, ImagePage, Category, Link, User, ItemPage, PropertyPage, Claim
-#from .page import html2unicode, url2unicode, unicode2html
-
 
 link_regex = re.compile(r'\[\[(?P<title>[^\]|[<>{}]*)(\|.*?)?\]\]')
 
@@ -519,7 +519,7 @@ Really exit?""" % remaining(),
     # only need one drop() call because all throttles use the same global pid
     try:
         list(_sites.values())[0].throttle.drop()
-        pywikibot.log("Dropped throttle(s).")
+        log("Dropped throttle(s).")
     except IndexError:
         pass
 

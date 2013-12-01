@@ -14,6 +14,8 @@ __version__ = '$Id$'
 # scripts, instead of writing each one from scratch.
 
 
+
+
 import logging
 import logging.handlers
        # all output goes thru python std library "logging" module
@@ -21,7 +23,7 @@ import os
 import os.path
 import sys
 import re
-
+#from pywikibot.bot import log, stdout, error
 # logging levels
 _logger = "bot"
 
@@ -34,15 +36,11 @@ INPUT = 25
 import pywikibot
 from pywikibot import config
 from pywikibot import version
-
+from pywikibot.exceptions import Error
 
 # User interface initialization
 # search for user interface module in the 'userinterfaces' subdirectory
-uiModule = __import__("pywikibot.userinterfaces.%s_interface"
-                      % config.userinterface,
-                      fromlist=['UI'])
-ui = uiModule.UI()
-pywikibot.argvu = ui.argvu()
+
 
 
 # Logging module configuration
@@ -179,7 +177,7 @@ def init_handlers(strm=None):
     use pywikibot.output function.
     """
 
-    global _handlers_initialized
+    #global _handlers_initialized
 
     moduleName = calledModuleName()
     if not moduleName:
@@ -196,11 +194,11 @@ def init_handlers(strm=None):
     root_logger = logging.getLogger("pywiki")
     root_logger.setLevel(DEBUG + 1)  # all records except DEBUG go to logger
     if hasattr(root_logger, 'captureWarnings'):
-        root_logger.captureWarnings(True)  # introduced in Python >= 2.7
+        logging.captureWarnings(True)  # introduced in Python >= 2.7
     root_logger.handlers = []  # remove any old handlers
 
     # configure handler(s) for display to user interface
-    ui.init_handlers(root_logger, **config.userinterface_init_kwargs)
+    #ui.init_handlers(root_logger, **config.userinterface_init_kwargs)
 
     # if user has enabled file logging, configure file handler
     if moduleName in config.log or '*' in config.log:
@@ -230,7 +228,7 @@ def init_handlers(strm=None):
             debuglogger.setLevel(DEBUG)
             debuglogger.addHandler(file_handler)
 
-    _handlers_initialized = True
+    #_handlers_initialized = True
 
     writelogheader()
 
@@ -303,7 +301,8 @@ def mycurrentframe():
         raise Exception
     except:
         # go back two levels, one for logoutput and one for whatever called it
-        return sys.exc_traceback.tb_frame.f_back.f_back
+        return sys.exc_info().tb_frame.f_back.f_back
+        #return sys.exc_traceback.tb_frame.f_back.f_back
 
 if hasattr(sys, '_getframe'):
     # less portable but more efficient
@@ -451,7 +450,7 @@ def exception(msg=None, decoder=None, newline=True, tb=False, **kwargs):
 # User input functions
 
 
-def input(question, password=False):
+def user_input(question, password=False):
     """Ask the user a question, return the user's answer.
 
     Parameters:
@@ -506,7 +505,8 @@ def calledModuleName():
 
     """
     # get commandline arguments
-    called = pywikibot.argvu[0].strip()
+    called = sys.argv[0].strip()
+
     if ".py" in called:  # could end with .pyc, .pyw, etc. on some platforms
         # clip off the '.py?' filename extension
         called = called[:called.rindex('.py')]
@@ -726,12 +726,12 @@ Global arguments available for all bots:
         if hasattr(module, 'docuReplacements'):
             for key, value in list(module.docuReplacements.items()):
                 helpText = helpText.replace(key, value.strip('\n\r'))
-        pywikibot.stdout(helpText)  # output to STDOUT
+        pywikibot.bot.stdout(helpText)  # output to STDOUT
     except Exception:
         if modname:
-            pywikibot.stdout('Sorry, no help available for %s' % modname)
-        pywikibot.log('showHelp:', exc_info=True)
-    pywikibot.stdout(globalHelp)
+            stdout('Sorry, no help available for %s' % modname)
+        log('showHelp:', exc_info=True)
+    stdout(globalHelp)
 
 
 class Bot(object):
@@ -778,7 +778,7 @@ class Bot(object):
         try:
             return self.options.get(option, self.availableOptions[option])
         except KeyError:
-            raise pywikibot.Error('%s is not a valid bot option.' % option)
+            raise Error('%s is not a valid bot option.' % option)
 
     def userPut(self, page, oldtext, newtext):
         """

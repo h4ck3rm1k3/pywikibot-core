@@ -2,14 +2,14 @@
 
 __version__ = '$Id$'
 
-from pywikibot import family
+from pywikibot.family import Family as BaseFamily
 
 
-class Family(family.Family):
+class Family(BaseFamily):
     def __init__(self):
-        family.Family.__init__(self)
+        BaseFamily.__init__(self)
         self.name = 'wowwiki'
-
+        
         self.langs = {
             'cs': 'cs.wow.wikia.com',
             'da': 'da.wowwiki.com',
@@ -45,10 +45,11 @@ class Family(family.Family):
         }
 
         self.content_id = "article"
-
+        self.disambiguationTemplates = {}
         self.disambiguationTemplates['en'] = ['disambig', 'disambig/quest',
                                               'disambig/quest2',
                                               'disambig/achievement2']
+        self.disambcatname = {}
         self.disambcatname['en'] = "Disambiguations"
 
         # Wikia's default CategorySelect extension always puts categories last

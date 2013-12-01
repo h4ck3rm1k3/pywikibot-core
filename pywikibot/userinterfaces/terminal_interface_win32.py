@@ -59,6 +59,7 @@ class Win32CtypesUI(Win32BaseUI):
         std_out_handle = ctypes.windll.kernel32.GetStdHandle(-11)
         # Color tags might be cascaded, e.g. because of transliteration.
         # Therefore we need this stack.
+        text = str(text)
         colorStack = []
         tagM = True
         while tagM:

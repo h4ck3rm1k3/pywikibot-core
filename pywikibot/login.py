@@ -13,9 +13,13 @@ __version__ = '$Id$'
 #
 
 #import logging
-import pywikibot
-from pywikibot import config, deprecate_arg
+#import pywikibot
+#from 
+import pywikibot.page 
+from pywikibot.deprecate import deprecate_arg
+#from pywikibot import deprecate_arg
 from pywikibot.exceptions import NoUsername
+from pywikibot.bot import debug, log,  user_input, error
 # NoSuchSite, 
 
 _logger = "wiki.login"
@@ -36,62 +40,83 @@ botList = {
 }
 
 
-class LoginManager:
+class LoginManager(object):
     @deprecate_arg("username", "user")
     @deprecate_arg("verbose", None)
     def __init__(self, password=None, sysop=False, site=None, user=None):
         if site is not None:
-            self.site = site
+            self._site = site
         else:
-            self.site = pywikibot.Site()
+            self._site = pywikibot.Site()
         if user:
-            self.username = user
+            self._username = user
         elif sysop:
             try:
-                self.username = config.sysopnames[
-                    self.site.family.name][self.site.code]
+                self._username = config.sysopnames[
+                    self._site.family.name][self._site.code]
             except KeyError:
                 raise NoUsername(
 """ERROR: Sysop username for %(fam_name)s:%(wiki_code)s is undefined.
 If you have a sysop account for that site, please add a line to user-config.py:
 
 sysopnames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
-                    % {'fam_name': self.site.family.name,
-                       'wiki_code': self.site.code})
+                    % {'fam_name': self._site.family.name,
+                       'wiki_code': self._site.code})
         else:
             try:
-                self.username = config.usernames[
-                    self.site.family.name][self.site.code]
+                self._username = config.usernames[
+                    self._site.family.name][self._site.code]
             except:
                 raise NoUsername(
 """ERROR: Username for %(fam_name)s:%(wiki_code)s is undefined.
 If you have an account for that site, please add a line to user-config.py:
 
 usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
-                    % {'fam_name': self.site.family.name,
-                       'wiki_code': self.site.code})
-        self.password = password
+                    % {'fam_name': self._site.family.name,
+                       'wiki_code': self._site.code})
+        self._password = password
         if getattr(config, 'password_file', ''):
             self.readPassword()
+
+    @property
+    def site(self):
+        return self._site
+
+    @property
+    def password(self):
+        return self._password
+
+    @property
+    def username(self):
+        return self._username
+
+    def get_site(self):
+        return self._site
+
+    def get_password(self):
+        return self._password
+
+    def get_username(self):
+        return self._username
 
     def botAllowed(self):
         """
         Checks whether the bot is listed on a specific page to comply with
         the policy on the respective wiki.
         """
-        if self.site.family.name in botList \
-                and self.site.code in botList[self.site.family.name]:
+        if self._site.family.name in botList \
+                and self._site.code in botList[self._site.family.name]:
             botListPageTitle, botTemplate = botList[
-                self.site.family.name][self.site.code]
-            botListPage = pywikibot.Page(self.site, botListPageTitle)
+                self._site.family.name][self._site.code]
+            botListPage = pywikibot.page.Page(self._site, botListPageTitle)
             if botTemplate:
                 for template in botListPage.templatesWithParams():
                     if template[0] == botTemplate \
-                       and template[1][0] == self.username:
+                       and template[1][0] == self._username:
                         return True
             else:
                 for linkedPage in botListPage.linkedPages():
-                    if linkedPage.title(withNamespace=False) == self.username:
+                    if linkedPage.title(withNamespace=False) == self._username:
                         return True
             return False
         else:
@@ -119,7 +144,7 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
         """
         # THIS IS OVERRIDDEN IN data/api.py
         filename = config.datafilepath('pywikibot.lwp')
-        pywikibot.debug("Storing cookies to %s" % filename,
+        debug("Storing cookies to %s" % filename,
                         _logger)
         f = open(filename, 'w')
         f.write(data)
@@ -152,38 +177,38 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
                 continue
             entry = eval(line.decode('utf-8'))
             if len(entry) == 2:    # for default userinfo
-                if entry[0] == self.username:
-                    self.password = entry[1]
+                if entry[0] == self._username:
+                    self._password = entry[1]
             elif len(entry) == 4:  # for userinfo included code and family
-                if entry[0] == self.site.code and \
-                   entry[1] == self.site.family.name and \
-                   entry[2] == self.username:
-                    self.password = entry[3]
+                if entry[0] == self._site.code and \
+                   entry[1] == self._site.family.name and \
+                   entry[2] == self._username:
+                    self._password = entry[3]
         password_f.close()
 
     def login(self, retry=False):
-        if not self.password:
+        if not self._password:
             # As we don't want the password to appear on the screen, we set
             # password = True
-            self.password = pywikibot.input(
+            self._password = user_input(
                 'Password for user %(name)s on %(site)s (no characters will be shown):'
-                % {'name': self.username, 'site': self.site},
+                % {'name': self._username, 'site': self._site},
                 password=True)
-#        self.password = self.password.encode(self.site.encoding())
+#        self.password = self.password.encode(self._site.encoding())
 
         pywikibot.output("Logging in to %(site)s as %(name)s"
-                         % {'name': self.username, 'site': self.site})
+                         % {'name': self._username, 'site': self._site})
         try:
             cookiedata = self.getCookie()
         except pywikibot.data.api.APIError as e:
-            pywikibot.error("Login failed (%s)." % e.code)
+            error("Login failed (%s)." % e.code)
             if retry:
-                self.password = None
+                self._password = None
                 return self.login(retry=True)
             else:
                 return False
         self.storecookiedata(cookiedata)
-        pywikibot.log("Should be logged in now")
+        log("Should be logged in now")
 ##        # Show a warning according to the local bot policy
 ##   FIXME: disabled due to recursion; need to move this to the Site object after
 ##   login
@@ -191,7 +216,7 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
 ##            logger.error(
 ##                u"Username '%(name)s' is not listed on [[%(page)s]]."
 ##                 % {'name': self.username,
-##                    'page': botList[self.site.family.name][self.site.code]})
+##                    'page': botList[self._site.family.name][self._site.code]})
 ##            logger.error(
 ##"Please make sure you are allowed to use the robot before actually using it!")
 ##            return False

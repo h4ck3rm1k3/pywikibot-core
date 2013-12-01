@@ -37,7 +37,7 @@ INPUT = 25
 import pywikibot
 
 
-class IRCBot(pywikibot.Bot, SingleServerIRCBot):
+class IRCBot(pywikibot.bot.Bot, SingleServerIRCBot):
     """
     Generic IRC Bot to be subclassed
 
@@ -54,7 +54,7 @@ class IRCBot(pywikibot.Bot, SingleServerIRCBot):
     }
 
     def __init__(self, site, channel, nickname, server, port=6667, **kwargs):
-        pywikibot.Bot.__init__(self, **kwargs)
+        pywikibot.bot.Bot.__init__(self, **kwargs)
         SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
         self.channel = channel
         self.site = site
@@ -91,12 +91,12 @@ class IRCBot(pywikibot.Bot, SingleServerIRCBot):
         name = msg[8:msg.find('14', 9)]
         text = pywikibot.comms.http.request(self.site, self.api_url)
         entry = self.api_found.findall(text)
-        page = pywikibot.Page(self.site, name)
+        page = pywikibot.page.Page(self.site, name)
         try:
                 text = page.get()
-        except pywikibot.NoPage:
+        except pywikibot.page.NoPage:
                 return
-        except pywikibot.IsRedirectPage:
+        except pywikibot.page.IsRedirectPage:
                 return
         pywikibot.output(str((entry[0], name)))
 

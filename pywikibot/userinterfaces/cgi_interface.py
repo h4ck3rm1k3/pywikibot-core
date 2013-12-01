@@ -8,7 +8,12 @@ class UI:
     def output(self, text, colors=None, newline=True, toStdout=False):
         if not toStdout:
             return
-        sys.stdout.write(text.encode('UTF-8', 'replace'))
+        #sys.stdout.write(text.encode('UTF-8', 'replace'))
 
-    def input(self, question, colors=None):
-        self.output(question + ' ', newline=False, showcgi=True)
+    def user_input(self, question, colors=None):
+        self.output(
+            question + ' ', 
+            newline=False, 
+            #showcgi=True
+        )
+

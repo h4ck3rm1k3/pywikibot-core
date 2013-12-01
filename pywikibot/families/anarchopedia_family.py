@@ -1,13 +1,14 @@
 # -*- coding: utf-8  -*-
 __version__ = '$Id$'
 
-from pywikibot import family
+from pywikibot.family import Family as FamilyBase
 
 
 # The Anarchopedia family
-class Family(family.Family):
+class Family(FamilyBase):
     def __init__(self):
-        family.Family.__init__(self)
+        self.langs={}
+        FamilyBase.__init__(self)
         self.name = 'anarchopedia'
 
         self.languages_by_size = [

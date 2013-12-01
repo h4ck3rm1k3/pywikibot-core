@@ -975,7 +975,7 @@ if __name__ == "__main__":
         if globalvar.randomSign and globalvar.saveSignIndex and \
            bot.welcomed_users:
             import pickle
-            f = file(filename, 'w')
+            f = open(filename, 'w')
             pickle.dump(bot.welcomed_users, f)
             f.close()
         pywikibot.stopme()

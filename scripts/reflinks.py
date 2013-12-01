@@ -39,13 +39,13 @@ See [[:en:User:DumZiBoT/refLinks]] for more information on the bot.
 __version__ = '$Id$'
 #
 
-import sys
+#import sys
 import re
 import urllib.request, urllib.error, urllib.parse
 import http.client
 import socket
 import codecs
-import ftplib
+#import ftplib
 import subprocess
 import tempfile
 import os
@@ -791,7 +791,7 @@ class ReferencesRobot:
 def main():
     genFactory = pagegenerators.GeneratorFactory()
 
-    PageTitles = []
+#    PageTitles = []
     xmlFilename = None
     always = False
     ignorepdf = False

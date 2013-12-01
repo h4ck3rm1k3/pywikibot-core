@@ -2,6 +2,7 @@
 """
 Objects representing MediaWiki sites (wikis) and families (groups of wikis
 on the same topic in different languages).
+from pywikibot.site import BaseSite
 """
 #
 # (C) Pywikibot team, 2008-2012
@@ -26,23 +27,28 @@ import urllib.request, urllib.parse, urllib.error
 import json
 
 import pywikibot
-from pywikibot import deprecate_arg
+#from pywikibot import deprecate_arg
 from pywikibot import config
-from pywikibot import deprecated
+#from pywikibot import deprecated
+from pywikibot.bot import log
 #from pywikibot import pagegenerators
 from pywikibot.throttle import Throttle
-from pywikibot.data import api
+#from pywikibot.data import api
+import pywikibot.data.api as api
 from pywikibot.exceptions import NoSuchSite, Error, UserBlocked,NoPage,NoUsername,EditConflict, SpamfilterError, LockedPage
 
+from pywikibot.deprecate import deprecated
+from pywikibot.deprecate import deprecate_arg
+
 class Captcha():
-    def input(x):
+    def user_input(self,x):
         print(x)
 cap_answerwikipedia= Captcha()
 
 _logger = "wiki.site"
 
 
-class PageInUse(pywikibot.Error):
+class PageInUse(Error):
     """Page cannot be reserved for writing due to existing lock."""
 
 
@@ -205,8 +211,8 @@ class BaseSite(object):
         if not isinstance(other, BaseSite):
             return 1
         if self.family == other.family:
-            return cmp(self.code, other.code)
-        return cmp(self.family.name, other.family.name)
+            return self.__lt__(self.code, other.code)
+        return self.__lt__(self.family.name, other.family.name)
 
     def user(self):
         """Return the currently-logged in bot user, or None."""
@@ -787,7 +793,8 @@ class APISite(BaseSite):
         self.sitelock = threading.Lock()
         self._msgcache = {}
         self._loginstatus = LoginStatus.NOT_ATTEMPTED
-        return
+        self._userinfo = None
+        
 
     @staticmethod
     def fromDBName(dbname):
@@ -900,7 +907,8 @@ class APISite(BaseSite):
 
     def logout(self):
         uirequest = api.Request(site=self, action="logout")
-        uidata = uirequest.submit()
+        #uidata = 
+        uirequest.submit()
         self._loginstatus = LoginStatus.NOT_LOGGED_IN
         if hasattr(self, "_userinfo"):
             del self._userinfo
@@ -1016,7 +1024,8 @@ class APISite(BaseSite):
     def has_mediawiki_message(self, key):
         """Return True iff this site defines a MediaWiki message for 'key'."""
         try:
-            v = self.mediawiki_message(key)
+            #v = 
+            self.mediawiki_message(key)
             return True
         except KeyError:
             return False
@@ -2010,11 +2019,14 @@ class APISite(BaseSite):
                 _logger)
             if includeredirects:
                 if includeredirects == "only":
-                    filterredirs = True
+                    #filterredirs = True
+                    pass
                 else:
-                    filterredirs = None
+                    #filterredirs = None
+                    pass
             else:
-                filterredirs = False
+                #filterredirs = False
+                pass
 
         apgen = self._generator(api.PageGenerator, type_arg="allpages",
                                 gapnamespace=str(namespace),
@@ -2799,7 +2811,7 @@ class APISite(BaseSite):
                 self.unlock_page(page)
                 if "nochange" in result["edit"]:
                     # null edit, page not changed
-                    pywikibot.log("Page [[%s]] saved without any changes."
+                    log("Page [[%s]] saved without any changes."
                                   % page.title())
                     return True
                 page._revid = result["edit"]["newrevid"]
@@ -2820,7 +2832,7 @@ class APISite(BaseSite):
                                         % (self.family.protocol(self.code),
                                            self.family.hostname(self.code),
                                            captcha["url"]))
-                        req['captchaword'] = cap_answerwikipedia.input(
+                        req['captchaword'] = cap_answerwikipedia.user_input(
                             "Please view CAPTCHA in your browser, "
                             "then type answer here:")
                         continue
@@ -2841,7 +2853,7 @@ class APISite(BaseSite):
                 pywikibot.error(
                     "editpage: Unknown result code '%s' received; "
                     "page not saved" % result["edit"]["result"])
-                pywikibot.log(str(result))
+                log(str(result))
                 return False
 
     # catalog of move errors for use in error messages
@@ -3029,7 +3041,8 @@ class APISite(BaseSite):
                           title=page.title(withSection=False),
                           reason=summary)
         try:
-            result = req.submit()
+            #result = 
+            req.submit()
         except api.APIError as err:
             errdata = {
                 'site': self,
@@ -3081,7 +3094,8 @@ class APISite(BaseSite):
                           protections="edit=" + edit + "|" + "move=" + move,
                           reason=summary)
         try:
-            result = req.submit()
+            #result = 
+            req.submit()
         except api.APIError as err:
             errdata = {
                 'site': self,
@@ -3152,15 +3166,6 @@ class APISite(BaseSite):
         """Backwards-compatible interface to exturlusage()"""
         return self.exturlusage(siteurl, total=limit)
 
-    @deprecated('Site().logevents(logtype="upload",...)')
-    @deprecate_arg("repeat", None)
-    def newimages(self, number=100, lestart=None, leend=None, leuser=None,
-                  letitle=None):
-        """Yield ImagePages from most recent uploads"""
-        if isinstance(letitle, str):
-            letitle = pywikibot.Page(pywikibot.Link(letitle))
-        return self.logevents(logtype="upload", total=number, start=lestart,
-                              end=leend, user=leuser, page=letitle)
 
     def getFilesFromAnHash(self, hash_found=None):
         """Return all images that have the same hash.
@@ -3240,7 +3245,8 @@ class APISite(BaseSite):
             if not os.path.isfile(source_filename):
                 raise ValueError("File '%s' does not exist."
                                  % source_filename)
-            filesize = os.path.getsize(source_filename)
+            #filesize = 
+            os.path.getsize(source_filename)
             # TODO: if file size exceeds some threshold (to be determined),
             #       upload by chunks
             req = api.Request(site=self, action="upload", token=token,
@@ -3263,6 +3269,7 @@ class APISite(BaseSite):
         try:
             result = req.submit()
         except api.APIError as err:
+            print (err)
             # TODO: catch and process foreseeable errors
             raise
         result = result["upload"]
@@ -3308,7 +3315,7 @@ class APISite(BaseSite):
         # N.B. API still provides no way to access Special:Newpages content
         # directly, so we get new pages indirectly through 'recentchanges'
 
-        namespaces = namespaces if namespaces is not None else namespace
+        namespaces = namespaces 
         gen = self.recentchanges(
             start=start, end=end, reverse=reverse,
             namespaces=namespaces, changetype="new", user=user,
@@ -3337,9 +3344,15 @@ class APISite(BaseSite):
 
         """
         #TODO: update docstring
-        for event in logevents(self, logtype="upload", user=user,
-                               start=start, end=end, reverse=reverse,
-                               step=step, total=total):
+        for event in self.logevents(self, 
+                                    #logtype="upload", 
+                                    user=user,
+                                    start=start, 
+                                    end=end, 
+                                    reverse=reverse,
+                                    step=step, 
+                                    total=total
+        ):
             image = pywikibot.ImagePage(self, event['title'])
             date = pywikibot.Timestamp.fromISOformat(event['timestamp'])
             user = event['user']
@@ -3546,7 +3559,7 @@ class DataSite (APISite):
                 if hasattr(method, "__doc__"):
                     f.__doc__ = method.__doc__
                 return f
-        return super(APISite, self).__getattr__(attr)
+        return BaseSite.__getattr__(self,attr)
 
     def __repr__(self):
         return 'DataSite("%s", "%s")' % (self.code, self.family.name)
@@ -3940,6 +3953,15 @@ class DataSite (APISite):
 
 #### METHODS NOT IMPLEMENTED YET ####
 class NotImplementedYet:
+    def __init__(self):
+        self._cookies=None
+        self._isLoggedIn=None
+        #self._userIndex=None
+        self.family=None
+        self.code=None
+
+    def _userIndex(self,sysop):
+        pass
 
     #TODO: is this needed any more? can it be obtained from the http module?
     def cookies(self, sysop=False):

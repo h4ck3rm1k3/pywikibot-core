@@ -2,13 +2,13 @@
 
 __version__ = '$Id$'
 
-from pywikibot import family
+from pywikibot.family import Family as FamilyBase
 
 
 # The locksmithwiki family
-class Family(family.Family):
+class Family(FamilyBase):
     def __init__(self):
-        family.Family.__init__(self)
+        FamilyBase.__init__(self)
         self.name = 'lockwiki'
         self.langs = {
             'en': 'www.locksmithwiki.com',
@@ -21,4 +21,4 @@ class Family(family.Family):
         return '1.15.1'
 
     def nicepath(self, code):
-        return "%s/" % self.path(self, code)
+        return "%s/" % FamilyBase.path(self, code)

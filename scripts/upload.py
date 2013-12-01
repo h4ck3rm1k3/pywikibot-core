@@ -26,7 +26,7 @@ and for a description.
 #
 __version__ = '$Id$'
 #
-
+from pywikibot.bot import log
 import os
 import time
 import urllib.request, urllib.parse, urllib.error
@@ -116,7 +116,7 @@ class UploadRobot:
                     elif dt < 360:
                         dt += 60
             else:
-                pywikibot.log(
+                log(
                     "WARNING: No check length to retrieved data is possible.")
         handle, tempname = tempfile.mkstemp()
         t = os.fdopen(handle, "wb")

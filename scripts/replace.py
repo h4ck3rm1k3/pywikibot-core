@@ -124,7 +124,7 @@ __version__ = '$Id$'
 __version__ = '$Id$'
 #
 
-import sys
+#import sys
 import re
 import time
 import pywikibot

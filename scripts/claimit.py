@@ -60,7 +60,7 @@ __version__ = '$Id$'
 import json
 import pywikibot
 from pywikibot import pagegenerators
-
+from pywikibot.bot import log
 
 class ClaimRobot:
     """
@@ -120,8 +120,8 @@ class ClaimRobot:
                 # If claim with same property already exists...
                 if claim.getID() in item.claims:
                     if self.exists_arg is None or 'p' not in self.exists_arg:
-                        pywikibot.log('Skipping %s because claim with same property already exists' % (claim.getID(),))
-                        pywikibot.log('Use the -exists:p option to override this behavior')
+                        log('Skipping %s because claim with same property already exists' % (claim.getID(),))
+                        log('Use the -exists:p option to override this behavior')
                         skip = True
                     else:
                         existing_claims = item.claims[claim.getID()]  # Existing claims on page of same property
@@ -130,16 +130,16 @@ class ClaimRobot:
                             # If some attribute of the claim being added matches some attribute in an existing claim
                             # of the same property, skip the claim, unless the 'exists' argument overrides it.
                             if claim.getTarget() == existing.getTarget() and 't' not in self.exists_arg:
-                                pywikibot.log('Skipping %s because claim with same target already exists' % (claim.getID(),))
-                                pywikibot.log('Append \'t\' to the -exists argument to override this behavior')
+                                log('Skipping %s because claim with same target already exists' % (claim.getID(),))
+                                log('Append \'t\' to the -exists argument to override this behavior')
                                 break
                             if listsEqual(claim.getSources(), existing.getSources()) and 's' not in self.exists_arg:
-                                pywikibot.log('Skipping %s because claim with same sources already exists' % (claim.getID(),))
-                                pywikibot.log('Append \'s\' to the -exists argument to override this behavior')
+                                log('Skipping %s because claim with same sources already exists' % (claim.getID(),))
+                                log('Append \'s\' to the -exists argument to override this behavior')
                                 break
                             if listsEqual(claim.qualifiers, existing.qualifiers) and 'q' not in self.exists_arg:
-                                pywikibot.log('Skipping %s because claim with same qualifiers already exists' % (claim.getID(),))
-                                pywikibot.log('Append \'q\' to the -exists argument to override this behavior')
+                                log('Skipping %s because claim with same qualifiers already exists' % (claim.getID(),))
+                                log('Append \'q\' to the -exists argument to override this behavior')
                                 break
                             skip = False
                 if not skip:

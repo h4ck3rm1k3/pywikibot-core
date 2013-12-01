@@ -73,14 +73,14 @@ or by adding a list to the given one:
 __version__ = '$Id$'
 #
 
-import sys
+#import sys
 import re
 import pywikibot
 from . import isbn
 from pywikibot import pagegenerators
 from pywikibot import i18n
 from pywikibot import config2 as config
-
+from pywikibot.bot import log
 warning = """
 ATTENTION: You can run this script as a stand-alone for testing purposes.
 However, the changes that are made are only minor, and other users
@@ -192,7 +192,7 @@ class CosmeticChangesToolkit:
         try:
             text = isbn.hyphenateIsbnNumbers(text)
         except isbn.InvalidIsbnException as error:
-            pywikibot.log("ISBN error: %s" % error)
+            log("ISBN error: %s" % error)
             pass
         if self.debug:
             pywikibot.showDiff(oldText, text)
@@ -308,7 +308,7 @@ class CosmeticChangesToolkit:
             allstars.sort()
             for element in allstars:
                 text += '%s%s' % (element.strip(), config.line_separator)
-                pywikibot.log('%s' % element.strip())
+                log('%s' % element.strip())
         # Adding the interwiki
         if interwikiLinks:
             text = pywikibot.replaceLanguageLinks(text, interwikiLinks,
@@ -537,7 +537,7 @@ class CosmeticChangesToolkit:
         return text
 
     def removeUselessSpaces(self, text):
-        result = []
+        #result = []
         multipleSpacesR = re.compile('  +')
         spaceAtLineEndR = re.compile(' $')
 

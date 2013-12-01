@@ -1,13 +1,19 @@
 # -*- coding: utf-8  -*-
-from pywikibot import family
+from pywikibot.family import WikimediaFamily
 
 __version__ = '$Id$'
 
 
 # The Wikimedia family that is known as Wikiversity
-class Family(family.WikimediaFamily):
+class Family(WikimediaFamily):
     def __init__(self):
-        super(Family, self).__init__()
+        self.alphabetic = []
+        self.alphabetic_revised = []
+        self.langs = {}
+        self.known_families={}
+        self.crossnamespace = {}
+
+        WikimediaFamily.__init__(self)
         self.name = 'wikiversity'
 
         self.languages_by_size = [

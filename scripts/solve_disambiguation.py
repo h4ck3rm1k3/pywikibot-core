@@ -82,7 +82,7 @@ __version__ = '$Id$'
 import re
 import sys
 import codecs
-
+from pywikibot.bot import log
 import pywikibot
 from pywikibot import editor as editarticle
 from pywikibot import pagegenerators
@@ -375,7 +375,7 @@ class ReferringPageGeneratorWithIgnore:
                                    ][self.disambPage.site.lang]:
                 for i in range(len(refs) - 1, -1, -1):
                     if re.match(ig, refs[i].title()):
-                        pywikibot.log('Ignoring page %s'
+                        log('Ignoring page %s'
                                       % refs[i].title())
                         del refs[i]
                     elif self.primaryIgnoreManager.isIgnored(refs[i]):
@@ -624,7 +624,7 @@ class DisambiguationRobot(object):
                         continue
                 except pywikibot.Error:
                     # must be a broken link
-                    pywikibot.log("Invalid link [[%s]] in page [[%s]]"
+                    log("Invalid link [[%s]] in page [[%s]]"
                                   % (m.group('title'), refPage.title()))
                     continue
                 n += 1
@@ -987,7 +987,7 @@ or press enter to quit:""")
             self.makeAlternativesUnique()
             # sort possible choices
             if config.sort_ignore_case:
-                self.alternatives.sort(lambda x, y: cmp(x.lower(), y.lower()))
+                self.alternatives.sort(lambda x, y: self.__lt__(x.lower(), y.lower()))
             else:
                 self.alternatives.sort()
             self.listAlternatives()

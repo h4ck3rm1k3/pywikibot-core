@@ -51,6 +51,8 @@ import pywikibot
 from pywikibot import catlib
 from pywikibot import pagegenerators
 
+protectionLevels = []
+
 # Summary messages for protecting from a category.
 msg_simple_protect = {
     'ar': 'بوت: حماية قائمة من الملفات.',

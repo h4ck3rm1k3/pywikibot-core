@@ -1,13 +1,20 @@
 # -*- coding: utf-8  -*-
-from pywikibot import family
+
 
 __version__ = '$Id$'
-
+from pywikibot.family import WikimediaFamily
 
 # The Wikimedia family that is known as Wikiquote
-class Family(family.WikimediaFamily):
+class Family(WikimediaFamily):
     def __init__(self):
-        super(Family, self).__init__()
+        self.alphabetic = []
+        self.alphabetic_revised = []
+        self.langs = {}
+        self.known_families={}
+        self.crossnamespace = {}
+
+        WikimediaFamily.__init__(self)
+
         self.name = 'wikiquote'
 
         self.languages_by_size = [
@@ -80,6 +87,10 @@ class Family(family.WikimediaFamily):
             'zh-tw': 'zh',
             'zh-cn': 'zh'
         }
+
+    def code2encoding(self, code):
+        """Return the encoding for a specific language wiki"""
+        return 'utf-8'
 
     def code2encodings(self, code):
         """

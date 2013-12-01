@@ -1,13 +1,20 @@
 # -*- coding: utf-8  -*-
-from pywikibot import family
+from pywikibot.family import WikimediaFamily 
 
 __version__ = '$Id$'
 
 
 # The Wikimedia family that is known as Wikipedia, the Free Encyclopedia
-class Family(family.WikimediaFamily):
+class Family(WikimediaFamily):
     def __init__(self):
-        super(Family, self).__init__()
+        self.alphabetic = []
+        self.alphabetic_revised = []
+        self.langs = {}
+        self.known_families={}
+        self.crossnamespace = {}
+        self.fyinterwiki = {}
+
+        WikimediaFamily.__init__(self)
         self.name = 'wikipedia'
 
         self.languages_by_size = [
@@ -532,6 +539,12 @@ class Family(family.WikimediaFamily):
             return d
         else:
             return self.known_families
+
+    def code2encoding(self, code):
+        """Return the encoding for a specific language wiki"""
+        # Most wikis nowadays use UTF-8, but change this if yours uses
+        # a different encoding
+        return 'utf-8'
 
     def code2encodings(self, code):
         """Return a list of historical encodings for a specific language

@@ -22,7 +22,9 @@ __version__ = '$Id$'
 
 import pywikibot
 from pywikibot import pagegenerators
-import sys
+#import sys
+
+always = False
 
 # ***** SETTINGS *******#
 #

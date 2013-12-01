@@ -2,14 +2,14 @@
 
 __version__ = '$Id$'
 
-from pywikibot import family
+from pywikibot.family import WikimediaFamily
 
 # The wikidata family
 
 
-class Family(family.WikimediaFamily):
+class Family(WikimediaFamily):
     def __init__(self):
-        super(Family, self).__init__()
+        WikimediaFamily.__init__(self)
         self.name = 'wikidata'
         self.langs = {
             'wikidata': 'www.wikidata.org',

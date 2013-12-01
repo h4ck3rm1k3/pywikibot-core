@@ -17,7 +17,7 @@ import time
 
 import pywikibot
 from pywikibot import config
-
+from pywikibot.bot import log
 _logger = "wiki.throttle"
 
 pid = False     # global process identifier
@@ -131,7 +131,7 @@ class Throttle(object):
                     "Found %(count)s %(mysite)s processes running, including this one."
                     % locals())
             else:
-                pywikibot.log(
+                log(
                     "Found %(count)s %(mysite)s processes running, including this one."
                     % locals())
         finally:
@@ -257,7 +257,7 @@ class Throttle(object):
                                                  time.localtime())
                            })
                 else:
-                    pywikibot.log(
+                    log(
                         "Sleeping for %(wait).1f seconds, %(now)s"
                         % {'wait': wait,
                            'now':  time.strftime("%Y-%m-%d %H:%M:%S",
@@ -295,7 +295,7 @@ class Throttle(object):
                                                 time.localtime())
                            })
                 else:
-                    pywikibot.log(
+                    log(
                         "Sleeping for %(wait).1f seconds, %(now)s"
                         % {'wait': wait,
                            'now': time.strftime("%Y-%m-%d %H:%M:%S",

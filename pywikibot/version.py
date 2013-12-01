@@ -166,7 +166,10 @@ def getversion_onlinerepo(repo=None):
 
 ## Simple version comparison
 #
-cmp_ver = lambda a, b, tol=1: {-1: '<', 0: '~', 1: '>'}[cmp((a - b) // tol, 0)]
+def cmp2(a,b):
+    return (a > b) - (a < b) 
+
+cmp_ver = lambda a, b, tol=1: {-1: '<', 0: '~', 1: '>'}[cmp2((a - b) // tol, 0)]
 
 
 def getfileversion(filename):
