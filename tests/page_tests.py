@@ -13,13 +13,20 @@ __version__ = '$Id$'
 import pywikibot
 import pywikibot.page
 
-from .utils import PywikibotTestCase, unittest
+from tests.utils import PywikibotTestCase, unittest
 
-site = pywikibot.Site('en', 'wikipedia')
-mainpage = pywikibot.Page(pywikibot.page.Link("Main Page", site))
-maintalk = pywikibot.Page(pywikibot.page.Link("Talk:Main Page", site))
-badpage = pywikibot.Page(pywikibot.page.Link("There is no page with this title",
-                         site))
+site = pywikibot.Site(
+    u'en', 
+    u'wikipedia')
+mainpage = pywikibot.page.Page(pywikibot.page.Link(
+    u"Main Page", 
+    site))
+maintalk = pywikibot.page.Page(pywikibot.page.Link(
+    u"Talk:Main Page", 
+    site))
+badpage = pywikibot.page.Page(pywikibot.page.Link(
+    u"There is no page with this title",
+    site))
 
 
 class TestLinkObject(unittest.TestCase):

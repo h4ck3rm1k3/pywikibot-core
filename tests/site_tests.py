@@ -14,7 +14,7 @@ import pywikibot
 #import warnings
 #from tests import patch_request, unpatch_request
 
-from .utils import PywikibotTestCase, unittest
+from tests.utils import PywikibotTestCase, unittest
 
 mysite = None
 mainpage = None

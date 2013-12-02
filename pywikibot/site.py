@@ -801,7 +801,7 @@ class APISite(BaseSite):
     @staticmethod
     def fromDBName(dbname):
         # TODO this only works for some WMF sites
-        req = api.CachedRequest(datetime.timedelta(days=10),
+        req = pywikibot.data.api.CachedRequest(datetime.timedelta(days=10),
                                 site=pywikibot.Site('meta', 'meta'),
                                 action='sitematrix')
         data = req.submit()
@@ -891,7 +891,7 @@ class APISite(BaseSite):
         if self.userinfo['name'] == self._username[sysop] and \
            self.logged_in(sysop):
             return
-        loginMan = api.LoginManager(site=self, sysop=sysop,
+        loginMan = pywikibot.data.api.LoginManager(site=self, sysop=sysop,
                                     user=self._username[sysop])
         if loginMan.login(retry=True):
             self._username[sysop] = loginMan.username
@@ -908,7 +908,7 @@ class APISite(BaseSite):
     forceLogin = login  # alias for backward-compatibility
 
     def logout(self):
-        uirequest = api.Request(site=self, action="logout")
+        uirequest = pywikibot.data.api.Request(site=self, action="logout")
         #uidata = 
         uirequest.submit()
         self._loginstatus = LoginStatus.NOT_LOGGED_IN
@@ -931,10 +931,11 @@ class APISite(BaseSite):
 
         """
         if (not hasattr(self, "_userinfo")
-                or "rights" not in self._userinfo
+                or (self._userinfo and 
+                    "rights" not in self._userinfo)
                 or self._userinfo['name']
                    != self._username["sysop" in self._userinfo["groups"]]):
-            uirequest = api.Request(
+            uirequest = pywikibot.data.api.Request(
                 site=self,
                 action="query",
                 meta="userinfo",
@@ -1012,7 +1013,7 @@ class APISite(BaseSite):
     def mediawiki_message(self, key):
         """Return the MediaWiki message text for key "key" """
         if not key in self._msgcache:
-            msg_query = api.QueryGenerator(site=self, meta="allmessages",
+            msg_query = pywikibot.data.api.QueryGenerator(site=self, meta="allmessages",
                                            ammessages=key)
             for msg in msg_query:
                 if msg['name'] == key and not 'missing' in msg:
@@ -1038,7 +1039,7 @@ class APISite(BaseSite):
         Format is 'yyyymmddhhmmss'
 
         """
-        r = api.Request(site=self,
+        r = pywikibot.data.api.Request(site=self,
                         action="parse",
                         text="{{CURRENTTIMESTAMP}}")
         result = r.submit()
@@ -1052,7 +1053,7 @@ class APISite(BaseSite):
     def getmagicwords(self, word):
         """Return list of localized "word" magic words for the site."""
         if not hasattr(self, "_magicwords"):
-            sirequest = api.CachedRequest(
+            sirequest = pywikibot.data.api.CachedRequest(
                 expiry=config.API_config_expiry,
                 site=self,
                 action="query",
@@ -1069,7 +1070,7 @@ class APISite(BaseSite):
                 self._magicwords = dict((item["name"], item["aliases"])
                                         for item in sidata["magicwords"])
 
-            except api.APIError:
+            except pywikibot.data.api.APIError:
                 # hack for older sites that don't support 1.13 properties
                 # probably should delete if we're not going to support pre-1.13
                 self._magicwords = {}
@@ -1115,7 +1116,7 @@ class APISite(BaseSite):
 
     def _getsiteinfo(self, force=False):
         """Retrieve siteinfo and namespaces from site."""
-        sirequest = api.CachedRequest(
+        sirequest = pywikibot.data.api.CachedRequest(
             expiry=(0 if force else config.API_config_expiry),
             site=self,
             action="query",
@@ -1124,10 +1125,10 @@ class APISite(BaseSite):
         )
         try:
             sidata = sirequest.submit()
-        except api.APIError:
+        except pywikibot.data.api.APIError:
             # hack for older sites that don't support 1.12 properties
             # probably should delete if we're not going to support pre-1.12
-            sirequest = api.Request(
+            sirequest = pywikibot.data.api.Request(
                 site=self,
                 action="query",
                 meta="siteinfo",
@@ -1292,7 +1293,7 @@ class APISite(BaseSite):
     def loadpageinfo(self, page):
         """Load page info from api and save in page attributes"""
         title = page.title(withSection=False)
-        query = self._generator(api.PropertyGenerator,
+        query = self._generator(pywikibot.data.api.PropertyGenerator,
                                 type_arg="info",
                                 titles=title.encode(self.encoding()),
                                 inprop="protection")
@@ -1302,13 +1303,13 @@ class APISite(BaseSite):
                     "loadpageinfo: Query on %s returned data on '%s'"
                     % (page, pageitem['title']))
                 continue
-            api.update_page(page, pageitem)
+            pywikibot.data.api.update_page(page, pageitem)
 
     def loadcoordinfo(self, page):
         """Load [[mw:Extension:GeoData]] info"""
         # prop=coordinates&titles=Wikimedia Foundation&format=jsonfm&coprop=type|name|dim|country|region&coprimary=all
         title = page.title(withSection=False)
-        query = self._generator(api.PropertyGenerator,
+        query = self._generator(pywikibot.data.api.PropertyGenerator,
                                 type_arg="coordinates",
                                 titles=title.encode(self.encoding()),
                                 coprop=['type', 'name', 'dim',
@@ -1321,11 +1322,11 @@ class APISite(BaseSite):
                     "loadcoordinfo: Query on %s returned data on '%s'"
                     % (page, pageitem['title']))
                 continue
-            api.update_page(page, pageitem)
+            pywikibot.data.api.update_page(page, pageitem)
 
     def loadpageprops(self, page):
         title = page.title(withSection=False)
-        query = self._generator(api.PropertyGenerator,
+        query = self._generator(pywikibot.data.api.PropertyGenerator,
                                 type_arg="pageprops",
                                 titles=title.encode(self.encoding()),
                                 )
@@ -1335,7 +1336,7 @@ class APISite(BaseSite):
                     "loadpageprops: Query on %s returned data on '%s'"
                     % (page, pageitem['title']))
                 continue
-            api.update_page(page, pageitem)
+            pywikibot.data.api.update_page(page, pageitem)
 
     def loadimageinfo(self, page, history=False):
         """Load image info from api and save in page attributes
@@ -1347,7 +1348,7 @@ class APISite(BaseSite):
         args = {"titles": title}
         if not history:
             args["total"] = 1
-        query = self._generator(api.PropertyGenerator,
+        query = self._generator(pywikibot.data.api.PropertyGenerator,
                                 type_arg="imageinfo",
                                 iiprop=["timestamp", "user", "comment",
                                         "url", "size", "sha1", "mime",
@@ -1358,7 +1359,7 @@ class APISite(BaseSite):
                 raise Error(
                     "loadimageinfo: Query on %s returned data on '%s'"
                     % (page, pageitem['title']))
-            api.update_page(page, pageitem)
+            pywikibot.data.api.update_page(page, pageitem)
             return (pageitem['imageinfo']
                     if history else pageitem['imageinfo'][0])
 
@@ -1386,7 +1387,7 @@ class APISite(BaseSite):
         rest = self.page_restrictions(page)
         sysop_protected = "edit" in rest and rest['edit'][0] == 'sysop'
         try:
-            api.LoginManager(site=self, sysop=sysop_protected)
+            pywikibot.data.api.LoginManager(site=self, sysop=sysop_protected)
         except NoUsername:
             return False
         return True
@@ -1404,7 +1405,7 @@ class APISite(BaseSite):
         if hasattr(page, '_redirtarget'):
             return page._redirtarget
         title = page.title(withSection=False)
-        query = api.Request(site=self, action="query", prop="info",
+        query = pywikibot.data.api.Request(site=self, action="query", prop="info",
                             inprop="protection|talkid|subjectid",
                             titles=title.encode(self.encoding()),
                             redirects="")
@@ -1427,7 +1428,7 @@ class APISite(BaseSite):
             # there should be only one value in 'pages', and it is the target
         if self.sametitle(pagedata['title'], target_title):
             target = pywikibot.Page(self, pagedata['title'], pagedata['ns'])
-            api.update_page(target, pagedata)
+            pywikibot.data.api.update_page(target, pagedata)
             page._redirtarget = target
         else:
             # double redirect; target is an intermediate redirect
@@ -1460,7 +1461,7 @@ class APISite(BaseSite):
                 props += '|templates'
             if langlinks:
                 props += '|langlinks'
-            rvgen = api.PropertyGenerator(props, site=self)
+            rvgen = pywikibot.data.api.PropertyGenerator(props, site=self)
             rvgen.set_maximum_items(-1)  # suppress use of "rvlimit" parameter
             if len(pageids) == len(sublist):
                 # only use pageids if all pages have them
@@ -1496,7 +1497,7 @@ class APISite(BaseSite):
                     pywikibot.debug("titles=%s" % list(cache.keys()), _logger)
                     continue
                 page = cache[pagedata['title']]
-                api.update_page(page, pagedata)
+                pywikibot.data.api.update_page(page, pagedata)
                 yield page
 
     def token(self, page, tokentype):
@@ -1507,7 +1508,7 @@ class APISite(BaseSite):
             see API documentation for full list of types
 
         """
-        query = api.PropertyGenerator("info",
+        query = pywikibot.data.api.PropertyGenerator("info",
                                       titles=page.title(withSection=False),
                                       intoken=tokentype,
                                       site=self)
@@ -1517,7 +1518,7 @@ class APISite(BaseSite):
                     "token: Query on page %s returned data on page [[%s]]"
                     % (page.title(withSection=False, asLink=True),
                         item['title']))
-            api.update_page(page, item)
+            pywikibot.data.api.update_page(page, item)
             pywikibot.debug(str(item), _logger)
             return item[tokentype + "token"]
 
@@ -1911,7 +1912,7 @@ class APISite(BaseSite):
                     raise NoPage(page)
             else:
                 page = pywikibot.Page(self, pagedata['title'])
-            api.update_page(page, pagedata)
+            pywikibot.data.api.update_page(page, pagedata)
             break
 
     def pageinterwiki(self, page):
@@ -1964,7 +1965,7 @@ class APISite(BaseSite):
                 raise Error(
                     "categoryinfo: Query on %s returned data on '%s'"
                     % (category, pageitem['title']))
-            api.update_page(category, pageitem)
+            pywikibot.data.api.update_page(category, pageitem)
 
     def categoryinfo(self, category):
         if not hasattr(category, "_catinfo"):
@@ -2641,7 +2642,7 @@ class APISite(BaseSite):
         """
         if not isinstance(usernames, str):
             usernames = "|".join(usernames)
-        usgen = api.ListGenerator(
+        usgen = pywikibot.data.api.ListGenerator(
             "users", ususers=usernames, site=self,
             usprop="blockinfo|groups|editcount|registration|emailable"
         )
@@ -2773,13 +2774,13 @@ class APISite(BaseSite):
 ##        md5hash = md5()
 ##        md5hash.update(urllib.quote_plus(text.encode(self.encoding())))
 ##        params['md5'] = md5hash.digest()
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         while True:
             try:
                 result = req.submit()
                 pywikibot.debug("editpage response: %s" % result,
                                 _logger)
-            except api.APIError as err:
+            except pywikibot.data.api.APIError as err:
                 self.unlock_page(page)
                 if err.code.endswith("anon") and self.logged_in():
                     pywikibot.debug(
@@ -2912,7 +2913,7 @@ class APISite(BaseSite):
                         % (oldtitle, self))
         token = self.token(page, "move")
         self.lock_page(page)
-        req = api.Request(site=self, action="move", to=newtitle,
+        req = pywikibot.data.api.Request(site=self, action="move", to=newtitle,
                           token=token, reason=summary)
         req['from'] = oldtitle  # "from" is a python keyword
         if movetalk:
@@ -2923,7 +2924,7 @@ class APISite(BaseSite):
             result = req.submit()
             pywikibot.debug("movepage response: %s" % result,
                             _logger)
-        except api.APIError as err:
+        except pywikibot.data.api.APIError as err:
             if err.code.endswith("anon") and self.logged_in():
                 pywikibot.debug(
                     "movepage: received '%s' even though bot is logged in"
@@ -2994,13 +2995,13 @@ class APISite(BaseSite):
             % locals())
         token = self.token(page, "rollback")
         self.lock_page(page)
-        req = api.Request(site=self, action="rollback",
+        req = pywikibot.data.api.Request(site=self, action="rollback",
                           title=page.title(withSection=False),
                           user=last_user,
                           token=token)
         try:
             result = req.submit()
-        except api.APIError as err:
+        except pywikibot.data.api.APIError as err:
             errdata = {
                 'site': self,
                 'title': page.title(withSection=False),
@@ -3039,13 +3040,13 @@ class APISite(BaseSite):
             raise NoUsername("delete: Unable to login as sysop")
         token = self.token(page, "delete")
         self.lock_page(page)
-        req = api.Request(site=self, action="delete", token=token,
+        req = pywikibot.data.api.Request(site=self, action="delete", token=token,
                           title=page.title(withSection=False),
                           reason=summary)
         try:
             #result = 
             req.submit()
-        except api.APIError as err:
+        except pywikibot.data.api.APIError as err:
             errdata = {
                 'site': self,
                 'title': page.title(withSection=False),
@@ -3091,14 +3092,14 @@ class APISite(BaseSite):
             raise NoUsername("protect: Unable to login as sysop")
         token = self.token(page, "protect")
         self.lock_page(page)
-        req = api.Request(site=self, action="protect", token=token,
+        req = pywikibot.data.api.Request(site=self, action="protect", token=token,
                           title=page.title(withSection=False),
                           protections="edit=" + edit + "|" + "move=" + move,
                           reason=summary)
         try:
             #result = 
             req.submit()
-        except api.APIError as err:
+        except pywikibot.data.api.APIError as err:
             errdata = {
                 'site': self,
                 'title': page.title(withSection=False),
@@ -3126,7 +3127,7 @@ class APISite(BaseSite):
         token = self.token(user, 'block')
         if isinstance(expiry, pywikibot.Timestamp):
             expiry = expiry.toISOformat()
-        req = api.Request(site=self, action='block', user=user.username,
+        req = pywikibot.data.api.Request(site=self, action='block', user=user.username,
                           expiry=expiry, reason=reason, token=token)
         if anononly:
             req['anononly'] = ''
@@ -3151,7 +3152,7 @@ class APISite(BaseSite):
 
         """
         token = self.token(page, "watch")
-        req = api.Request(action="watch", token=token,
+        req = pywikibot.data.api.Request(action="watch", token=token,
                           title=page.title(withSection=False))
         if unwatch:
             req["unwatch"] = ""
@@ -3251,7 +3252,7 @@ class APISite(BaseSite):
             os.path.getsize(source_filename)
             # TODO: if file size exceeds some threshold (to be determined),
             #       upload by chunks
-            req = api.Request(site=self, action="upload", token=token,
+            req = pywikibot.data.api.Request(site=self, action="upload", token=token,
                               filename=imagepage.title(withNamespace=False),
                               file=source_filename, comment=comment,
                               text=text, mime=True)
@@ -3261,7 +3262,7 @@ class APISite(BaseSite):
                 raise pywikibot.Error(
                     "User '%s' is not authorized to upload by URL on site %s."
                     % (self.user(), self))
-            req = api.Request(site=self, action="upload", token=token,
+            req = pywikibot.data.api.Request(site=self, action="upload", token=token,
                               filename=imagepage.title(withNamespace=False),
                               url=source_url, comment=comment, text=text)
         if watch:
@@ -3270,7 +3271,7 @@ class APISite(BaseSite):
             req["ignorewarnings"] = ""
         try:
             result = req.submit()
-        except api.APIError as err:
+        except pywikibot.data.api.APIError as err:
             print (err)
             # TODO: catch and process foreseeable errors
             raise
@@ -3580,7 +3581,7 @@ class DataSite (APISite):
         if type(source) == int or \
            isinstance(source, str) and source.isdigit():
             ids = 'q' + str(source)
-            wbrequest = api.Request(site=self, action="wbgetentities", ids=ids,
+            wbrequest = pywikibot.data.api.Request(site=self, action="wbgetentities", ids=ids,
                                     **params)
             wbdata = wbrequest.submit()
             assert 'success' in wbdata, \
@@ -3609,7 +3610,7 @@ class DataSite (APISite):
         params['action'] = 'wbgetentities'
         if props:
             params['props'] = '|'.join(props)
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         if not 'success' in data:
             raise pywikibot.data.api.APIError(data['errors'])
@@ -3633,7 +3634,7 @@ class DataSite (APISite):
                 for key in ident:
                     req[key].append(ident[key])
 
-            req = api.Request(site=self, action='wbgetentities', **req)
+            req = pywikibot.data.api.Request(site=self, action='wbgetentities', **req)
             data = req.submit()
             for qid in data['entities']:
                 item = pywikibot.ItemPage(self, qid)
@@ -3653,7 +3654,7 @@ class DataSite (APISite):
         )
         expiry = datetime.timedelta(days=365 * 100)
         #Store it for 100 years
-        req = api.CachedRequest(expiry, site=self, **params)
+        req = pywikibot.data.api.CachedRequest(expiry, site=self, **params)
         data = req.submit()
 
         # the IDs returned from the API can be upper or lowercase, depending
@@ -3688,7 +3689,7 @@ class DataSite (APISite):
             if arg in ['clear', 'data', 'exclude', 'summary']:
                 params[arg] = kwargs[arg]
         params['data'] = json.dumps(data)
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         return data
 
@@ -3708,7 +3709,7 @@ class DataSite (APISite):
         if 'summary' in kwargs:
             params['summary'] = kwargs['summary']
         params['token'] = self.token(item, 'edit')
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         claim.snak = data['claim']['id']
         #Update the item
@@ -3742,7 +3743,7 @@ class DataSite (APISite):
             params['value'] = json.dumps(claim._formatDataValue())
 
         params['baserevid'] = claim.on_item.lastrevid
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         return data
 
@@ -3809,7 +3810,7 @@ class DataSite (APISite):
             if arg in ['baserevid', 'summary']:
                 params[arg] = kwargs[arg]
 
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         return data
 
@@ -3845,7 +3846,7 @@ class DataSite (APISite):
             if arg in ['baserevid', 'summary']:
                 params[arg] = kwargs[arg]
 
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         return data
 
@@ -3860,7 +3861,7 @@ class DataSite (APISite):
         for kwarg in kwargs:
             if kwarg in ['baserevid', 'summary']:
                 params[kwarg] = kwargs[kwarg]
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         return data
 
@@ -3883,7 +3884,7 @@ class DataSite (APISite):
         for kwarg in kwargs:
             if kwarg in ['baserevid', 'summary']:
                 params[kwarg] = kwargs[kwarg]
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         return data
 
@@ -3907,7 +3908,7 @@ class DataSite (APISite):
         }
         if bot:
             params['bot'] = 1
-        req = api.Request(site=self, **params)
+        req = pywikibot.data.api.Request(site=self, **params)
         data = req.submit()
         return data
 

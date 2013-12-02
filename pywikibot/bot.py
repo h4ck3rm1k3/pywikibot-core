@@ -325,38 +325,38 @@ def logoutput(text, decoder=None, newline=True, _level=INFO, _logger="",
     Backend function used by all the user-output convenience functions.
 
     """
-    if _logger:
-        logger = logging.getLogger("pywiki." + _logger)
-    else:
-        logger = logging.getLogger("pywiki")
+    # if _logger:
+    #     logger = logging.getLogger("pywiki." + _logger)
+    # else:
+    #     logger = logging.getLogger("pywiki")
 
-    # make sure logging system has been initialized
-    if not _handlers_initialized:
-        init_handlers()
+    # # make sure logging system has been initialized
+    # if not _handlers_initialized:
+    #     init_handlers()
 
-    frame = currentframe()
-    module = os.path.basename(frame.f_code.co_filename)
-    context = {'caller_name': frame.f_code.co_name,
-               'caller_file': module,
-               'caller_line': frame.f_lineno,
-               'newline': ("\n" if newline else "")}
+    # frame = currentframe()
+    # module = os.path.basename(frame.f_code.co_filename)
+    # context = {'caller_name': frame.f_code.co_name,
+    #            'caller_file': module,
+    #            'caller_line': frame.f_lineno,
+    #            'newline': ("\n" if newline else "")}
 
-    if decoder:
-        text = str(text, decoder)
-    elif not isinstance(text, str):
-        if not isinstance(text, str):
-            # looks like text is a non-text object.
-            # Maybe it has a __unicode__ builtin ?
-            # (allows to print Page, Site...)
-            text = str(text)
-        else:
-            try:
-                text = str(text, 'utf-8')
-            except UnicodeDecodeError:
-                text = str(text, 'iso8859-1')
+    # if decoder:
+    #     text = str(text, decoder)
+    # elif not isinstance(text, str):
+    #     if not isinstance(text, str):
+    #         # looks like text is a non-text object.
+    #         # Maybe it has a __unicode__ builtin ?
+    #         # (allows to print Page, Site...)
+    #         text = str(text)
+    #     else:
+    #         try:
+    #             text = str(text, 'utf-8')
+    #         except UnicodeDecodeError:
+    #             text = str(text, 'iso8859-1')
 
-    logger.log(_level, text, extra=context, **kwargs)
-
+    # logger.log(_level, text, extra=context, **kwargs)
+    print(text)
 
 def output(text, decoder=None, newline=True, toStdout=False, **kwargs):
     """Output a message to the user via the userinterface.
@@ -382,11 +382,11 @@ def output(text, decoder=None, newline=True, toStdout=False, **kwargs):
     log message to include an exception traceback.
 
     """
-    if toStdout:  # maintained for backwards-compatibity only
-        logoutput(text, decoder, newline, STDOUT, **kwargs)
-    else:
-        logoutput(text, decoder, newline, INFO, **kwargs)
-
+    # if toStdout:  # maintained for backwards-compatibity only
+    #     logoutput(text, decoder, newline, STDOUT, **kwargs)
+    # else:
+    #     logoutput(text, decoder, newline, INFO, **kwargs)
+    print(text)
 
 def stdout(text, decoder=None, newline=True, **kwargs):
     """Output script results to the user via the userinterface."""
@@ -405,7 +405,8 @@ def error(text, decoder=None, newline=True, **kwargs):
 
 def log(text, decoder=None, newline=True, **kwargs):
     """Output a record to the log file."""
-    logoutput(text, decoder, newline, VERBOSE, **kwargs)
+    #logoutput(text, decoder, newline, VERBOSE, **kwargs)
+    print(text)
 
 
 def critical(text, decoder=None, newline=True, **kwargs):

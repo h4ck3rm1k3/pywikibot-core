@@ -40,13 +40,16 @@ import re
 import unicodedata
 import urllib.request, urllib.parse, urllib.error
 import collections
-from pywikibot.data.api import Request, APIError
+#from pywikibot.data.api import Request, APIError
+import pywikibot.data.api # import Request, APIError
+# pywikibot.data.api.Request
+#  pywikibot.data.api.APIError
 
 from pywikibot.site import BaseSite
 from logging import  WARNING
 from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
-from pywikibot.comms.pybothttp import request 
+#from pywikibot.comms.pybothttp import request 
 import pywikibot.config2 as config
 #, ERROR
 #, CRITICAL
@@ -112,7 +115,7 @@ def async_manager():
         (request2, args, kwargs) = page_put_queue.get()
         if request2 is None:
             break
-        request(*args, **kwargs)
+        pywikibot.comms.pybothttp.request(*args, **kwargs)
 
 
 def async_request(request, *args, **kwargs):
@@ -126,7 +129,7 @@ def async_request(request, *args, **kwargs):
                 pass
         finally:
             page_put_queue.mutex.release()
-    page_put_queue.put((request, args, kwargs))
+    page_put_queue.put((pywikibot.comms.pybothttp.request, args, kwargs))
 
 # queue to hold pending requests
 page_put_queue = Queue(config.max_queue_size)
@@ -520,7 +523,7 @@ class Page(object):
         """Return the page text with all templates expanded."""
         if not hasattr(self, "_expanded_text") or (
                 self._expanded_text is None) or refresh:
-            req = Request(
+            req = pywikibot.data.api.Request(
                 action="expandtemplates", text=self.text,
                 title=self.title(withSection=False), site=self.site)
             self._expanded_text = req.submit()["expandtemplates"]["*"]
@@ -1719,7 +1722,7 @@ class ImagePage(Page):
         if not hasattr(self, '_imagePageHtml'):
             path = "%s/index.php?title=%s" \
                    % (self.site.scriptpath(), self.title(asUrl=True))
-            self._imagePageHtml = request(self.site, path)
+            self._imagePageHtml = pywikibot.comms.pybothttp.request(self.site, path)
         return self._imagePageHtml
 
     def fileUrl(self):
@@ -2326,7 +2329,7 @@ class User(Page):
         }
         if ccme:
             params['ccme'] = 1
-        mailrequest = Request(**params)
+        mailrequest = pywikibot.data.api.Request(**params)
         maildata = mailrequest.submit()
 
         if 'error' in maildata:
@@ -2362,7 +2365,7 @@ class User(Page):
         try:
             self.site.blockuser(self, expiry, reason, anononly, nocreate,
                                 autoblock, noemail, reblock)
-        except APIError as err:
+        except pywikibot.data.api.APIError as err:
             if err.code == 'invalidrange':
                 raise ValueError("%s is not a valid IP range." % self.username)
             else:
@@ -3218,8 +3221,10 @@ class Link(object):
         # Convert HTML entities to unicode
         t = html2unicode(self._text)
 
+        #t = str( t, encoding='utf8' )
+
         # Convert URL-encoded characters to unicode
-        t = url2unicode(t, site=self._source)
+        #t = url2unicode(t, site=self._source)
 
         # Normalize unicode string to a NFC (composed) format to allow
         # proper string comparisons. According to
@@ -3654,6 +3659,8 @@ def url2unicode(title, site, site2=None):
     for enc in encList:
         try:
             t = title.encode(enc)
+            t = str( t, encoding='utf8' )
+            print(t)
             t = urllib.parse.unquote(t)
             return str(t, enc)
         except UnicodeError as ex:

@@ -28,8 +28,8 @@ import re
 import traceback
 import time
 import urllib.request
-#urllib.parse
-#urllib.error
+# urllib.parse
+# urllib.error
 #import warnings
 from pywikibot.bot import log, error
 import pywikibot
@@ -38,7 +38,7 @@ from pywikibot import config
 
 from pywikibot.login import LoginManager as LoginManagerBase
 #from pywikibot.page import Page, Category, ImagePage, Link
-from pywikibot.exceptions import (Server504Error, FatalServerError,Error)
+from pywikibot.exceptions import (Server504Error, FatalServerError, Error)
 #, AutoblockUser
 #, UserActionRefuse
 
@@ -46,8 +46,11 @@ _logger = "data.api"
 
 lagpattern = re.compile(r"Waiting for [\d.]+: (?P<lag>\d+) seconds? lagged")
 
+
 class APIError(Error):
+
     """The wiki site returned an error message."""
+
     def __init__(self, code, info, **kwargs):
         """Save error dict returned by MW API."""
         self.code = code
@@ -63,6 +66,7 @@ class APIError(Error):
 
 
 class APIWarning(UserWarning):
+
     """The API returned a warning message."""
     pass
 
@@ -72,6 +76,7 @@ class TimeoutError(Error):
 
 
 class Request(MutableMapping, object):
+
     """A request to a Site's api.php interface.
 
     Attributes of this object (except for the special parameters listed
@@ -126,13 +131,16 @@ class Request(MutableMapping, object):
     @param format: (optional) Defaults to "json"
 
     """
+
     def __init__(self, **kwargs):
         try:
             self.site = kwargs.pop("site")
         except KeyError:
             self.site = pywikibot.Site()
         self.mime = kwargs.pop("mime", False)
-        self.max_retries = kwargs.pop("max_retries", pywikibot.config.max_retries)
+        self.max_retries = kwargs.pop(
+            "max_retries",
+            pywikibot.config.max_retries)
         self.retry_wait = kwargs.pop("retry_wait", pywikibot.config.retry_wait)
         self.params = {}
         if "action" not in kwargs:
@@ -147,7 +155,7 @@ class Request(MutableMapping, object):
             "wbremoveclaims", "wbsetclaimvalue", "wbsetreference",
             "wbremovereferences"
         )
-        if self.params["action"] == "edit":
+        if self.params[u"action"] == u"edit":
             pywikibot.debug("Adding user assertion", _logger)
             self.params["assert"] = "user"  # make sure user is logged in
 
@@ -156,6 +164,7 @@ class Request(MutableMapping, object):
         return self.params[key]
 
     def __setitem__(self, key, value):
+        print("setting %s=%s" % (key, value))
         self.params[key] = value
 
     def __delitem__(self, key):
@@ -204,15 +213,20 @@ class Request(MutableMapping, object):
         if "maxlag" not in self.params and config.maxlag:
             self.params["maxlag"] = [str(config.maxlag)]
         if "format" not in self.params:
-            self.params["format"] = ["json"]
-        if self.params['format'] != ["json"]:
+            print("before setting ")
+            self.params["format"] = [b"json"]
+            print("setting %s" % self.params["format"])
+
+        if self.params['format'] != [b"json"]:
+            print("Param: %s" % str(self.params))
             raise TypeError("Query format '%s' cannot be parsed."
                             % self.params['format'])
         for key in self.params:
             try:
                 self.params[key] = "|".join(self.params[key])
                 if isinstance(self.params[key], str):
-                    self.params[key] = self.params[key].encode(self.site.encoding())
+                    self.params[key] = self.params[
+                        key].encode(self.site.encoding())
             except Exception:
                 error(
                     "http_params: Key '%s' could not be encoded to '%s'; params=%r"
@@ -221,8 +235,8 @@ class Request(MutableMapping, object):
 
     def __str__(self):
         return urllib.parse.unquote(self.site.scriptpath()
-                              + "/api.php?"
-                              + self.http_params())
+                                    + "/api.php?"
+                                    + self.http_params())
 
     def _simulate(self, action):
         if action and config.simulate and action in config.actions_to_block:
@@ -275,8 +289,9 @@ class Request(MutableMapping, object):
                             except UnicodeError:
                                 keytype = ("application", "octet-stream")
                             submsg = MIMENonMultipart(*keytype)
-                            submsg.add_header("Content-disposition", "form-data",
-                                              name=key)
+                            submsg.add_header(
+                                "Content-disposition", "form-data",
+                                name=key)
                             submsg.set_payload(self.params[key])
                         container.attach(submsg)
                     # strip the headers to get the HTTP message body
@@ -287,14 +302,15 @@ class Request(MutableMapping, object):
                     # retrieve the headers from the MIME object
                     mimehead = dict(list(container.items()))
                     rawdata = request(self.site, uri, ssl, method="POST",
-                                           headers=mimehead, body=body)
+                                      headers=mimehead, body=body)
                 else:
                     rawdata = request(self.site, uri, ssl, method="POST",
-                                           headers={'Content-Type': 'application/x-www-form-urlencoded'},
-                                           body=paramstring)
+                                      headers={
+                                          'Content-Type': 'application/x-www-form-urlencoded'},
+                                      body=paramstring)
 ##                import traceback
-##                traceback.print_stack()
-##                print rawdata
+# traceback.print_stack()
+# print rawdata
             except Server504Error:
                 log("Caught HTTP 504 error; retrying")
                 self.wait()
@@ -303,7 +319,7 @@ class Request(MutableMapping, object):
                 # This error is not going to be fixed by just waiting
                 error(traceback.format_exc())
                 raise
-            #TODO: what other exceptions can occur here?
+            # TODO: what other exceptions can occur here?
             except Exception as e:
                 print(e)
                 # for any other error on the http request, wait and retry
@@ -339,7 +355,7 @@ class Request(MutableMapping, object):
                 continue
             if not result:
                 result = {}
-            if type(result) is not dict:
+            if not isinstance(result, dict):
                 raise APIError("Unknown",
                                "Unable to process query response of type %s."
                                % type(result),
@@ -399,9 +415,9 @@ class Request(MutableMapping, object):
             # raise error
             try:
                 log("API Error: query=\n%s"
-                              % pprint.pformat(self.params))
+                    % pprint.pformat(self.params))
                 log("           response=\n%s"
-                              % result)
+                    % result)
                 raise APIError(code, info, **result["error"])
             except TypeError:
                 raise RuntimeError(result)
@@ -419,6 +435,7 @@ class Request(MutableMapping, object):
 
 
 class CachedRequest(Request):
+
     def __init__(self, expiry, *args, **kwargs):
         """ expiry should be either a number of days or a datetime.timedelta object """
         super(CachedRequest, self).__init__(*args, **kwargs)
@@ -441,7 +458,9 @@ class CachedRequest(Request):
             pass
 
     def _create_file_name(self):
-        return hashlib.sha256(str(self.site) + str(self)).hexdigest()
+        name = str(self.site) + str(self)
+        string = name.encode()
+        return hashlib.sha256(string).hexdigest()
 
     def _cachefile_path(self):
         return os.path.join(self._get_cache_dir(), self._create_file_name())
@@ -452,7 +471,8 @@ class CachedRequest(Request):
     def _load_cache(self):
         """ Returns whether the cache can be used """
         try:
-            sitestr, selfstr, self._data, self._cachetime = pickle.load(open(self._cachefile_path()))
+            sitestr, selfstr, self._data, self._cachetime = pickle.load(
+                open(self._cachefile_path()))
             assert(sitestr == str(self.site))
             assert(selfstr == str(self))
             if self._expired(self._cachetime):
@@ -476,6 +496,7 @@ class CachedRequest(Request):
 
 
 class QueryGenerator(object):
+
     """Base class for iterators that handle responses to API action=query.
 
     By default, the iterator will iterate each item in the query response,
@@ -491,6 +512,7 @@ class QueryGenerator(object):
     links. See the API documentation for specific query options.
 
     """
+
     def __init__(self, **kwargs):
         """
         Constructor: kwargs are used to create a Request object;
@@ -526,7 +548,8 @@ class QueryGenerator(object):
         self.limit = None
         self.query_limit = self.api_limit
         if "generator" in kwargs:
-            self.resultkey = "pages"        # name of the "query" subelement key
+            # name of the "query" subelement key
+            self.resultkey = "pages"
         else:                               # to look for when iterating
             self.resultkey = self.module
         self.continuekey = self.module      # usually the query-continue key
@@ -560,11 +583,14 @@ class QueryGenerator(object):
             data = paramreq.submit()
             assert "paraminfo" in data
             assert "querymodules" in data["paraminfo"]
-            assert len(data["paraminfo"]["querymodules"]) == 1 + self.module.count("|")
+            assert len(data["paraminfo"]["querymodules"]) == 1 + \
+                self.module.count("|")
             for paraminfo in data["paraminfo"]["querymodules"]:
                 assert paraminfo["name"] in self.module
                 if "missing" in paraminfo:
-                    raise Error("Invalid query module name '%s'." % self.module)
+                    raise Error(
+                        "Invalid query module name '%s'." %
+                        self.module)
                 self.__modules[paraminfo["name"]] = paraminfo
         _modules = {}
         for m in self.module.split('|'):
@@ -743,6 +769,7 @@ class QueryGenerator(object):
 
 
 class PageGenerator(QueryGenerator):
+
     """Iterator for response to a request of type action=query&generator=foo.
 
     This class can be used for any of the query types that are listed in the
@@ -750,6 +777,7 @@ class PageGenerator(QueryGenerator):
     this class iterate Page objects.
 
     """
+
     def __init__(self, generator, g_content=False, **kwargs):
         """
         Required and optional parameters are as for C{Request}, except that
@@ -798,6 +826,7 @@ class PageGenerator(QueryGenerator):
 
 
 class CategoryPageGenerator(PageGenerator):
+
     """Like PageGenerator, but yields Category objects instead of Pages."""
 
     def result(self, pagedata):
@@ -806,6 +835,7 @@ class CategoryPageGenerator(PageGenerator):
 
 
 class ImagePageGenerator(PageGenerator):
+
     """Like PageGenerator, but yields ImagePage objects instead of Pages."""
 
     def result(self, pagedata):
@@ -817,6 +847,7 @@ class ImagePageGenerator(PageGenerator):
 
 
 class PropertyGenerator(QueryGenerator):
+
     """Iterator for queries of type action=query&property=...
 
     See the API documentation for types of page properties that can be
@@ -829,6 +860,7 @@ class PropertyGenerator(QueryGenerator):
     be supplied when instantiating this class).
 
     """
+
     def __init__(self, prop, **kwargs):
         """
         Required and optional parameters are as for C{Request}, except that
@@ -843,6 +875,7 @@ class PropertyGenerator(QueryGenerator):
 
 
 class ListGenerator(QueryGenerator):
+
     """Iterator for queries of type action=query&list=...
 
     See the API documentation for types of lists that can be queried.  Lists
@@ -856,6 +889,7 @@ class ListGenerator(QueryGenerator):
     returned information into a Page object.
 
     """
+
     def __init__(self, listaction, **kwargs):
         """
         Required and optional parameters are as for C{Request}, except that
@@ -869,10 +903,12 @@ class ListGenerator(QueryGenerator):
 
 
 class LogEntryListGenerator(ListGenerator):
+
     """
     Like ListGenerator, but specialized for listaction="logevents" :
     yields LogEntry objects instead of dicts.
     """
+
     def __init__(self, logtype=None, **kwargs):
         ListGenerator.__init__(self, "logevents", **kwargs)
 
@@ -890,6 +926,7 @@ class LoginManager(LoginManagerBase):
         LoginManagerBase.__init__(self)
 
     """Supplies getCookie() method to use API interface."""
+
     def getCookie(self, remember=True, captchaId=None, captchaAnswer=None):
         """Login to the site.
 
@@ -912,7 +949,8 @@ class LoginManager(LoginManagerBase):
         while True:
             login_result = login_request.submit()
             if "login" not in login_result:
-                raise RuntimeError("API login response does not have 'login' key.")
+                raise RuntimeError(
+                    "API login response does not have 'login' key.")
             if login_result['login']['result'] == "Success":
                 prefix = login_result['login']['cookieprefix']
                 cookies = []
@@ -991,8 +1029,8 @@ def update_page(page, pagedict):
         links = []
         for ll in pagedict["langlinks"]:
             link = pywikibot.page.Link.langlinkUnsafe(ll['lang'],
-                                                 ll['*'],
-                                                 source=page.site)
+                                                      ll['*'],
+                                                      source=page.site)
             links.append(link)
         page._langlinks = links
 
@@ -1004,7 +1042,8 @@ def update_page(page, pagedict):
                                          typ=co.get('type', ''),
                                          name=co['name'],
                                          dim=int(co['dim']),
-                                         globe=co['globe'],  # See [[gerrit:67886]]
+                                         globe=co['globe'],
+                                         # See [[gerrit:67886]]
                                          )
             coords.append(coord)
         page._coords = coords
@@ -1018,6 +1057,7 @@ if __name__ == "__main__":
     logging.getLogger("pywiki.data.api").setLevel(logging.DEBUG)
     mysite = Site("en", "wikipedia")
     pywikibot.output("starting test....")
+
 
     def _test():
         import doctest

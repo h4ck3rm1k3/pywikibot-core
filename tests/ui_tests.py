@@ -35,7 +35,7 @@ import os
 import sys
 import time
 import pywikibot.bot
-from .utils import unittest
+from tests.utils import unittest
 
 if os.name == "nt":
     from multiprocessing.managers import BaseManager
@@ -194,7 +194,7 @@ if __name__ == "__main__":
             self.assertEqual(newstderr.getvalue(), "")
 
         def test_critical(self):
-            pywikibot.critical("critical")
+            pywikibot.bot.critical("critical")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "CRITICAL: critical\n")
 
@@ -209,7 +209,7 @@ if __name__ == "__main__":
             try:
                 raise TestException("Testing Exception")
             except TestException:
-                pywikibot.exception("exception", tb=True)
+                pywikibot.bot.exception("exception", tb=True)
             self.assertEqual(newstdout.getvalue(), "")
             stderrlines = newstderr.getvalue().split("\n")
             self.assertEqual(stderrlines[0], "ERROR: TestException: Testing Exception")
@@ -224,7 +224,7 @@ if __name__ == "__main__":
             newstdin.write("input to read\n")
             newstdin.seek(0)
 
-            returned = pywikibot.input("question")
+            returned = pywikibot.user_input("question")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ")
@@ -249,7 +249,7 @@ if __name__ == "__main__":
             newstdin.write("N\n")
             newstdin.seek(0)
 
-            returned = pywikibot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
+            returned = pywikibot.bot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) ")
@@ -261,7 +261,7 @@ if __name__ == "__main__":
             newstdin.write("n\n")
             newstdin.seek(0)
 
-            returned = pywikibot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
+            returned = pywikibot.bot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) ")
@@ -273,7 +273,7 @@ if __name__ == "__main__":
             newstdin.write("X\nN\n")
             newstdin.seek(0)
 
-            returned = pywikibot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
+            returned = pywikibot.bot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) " * 2)
@@ -470,7 +470,7 @@ if __name__ == "__main__":
             pass
     finally:
         unpatch()
-        pywikibot.stopme()
+        pywikibot.page.stopme()
 
 else:
     class TestTerminalUI(unittest.TestCase):

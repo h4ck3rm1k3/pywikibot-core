@@ -3,21 +3,21 @@ PYTHONPATH=/mnt/data/home/mdupont/experiments/wiki/pywikibot-core:/mnt/data/home
 PYTHON=PYTHONPATH=$(PYTHONPATH) python3
 
 test :
-	$(PYTHON) tests/dry_api_tests.py
-	$(PYTHON) tests/textlib_tests.py
-	$(PYTHON) tests/page_tests.py
-	$(PYTHON) tests/dry_site_tests.py
-	$(PYTHON) tests/__init__.py
-	$(PYTHON) tests/utils.py
-	$(PYTHON) tests/pwb_tests.py
-	$(PYTHON) tests/i18n/test.py
-	$(PYTHON) tests/i18n/__init__.py
-	$(PYTHON) tests/wikibase_tests.py
-	$(PYTHON) tests/ui_tests.py
-	$(PYTHON) tests/api_tests.py
-	$(PYTHON) tests/pwb/print_locals.py
-	$(PYTHON) tests/site_tests.py
-	$(PYTHON) tests/i18n_tests.py
+	-$(PYTHON) tests/dry_api_tests.py
+	-$(PYTHON) tests/textlib_tests.py
+	-$(PYTHON) tests/page_tests.py
+	-$(PYTHON) tests/dry_site_tests.py
+	-$(PYTHON) tests/__init__.py
+	-$(PYTHON) tests/utils.py
+	-$(PYTHON) tests/pwb_tests.py
+	-$(PYTHON) tests/i18n/test.py
+	-$(PYTHON) tests/i18n/__init__.py
+	-$(PYTHON) tests/wikibase_tests.py
+	-$(PYTHON) tests/ui_tests.py
+	-$(PYTHON) tests/api_tests.py
+	-$(PYTHON) tests/pwb/print_locals.py
+	-$(PYTHON) tests/site_tests.py
+	-$(PYTHON) tests/i18n_tests.py
 
 setuptest:
 	PYTHONPATH=/mnt/data/home/mdupont/experiments/wiki/pywikibot-core:/mnt/data/home/mdupont/experiments/wiki/pywikibot-core/pywikibot:/mnt/data/home/mdupont/.local/lib/python3.3/site-packages python3 setup.py test

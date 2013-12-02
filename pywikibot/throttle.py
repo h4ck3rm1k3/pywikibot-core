@@ -121,10 +121,14 @@ class Throttle(object):
                 f = open(self.ctrlfilename, 'w')
                 for p in processes:
                     f.write("%(pid)s %(time)s %(site)s\n" % p)
-            except IOError:
-                pass
-            else:
                 f.close()
+
+            except IOError:
+                f.close()
+                pass
+
+
+
             self.process_multiplicity = count
             if self.verbosedelay:
                 pywikibot.output(

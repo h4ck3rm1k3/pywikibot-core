@@ -9,7 +9,7 @@ __version__ = '$Id$'
 import datetime
 import pywikibot
 import pywikibot.data.api as api
-from .utils import PywikibotTestCase, unittest
+from tests.utils import PywikibotTestCase, unittest
 
 mysite = pywikibot.Site('en', 'wikipedia')
 
@@ -19,7 +19,7 @@ class TestApiFunctions(unittest.TestCase):
     def testObjectCreation(self):
         """Test that api.Request() creates an object with desired attributes"""
         req = api.Request(site=mysite, action="test", foo="", bar="test")
-        self.assert_(req)
+        self.assertTrue(req)
         self.assertEqual(req.site, mysite)
         self.assert_("foo" in req.params)
         self.assertEqual(req["bar"], "test")
