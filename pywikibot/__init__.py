@@ -16,23 +16,21 @@ import difflib
 import math
 import re
 #import sys
-import threading
-from queue import Queue
 
 # Use pywikibot. prefix for all in-package imports; this is to prevent
 # confusion with similarly-named modules in version 1 framework, for users
 # who want to continue using both
 #from pywikibot.bot import log
-import pywikibot
+#import pywikibot
 from pywikibot import config2 as config
-from pywikibot.bot import (warning, output, debug, inputChoice, log)
-from pywikibot.bot import (warning, output, debug, inputChoice, log)
-from pywikibot.bot import log, stdout, error
-from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse
+#from pywikibot.bot import (inputChoice, log)
+from pywikibot.bot import (warning, output, debug)
+#from pywikibot.bot import stdout, error
+#from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse
 #from pywikibot.textlib import UnicodeToAsciiHtml
-from pywikibot.i18n import translate
-from pywikibot.page import Page, ImagePage, Category, Link, User, ItemPage, PropertyPage, Claim
-from pywikibot.page import html2unicode, url2unicode, unicode2html
+#from pywikibot.i18n import translate
+#from pywikibot.page import Page, ImagePage, Category, Link, User, ItemPage, PropertyPage, Claim
+#from pywikibot.page import html2unicode, url2unicode, unicode2html
 
 class Timestamp(datetime.datetime):
     """Class for handling Mediawiki timestamps.
@@ -325,16 +323,16 @@ def deprecate_arg(old_arg, new_arg):
             if old_arg in __kw:
                 if new_arg:
                     if new_arg in __kw:
-                        pywikibot.warning(
+                        warning(
 "%(new_arg)s argument of %(meth_name)s replaces %(old_arg)s; cannot use both."
                             % locals())
                     else:
-                        pywikibot.warning(
+                        warning(
 "%(old_arg)s argument of %(meth_name)s is deprecated; use %(new_arg)s instead."
                             % locals())
                         __kw[new_arg] = __kw[old_arg]
                 else:
-                    pywikibot.debug(
+                    debug(
 "%(old_arg)s argument of %(meth_name)s is deprecated."
                         % locals(), _logger)
                 del __kw[old_arg]
@@ -392,7 +390,7 @@ def Site(code=None, fam=None, user=None, sysop=None, interface=None):
     key = '%s:%s:%s' % (fam, code, user)
     if not key in _sites or not isinstance(_sites[key], __Site):
         _sites[key] = __Site(code=code, fam=fam, user=user, sysop=sysop)
-        pywikibot.debug("Instantiating Site object '%(site)s'"
+        debug("Instantiating Site object '%(site)s'"
                         % {'site': _sites[key]}, _logger)
     return _sites[key]
 
@@ -474,86 +472,5 @@ def showDiff(oldtext, newtext):
 
 # Throttle and thread handling
 
-stopped = False
 
 
-def stopme():
-    """Drop this process from the throttle log, after pending threads finish.
-
-    Can be called manually if desired, but if not, will be called automatically
-    at Python exit.
-
-    """
-    global stopped
-    _logger = "wiki"
-
-    if not stopped:
-        debug("stopme() called", _logger)
-
-        def remaining():
-            import datetime
-            remainingPages = page_put_queue.qsize() - 1
-                # -1 because we added a None element to stop the queue
-            remainingSeconds = datetime.timedelta(
-                seconds=(remainingPages * config.put_throttle))
-            return (remainingPages, remainingSeconds)
-
-        page_put_queue.put((None, [], {}))
-        stopped = True
-
-        if page_put_queue.qsize() > 1:
-            output('Waiting for %i pages to be put. Estimated time remaining: %s'
-                   % remaining())
-
-        while(_putthread.isAlive()):
-            try:
-                _putthread.join(1)
-            except KeyboardInterrupt:
-                answer = inputChoice("""\
-There are %i pages remaining in the queue. Estimated time remaining: %s
-Really exit?""" % remaining(),
-                    ['yes', 'no'], ['y', 'N'], 'N')
-                if answer == 'y':
-                    return
-
-    # only need one drop() call because all throttles use the same global pid
-    try:
-        list(_sites.values())[0].throttle.drop()
-        log("Dropped throttle(s).")
-    except IndexError:
-        pass
-
-import atexit
-atexit.register(stopme)
-
-
-# Create a separate thread for asynchronous page saves (and other requests)
-def async_manager():
-    """Daemon; take requests from the queue and execute them in background."""
-    while True:
-        (request, args, kwargs) = page_put_queue.get()
-        if request is None:
-            break
-        request(*args, **kwargs)
-
-
-def async_request(request, *args, **kwargs):
-    """Put a request on the queue, and start the daemon if necessary."""
-    if not _putthread.isAlive():
-        try:
-            page_put_queue.mutex.acquire()
-            try:
-                _putthread.start()
-            except (AssertionError, RuntimeError):
-                pass
-        finally:
-            page_put_queue.mutex.release()
-    page_put_queue.put((request, args, kwargs))
-
-# queue to hold pending requests
-page_put_queue = Queue(config.max_queue_size)
-# set up the background thread
-_putthread = threading.Thread(target=async_manager)
-# identification for debugging purposes
-_putthread.setName('Put-Thread')
-_putthread.setDaemon(True)

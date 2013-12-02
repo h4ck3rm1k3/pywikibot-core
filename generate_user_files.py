@@ -35,27 +35,27 @@ def get_base_dir():
     # directory already contains a user-config.py file
     # this code duplication is nasty, should fix
     NAME = "pywikibot"
-    for arg in sys.argv[1:]:
-        if arg.startswith("-dir:"):
-            base_dir = arg[5:]
-            sys.argv.remove(arg)
-            break
+    # for arg in sys.argv[1:]:
+    #     if arg.startswith("-dir:"):
+    #         base_dir = arg[5:]
+    #         sys.argv.remove(arg)
+    #         break
+    # else:
+    if "PYWIKIBOT2_DIR" in os.environ:
+        base_dir = os.environ["PYWIKIBOT2_DIR"]
     else:
-        if "PYWIKIBOT2_DIR" in os.environ:
-            base_dir = os.environ["PYWIKIBOT2_DIR"]
+        is_windows = sys.platform == 'win32'
+        home = os.path.expanduser("~")
+        if is_windows:
+            _win_version = int(platform.version()[0])
+            if _win_version == 5:
+                base_dir = os.path.join(home, "Application Data", NAME)
+            elif _win_version == 6:
+                base_dir = os.path.join(home, "AppData\\Roaming", NAME)
         else:
-            is_windows = sys.platform == 'win32'
-            home = os.path.expanduser("~")
-            if is_windows:
-                _win_version = int(platform.version()[0])
-                if _win_version == 5:
-                    base_dir = os.path.join(home, "Application Data", NAME)
-                elif _win_version == 6:
-                    base_dir = os.path.join(home, "AppData\\Roaming", NAME)
-            else:
-                base_dir = os.path.join(home, "." + NAME)
-            if not os.path.isdir(base_dir):
-                os.makedirs(base_dir, mode=0o700)
+            base_dir = os.path.join(home, "." + NAME)
+        if not os.path.isdir(base_dir):
+            os.makedirs(base_dir, mode=0o700)
     if not os.path.isabs(base_dir):
         base_dir = os.path.normpath(os.path.join(os.getcwd(), base_dir))
     return base_dir

@@ -8,9 +8,11 @@
 __version__ = '$Id$'
 #
 
+import sys 
 import os
-import sys as __sys
-import re
+import platform
+##argv = sys.argv
+
 #import platform
 
 # IMPORTANT:
@@ -120,32 +122,22 @@ def _get_base_dir():
     """
     NAME = "pywikibot"
 
-    import os
-    import sys as __sys
-    #import re
-    import platform
 
-    for arg in __sys.argv[1:]:
-        if arg.startswith("-dir:"):
-            base_dir = arg[5:]
-            __sys.argv.remove(arg)
-            break
-    else:
-        if "PYWIKIBOT2_DIR" in os.environ:
-            base_dir = os.environ["PYWIKIBOT2_DIR"]
-        else:
-            is_windows = __sys.platform == 'win32'
-            home = os.path.expanduser("~")
-            if is_windows:
-                _win_version = int(platform.version()[0])
-                if _win_version == 5:
-                    base_dir = os.path.join(home, "Application Data", NAME)
-                elif _win_version == 6:
-                    base_dir = os.path.join(home, "AppData\\Roaming", NAME)
-            else:
-                base_dir = os.path.join(home, "." + NAME)
-            if not os.path.isdir(base_dir):
-                os.makedirs(base_dir, mode=0o700)
+    #for arg in sys.argv[1:]:
+    #    if arg.startswith("-dir:"):
+    #        base_dir = arg[5:]
+    #        argv.remove(arg)
+    #        break
+    #else:
+    if "PYWIKIBOT2_DIR" in os.environ:
+        base_dir = os.environ["PYWIKIBOT2_DIR"]
+#    else:
+#        is_windows = sys.platform == 'win32'
+
+    home = os.path.expanduser("~")
+    base_dir = os.path.join(home, "." + NAME)
+    if not os.path.isdir(base_dir):
+        os.makedirs(base_dir, mode=0o700)
     if not os.path.isabs(base_dir):
         base_dir = os.path.normpath(os.path.join(os.getcwd(), base_dir))
     # make sure this path is valid and that it contains user-config file
@@ -185,7 +177,7 @@ ignore_bot_templates = False
 # This default code should work fine, so you don't have to think about it.
 # TODO: consider getting rid of this config variable.
 try:
-    console_encoding = __sys.stdout.encoding
+    console_encoding = sys.stdout.encoding
 except:
     #When using pywikipedia inside a daemonized twisted application,
     #we get "StdioOnnaStick instance has no attribute 'encoding'"
@@ -241,7 +233,7 @@ ring_bell = False
 # ANSI colors.
 try:
     # Don't print colorized when the output is, for example, piped to a file.
-    colorized_output = __sys.stdout.isatty()
+    colorized_output = sys.stdout.isatty()
 except:
     colorized_output = False
 
@@ -249,7 +241,7 @@ except:
 # The command for the editor you want to use. If set to None, a simple Tkinter
 # editor will be used.
 # On Windows systems, this script tries to determine the default text editor.
-if __sys.platform == 'win32':
+if sys.platform == 'win32':
     try:
         import winreg
         _key1 = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
@@ -676,8 +668,8 @@ for _filename in _fns:
         _filestatus = os.stat(_filename)
         _filemode = _filestatus[0]
         _fileuid = _filestatus[4]
-        if __sys.platform == 'win32' or _fileuid in [os.getuid(), 0]:
-            if __sys.platform == 'win32' or _filemode & 0o02 == 0 or True:
+        if sys.platform == 'win32' or _fileuid in [os.getuid(), 0]:
+            if sys.platform == 'win32' or _filemode & 0o02 == 0 or True:
                 exec(compile(open(_filename).read(), _filename, 'exec'))
             else:
                 print(("WARNING: Skipped '%(fn)s': writeable by others." \
@@ -713,14 +705,14 @@ for _key, _val in list(globals().items()):
 
 # Fix up default console_encoding
 if console_encoding is None:
-    if __sys.platform == 'win32':
+    if sys.platform == 'win32':
         console_encoding = 'cp850'
     else:
         console_encoding = 'iso-8859-1'
 
 # Fix up transliteration_target
 if transliteration_target == 'not set':
-    if __sys.platform == 'win32':
+    if sys.platform == 'win32':
         transliteration_target = console_encoding
         print("WARNING: Running on Windows and transliteration_target is not "
               "set.")
@@ -741,11 +733,11 @@ base_dir = _base_dir
 if __name__ == "__main__":
     import types
     _all = 1
-    for _arg in __sys.argv[1:]:
-        if _arg == "modified":
-            _all = 0
-        else:
-            print(("Unknown arg %(_arg)s ignored" % locals()))
+    # for _arg in argv[1:]:
+    #     if _arg == "modified":
+    #         _all = 0
+    #     else:
+    #         print(("Unknown arg %(_arg)s ignored" % locals()))
     _k = list(globals().keys())
     _k.sort()
     for _name in _k:
@@ -758,7 +750,7 @@ if __name__ == "__main__":
 # cleanup all locally-defined variables
 for __var in list(globals().keys()):
     if __var.startswith("_") and not __var.startswith("__"):
-        del __sys.modules[__name__].__dict__[__var]
+        del sys.modules[__name__].__dict__[__var]
 
-del __var, __sys
-del os, re
+del __var, 
+

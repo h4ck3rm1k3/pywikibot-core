@@ -1,3 +1,9 @@
+def warning (x):
+    print(x)
+
+def debug (x):
+    print(x)
+
 def deprecated(instead=None):
     """Decorator to output a method deprecation warning.
 
@@ -21,7 +27,6 @@ def deprecated(instead=None):
 
 def deprecate_arg(old_arg, new_arg):
     """Decorator to declare old_arg deprecated and replace it with new_arg"""
-    _logger = ""
 
     def decorator(method):
         def wrapper(*__args, **__kw):
@@ -29,18 +34,18 @@ def deprecate_arg(old_arg, new_arg):
             if old_arg in __kw:
                 if new_arg:
                     if new_arg in __kw:
-                        pywikibot.warning(
+                        warning(
 "%(new_arg)s argument of %(meth_name)s replaces %(old_arg)s; cannot use both."
                             % locals())
                     else:
-                        pywikibot.warning(
+                        warning(
 "%(old_arg)s argument of %(meth_name)s is deprecated; use %(new_arg)s instead."
                             % locals())
                         __kw[new_arg] = __kw[old_arg]
                 else:
-                    pywikibot.debug(
+                    debug(
 "%(old_arg)s argument of %(meth_name)s is deprecated."
-                        % locals(), _logger)
+                        % locals())
                 del __kw[old_arg]
             return method(*__args, **__kw)
         wrapper.__doc__ = method.__doc__

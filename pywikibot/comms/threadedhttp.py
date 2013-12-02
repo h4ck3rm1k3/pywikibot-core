@@ -21,12 +21,14 @@ __version__ = '$Id$'
 __docformat__ = 'epytext'
 
 # standard python libraries
+import httplib2
 import re
 import threading
+
 #import time
 #import logging
 #from httplib2 import
-import httplib2
+#import httplib2
 class RedirectLimit (Exception):
     pass 
 

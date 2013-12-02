@@ -919,6 +919,7 @@ def extract_templates_and_params(text):
         return extract_templates_and_params_regex(text)
     code = mwparserfromhell.parse(text)
     result = []
+    print (code)
     for template in code.filter_templates(recursive=True):
         params = {}
         for param in template.params:

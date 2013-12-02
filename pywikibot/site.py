@@ -15,7 +15,7 @@ __version__ = '$Id$'
 #    from hashlib import md5
 #except ImportError:
 #    #from md5 import md5
-
+#import httplib2
 import datetime
 import itertools
 import os
@@ -34,7 +34,7 @@ from pywikibot.bot import log
 #from pywikibot import pagegenerators
 from pywikibot.throttle import Throttle
 #from pywikibot.data import api
-import pywikibot.data.api as api
+#import pywikibot.data.api as api
 from pywikibot.exceptions import NoSuchSite, Error, UserBlocked,NoPage,NoUsername,EditConflict, SpamfilterError, LockedPage
 
 from pywikibot.deprecate import deprecated
@@ -100,7 +100,9 @@ def Family(fam=None, fatal=True):
     except ImportError:
         # next see if user has defined a local family module
         try:
+            print(config.datafilepath('families'))
             sys.path.append(config.datafilepath('families'))
+            print("%s_family" % fam)
             myfamily = __import__("%s_family" % fam)
         except ImportError:
             if fatal:

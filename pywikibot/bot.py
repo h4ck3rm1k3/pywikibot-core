@@ -41,6 +41,7 @@ from pywikibot.exceptions import Error
 # User interface initialization
 # search for user interface module in the 'userinterfaces' subdirectory
 
+import pywikibot.ui 
 
 
 # Logging module configuration
@@ -417,7 +418,8 @@ def debug(text, layer, decoder=None, newline=True, **kwargs):
 
     @param layer: The name of the logger that text will be sent to.
     """
-    logoutput(text, decoder, newline, DEBUG, layer, **kwargs)
+    #logoutput(text, decoder, newline, DEBUG, layer, **kwargs)
+    print (text)
 
 
 def exception(msg=None, decoder=None, newline=True, tb=False, **kwargs):
@@ -465,7 +467,7 @@ def user_input(question, password=False):
     # make sure logging system has been initialized
     if not _handlers_initialized:
         init_handlers()
-
+    ui = pywikibot.ui.get_ui()
     data = ui.input(question, password)
     return data
 
@@ -492,6 +494,7 @@ def inputChoice(question, answers, hotkeys, default=None):
     if not _handlers_initialized:
         init_handlers()
 
+    ui = pywikibot.ui.get_ui()
     data = ui.inputChoice(question, answers, hotkeys, default).lower()
     return data
 
@@ -505,12 +508,13 @@ def calledModuleName():
 
     """
     # get commandline arguments
-    called = sys.argv[0].strip()
+    #called = sys.argv[0].strip()
 
-    if ".py" in called:  # could end with .pyc, .pyw, etc. on some platforms
-        # clip off the '.py?' filename extension
-        called = called[:called.rindex('.py')]
-    return os.path.basename(called)
+    #if ".py" in called:  # could end with .pyc, .pyw, etc. on some platforms
+    #    # clip off the '.py?' filename extension
+    #    called = called[:called.rindex('.py')]
+    #return os.path.basename(called)
+    return "blah"
 
 
 def handleArgs(*args):

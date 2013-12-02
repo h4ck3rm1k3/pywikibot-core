@@ -16,13 +16,18 @@ __version__ = '$Id$'
 #from pywikibot import deprecate_arg
 #from pywikibot import deprecated
 #from pywikibot import async_request
-# link_regex, 
+#import pywikibot # import link_regex, _sites
+import pywikibot 
+
+import threading
+from queue import Queue
+
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
 #from pywikibot import config,  Timestamp, Coordinate, WbTime
 #import pywikibot.site
 from pywikibot.site import Family, APISite
 from pywikibot.textlib import removeLanguageLinks, removeCategoryLinks, removeDisabledParts, extract_templates_and_params, replaceCategoryInPlace, replaceCategoryLinks
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName, debug
 
 from pywikibot.bot import error as print_error
 from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse, NoUsername, EditConflict
@@ -35,17 +40,102 @@ import re
 import unicodedata
 import urllib.request, urllib.parse, urllib.error
 import collections
-from data.api import Request, APIError
+from pywikibot.data.api import Request, APIError
 
 from pywikibot.site import BaseSite
 from logging import  WARNING
 from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
-from comms.pybothttp import request 
+from pywikibot.comms.pybothttp import request 
+import pywikibot.config2 as config
 #, ERROR
 #, CRITICAL
 # DEBUG,
 # INFO, 
+
+stopped = False
+
+
+def stopme():
+    """Drop this process from the throttle log, after pending threads finish.
+
+    Can be called manually if desired, but if not, will be called automatically
+    at Python exit.
+
+    """
+    global stopped
+    _logger = "wiki"
+
+    if not stopped:
+        debug("stopme() called", _logger)
+
+        def remaining():
+            import datetime
+            remainingPages = page_put_queue.qsize() - 1
+                # -1 because we added a None element to stop the queue
+            remainingSeconds = datetime.timedelta(
+                seconds=(remainingPages * config.put_throttle))
+            return (remainingPages, remainingSeconds)
+
+        page_put_queue.put((None, [], {}))
+        stopped = True
+
+        if page_put_queue.qsize() > 1:
+            output('Waiting for %i pages to be put. Estimated time remaining: %s'
+                   % remaining())
+
+        while(_putthread.isAlive()):
+            try:
+                _putthread.join(1)
+            except KeyboardInterrupt:
+                answer = inputChoice("""\
+There are %i pages remaining in the queue. Estimated time remaining: %s
+Really exit?""" % remaining(),
+                    ['yes', 'no'], ['y', 'N'], 'N')
+                if answer == 'y':
+                    return
+
+    # only need one drop() call because all throttles use the same global pid
+    try:
+        list(pywikibot._sites.values())[0].throttle.drop()
+        log("Dropped throttle(s).")
+    except IndexError:
+        pass
+
+import atexit
+atexit.register(stopme)
+
+# Create a separate thread for asynchronous page saves (and other requests)
+def async_manager():
+    """Daemon; take requests from the queue and execute them in background."""
+    while True:
+        (request2, args, kwargs) = page_put_queue.get()
+        if request2 is None:
+            break
+        request(*args, **kwargs)
+
+
+def async_request(request, *args, **kwargs):
+    """Put a request on the queue, and start the daemon if necessary."""
+    if not _putthread.isAlive():
+        try:
+            page_put_queue.mutex.acquire()
+            try:
+                _putthread.start()
+            except (AssertionError, RuntimeError):
+                pass
+        finally:
+            page_put_queue.mutex.release()
+    page_put_queue.put((request, args, kwargs))
+
+# queue to hold pending requests
+page_put_queue = Queue(config.max_queue_size)
+# set up the background thread
+_putthread = threading.Thread(target=async_manager)
+# identification for debugging purposes
+_putthread.setName('Put-Thread')
+_putthread.setDaemon(True)
+
 
 logger = logging.getLogger("pywiki.wiki.page")
 
@@ -991,7 +1081,7 @@ class Page(object):
             text = self.expand_text()
         else:
             text = self.text
-        for linkmatch in link_regex.finditer(
+        for linkmatch in pywikibot.link_regex.finditer(
                 removeDisabledParts(text)):
             linktitle = linkmatch.group("title")
             link = Link(linktitle, self.site)
@@ -2129,7 +2219,7 @@ class User(Page):
         """
         reg = self.getprops(force).get('registration')
         if reg:
-            return Timestamp.fromISOformat(reg)
+            return pywikibot.Timestamp.fromISOformat(reg)
 
     def editCount(self, force=False):
         """ Return edit count for this user as int. This is always 0 for
@@ -2308,7 +2398,7 @@ class User(Page):
         """
         for contrib in self.site.usercontribs(
                 user=self.username, namespaces=namespaces, total=total):
-            ts = Timestamp.fromISOformat(contrib['timestamp'])
+            ts = pywikibot.Timestamp.fromISOformat(contrib['timestamp'])
             yield (Page(self.site, contrib['title'], contrib['ns']),
                    contrib['revid'],
                    ts,
@@ -2595,7 +2685,7 @@ class ItemPage(WikibasePage):
         """
         lang = dbname.replace('wiki', '')
         lang = lang.replace('_', '-')
-        return Site(lang, 'wikipedia')
+        return pywikibot.Site(lang, 'wikipedia')
 
     def get(self, force=False, *args):
         """
@@ -2842,10 +2932,10 @@ class Claim(PropertyPage):
                 claim.target = ImagePage(site.image_repository(), 'File:' +
                                          data['mainsnak']['datavalue']['value'])
             elif claim.getType() == 'globecoordinate':
-                claim.target = Coordinate.fromWikibase(
+                claim.target = pywikibot.Coordinate.fromWikibase(
                     data['mainsnak']['datavalue']['value'], site)
             elif claim.getType() == 'time':
-                claim.target = WbTime.fromWikibase(
+                claim.target = pywikibot.WbTime.fromWikibase(
                     data['mainsnak']['datavalue']['value'])
             else:
                 # This covers string, url types
@@ -2895,9 +2985,9 @@ class Claim(PropertyPage):
         types = {'wikibase-item': ItemPage,
                  'string': str,
                  'commonsMedia': ImagePage,
-                 'globecoordinate': Coordinate,
+                 'globecoordinate': pywikibot.Coordinate,
                  'url': str,
-                 'time': WbTime,
+                 'time': pywikibot.WbTime,
                  }
         if self.getType() in types:
             if not isinstance(value, types[self.getType()]):
@@ -3114,7 +3204,7 @@ class Link(object):
             "source parameter should be a Site object"
 
         self._text = text
-        self._source = source or Site()
+        self._source = source or pywikibot.Site()
         self._defaultns = defaultNamespace
 
         # preprocess text (these changes aren't site-dependent)
@@ -3235,14 +3325,14 @@ class Link(object):
                         % self._text)
                 t = t[t.index(":"):].lstrip(":").lstrip(" ")
                 if prefix in list(fam.langs.keys()):
-                    newsite = Site(prefix, fam)
+                    newsite = pywikibot.Site(prefix, fam)
                 else:
                     otherlang = self._site.code
                     familyName = fam.get_known_families(site=self._site)[prefix]
                     if familyName in ['commons', 'meta']:
                         otherlang = familyName
                     try:
-                        newsite = Site(otherlang, familyName)
+                        newsite = pywikibot.Site(otherlang, familyName)
                     except ValueError:
                         raise Error(
                             """\
@@ -3422,7 +3512,7 @@ not supported by PyWikiBot!"""
                                  allowInterwiki=False,
                                  withSection=False)
         link._anchor = None
-        link._source = source or Site()
+        link._source = source or pywikibot.Site()
 
         return link
 
@@ -3433,7 +3523,7 @@ not supported by PyWikiBot!"""
         Assumes that the lang & title come clean, no checks are made.
         """
         link = Link.__new__(Link)
-        link._site = Site(lang, source.family.name)
+        link._site = pywikibot.Site(lang, source.family.name)
         link._section = None
         link._source = source
 

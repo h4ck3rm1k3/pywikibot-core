@@ -10,18 +10,19 @@ from . import transliteration
 #import traceback
 import re
 import sys
+import pywikibot
 #import pywikibot as wikipedia
 from pywikibot import config
-#from pywikibot.bot import  VERBOSE, INFO, STDOUT, INPUT
+from pywikibot.bot import  VERBOSE, INFO, STDOUT, INPUT
 #WARNING, DEBUG,
 import logging
 
-from pywikibot.bot import user_input
-from pywikibot.bot import calledModuleName
-from pywikibot.bot import log
-from pywikibot.bot import warning
-from pywikibot.bot import output
-from pywikibot.bot import inputChoice
+#from pywikibot.bot import user_input,output
+#from pywikibot.bot import calledModuleName
+#from pywikibot.bot import log
+#from pywikibot.bot import warning
+#from pywikibot.bot import output
+#from pywikibot.bot import inputChoice
 
 transliterator = transliteration.transliterator(config.console_encoding)
 
@@ -53,7 +54,7 @@ class UI:
         self.stdin = sys.stdin
         self.stdout = sys.stdout
         self.stderr = sys.stderr
-        self.argv = sys.argv
+        #self.argv = sys.argv
         self.encoding = config.console_encoding
         self.transliteration_target = config.transliteration_target
 
@@ -255,24 +256,24 @@ class UI:
         """Show the user a CAPTCHA image and return the answer."""
         try:
             import webbrowser
-            dooutput('Opening CAPTCHA in your web browser...')
+            pywikibot.bot.output('Opening CAPTCHA in your web browser...')
             if webbrowser.open(url):
-                return user_input(
+                return pywikibot.bot.user_input(
                     'What is the solution of the CAPTCHA that is shown in '
                     'your web browser?')
             else:
                 raise
         except:
-            dooutput('Error in opening web browser: %s'
+            pywikibot.bot.output('Error in opening web browser: %s'
                              % sys.exc_info()[0])
-            dooutput(
+            pywikibot.bot.output(
                 'Please copy this url to your web browser and open it:\n %s'
                 % url)
-            return user_input(
+            return pywikibot.bot.user_input(
                 'What is the solution of the CAPTCHA at this url ?')
 
     def argvu(self):
-        return [s for s in self.argv]
+        return [s for s in sys.argv]
 
 
 class TerminalHandler(logging.Handler):

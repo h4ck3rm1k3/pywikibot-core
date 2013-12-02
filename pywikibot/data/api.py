@@ -792,7 +792,7 @@ class PageGenerator(QueryGenerator):
         of object.
 
         """
-        p = Page(self.site, pagedata['title'], pagedata['ns'])
+        p = pywikibot.page.Page(self.site, pagedata['title'], pagedata['ns'])
         update_page(p, pagedata)
         return p
 
@@ -802,7 +802,7 @@ class CategoryPageGenerator(PageGenerator):
 
     def result(self, pagedata):
         p = PageGenerator.result(self, pagedata)
-        return Category(p)
+        return pywikibot.page.Category(p)
 
 
 class ImagePageGenerator(PageGenerator):
@@ -810,7 +810,7 @@ class ImagePageGenerator(PageGenerator):
 
     def result(self, pagedata):
         p = PageGenerator.result(self, pagedata)
-        image = ImagePage(p)
+        image = pywikibot.page.ImagePage(p)
         if 'imageinfo' in pagedata:
             image._imageinfo = pagedata['imageinfo'][0]
         return image
@@ -984,13 +984,13 @@ def update_page(page, pagedict):
         page._catinfo = pagedict["categoryinfo"]
 
     if "templates" in pagedict:
-        page._templates = [Page(page.site, tl['title'])
+        page._templates = [pywikibot.page.Page(page.site, tl['title'])
                            for tl in pagedict['templates']]
 
     if "langlinks" in pagedict:
         links = []
         for ll in pagedict["langlinks"]:
-            link = Link.langlinkUnsafe(ll['lang'],
+            link = pywikibot.page.Link.langlinkUnsafe(ll['lang'],
                                                  ll['*'],
                                                  source=page.site)
             links.append(link)

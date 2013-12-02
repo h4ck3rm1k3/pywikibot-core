@@ -12,11 +12,12 @@ __version__ = '$Id$'
 
 import sys
 
-from ez_setup import use_setuptools
-use_setuptools()
+#from ez_setup import use_setuptools
+#use_setuptools()
+from distutils.core import setup
 
-from setuptools import setup, find_packages
-from setuptools.command import install
+#from setuptools import setup, find_packages
+#from setuptools.command import install
 
 test_deps = []
 testcollector = "tests"
@@ -39,32 +40,32 @@ testcollector = "tests"
 #         sys.exit(1)
 
 
-class pwb_install(install.install):
-    """
-    Setuptools' install command subclassed to automatically call
-    `generate_user_files.py` after installing the package.
-    """
-    def run(self):
-        install.install.do_egg_install(self)
-        import subprocess
-        python = sys.executable
-        python = python.replace("pythonw.exe", "python.exe")  # for Windows
-        subprocess.call([python, "generate_user_files.py"])
+# class pwb_install(install.install):
+#     """
+#     Setuptools' install command subclassed to automatically call
+#     `generate_user_files.py` after installing the package.
+#     """
+#     def run(self):
+#         install.install.do_egg_install(self)
+#         import subprocess
+#         python = sys.executable
+#         python = python.replace("pythonw.exe", "python.exe")  # for Windows
+#         subprocess.call([python, "generate_user_files.py"])
 
 setup(
     name='Pywikipediabot',
     version='2.0b1',
     description='Python Wikipedia Bot Framework',
     license='MIT License',
-    packages=find_packages(),
-    install_requires=[
-        'httplib2>=0.6.0'
-    ],
-    dependency_links=[
-        'https://git.wikimedia.org/zip/?r=pywikibot/externals/httplib2.git&format=gz#egg=httplib2-0.8-pywikibot1'
-    ],
-    test_suite=testcollector,
-    tests_require=test_deps,
+    packages=[] ,#find_packages(),
+#    install_requires=[
+#        'httplib2>=0.6.0'
+#    ],
+#    dependency_links=[
+#        'https://git.wikimedia.org/zip/?r=pywikibot/externals/httplib2.git&format=gz#egg=httplib2-0.8-pywikibot1'
+#    ],
+#    test_suite=testcollector,
+#    tests_require=test_deps,
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Development Status :: 4 - Beta'
@@ -75,7 +76,7 @@ setup(
         'Programming Language :: Python :: 2.7'
     ],
     cmdclass={
-        'install': pwb_install
+#        'install': pwb_install
     },
     #use_2to3=False
 )

@@ -16,8 +16,9 @@ import locale
 from pywikibot.exceptions import Error
 from .plural import plural_rules
 import pywikibot
-import config2 as config
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+import pywikibot.config2 as config
+from pywikibot.bot import  user_input
+# output, calledModuleName, log,  warning, inputChoice, 
 
 PLURAL_PATTERN = '{{PLURAL:(?:%\()?([^\)]*?)(?:\)d)?\|(.*?)}}'
 

@@ -22,6 +22,9 @@ from pywikibot.exceptions import NoUsername
 from pywikibot.bot import debug, log,  user_input, error
 # NoSuchSite, 
 
+import pywikibot.config2 as config
+
+
 _logger = "wiki.login"
 
 

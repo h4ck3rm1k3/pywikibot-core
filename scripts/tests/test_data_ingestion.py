@@ -8,7 +8,8 @@ import os
 import unittest
 #import test_utils
 #import pywikibot
-import data_ingestion
+#import data_ingestion
+from scripts.data_ingestion 
 
 
 class TestPhoto(unittest.TestCase):

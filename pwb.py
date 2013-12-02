@@ -52,11 +52,11 @@ def run_python_file(filename, argv, argvu):
 
     # Set sys.argv and the first path element properly.
     old_argv = sys.argv
-    old_argvu = pwb.argvu
+#    old_argvu = pwb.argvu
     old_path0 = sys.path[0]
 
     sys.argv = argv
-    pwb.argvu = argvu
+#    pwb.argvu = argvu
     sys.path[0] = os.path.dirname(filename)
 
     try:
@@ -69,7 +69,7 @@ def run_python_file(filename, argv, argvu):
         # Restore the old argv and path
         sys.argv = old_argv
         sys.path[0] = old_path0
-        pwb.argvu = old_argvu
+#        pwb.argvu = old_argvu
 
 #### end of snippet
 
@@ -79,47 +79,48 @@ def run_python_file(filename, argv, argvu):
 #     raise RuntimeError("ERROR: Pywikipediabot only runs under Python 2.6 "
 #                        "or higher")
 
-rewrite_path = os.path.dirname(sys.argv[0])
-if not os.path.isabs(rewrite_path):
-    rewrite_path = os.path.abspath(os.path.join(os.curdir, rewrite_path))
+def some_routine():
+    rewrite_path = os.path.dirname(sys.argv[0])
+    if not os.path.isabs(rewrite_path):
+        rewrite_path = os.path.abspath(os.path.join(os.curdir, rewrite_path))
 
-sys.path = [sys.path[0], rewrite_path,
-            os.path.join(rewrite_path, 'pywikibot', 'compat'),
-            os.path.join(rewrite_path, 'externals')
-            ] + sys.path[1:]
+    sys.path = [sys.path[0], rewrite_path,
+                os.path.join(rewrite_path, 'pywikibot', 'compat'),
+                os.path.join(rewrite_path, 'externals')
+                ] + sys.path[1:]
 
-if "PYWIKIBOT2_DIR" not in os.environ:
-    os.environ["PYWIKIBOT2_DIR"] = os.path.split(__file__)[0]
+    if "PYWIKIBOT2_DIR" not in os.environ:
+        os.environ["PYWIKIBOT2_DIR"] = os.path.split(__file__)[0]
 
-for i, x in enumerate(sys.argv):
-    if x.startswith("-dir:"):
-        os.environ["PYWIKIBOT2_DIR"] = x[5:]
-        sys.argv.pop(i)
-        break
+    for i, x in enumerate(sys.argv):
+        if x.startswith("-dir:"):
+            os.environ["PYWIKIBOT2_DIR"] = x[5:]
+            sys.argv.pop(i)
+            break
 
-user_config_path = os.path.join(os.environ["PYWIKIBOT2_DIR"], "user-config.py")
-if not os.path.exists(user_config_path):
-    print("NOTE:", user_config_path, "was not found!")
-    print("Please follow the prompts to create it:")
-    path = 'generate_user_files.py'
-    run_python_file(path, [path], [path.decode('ascii')])
+    user_config_path = os.path.join(os.environ["PYWIKIBOT2_DIR"], "user-config.py")
+    if not os.path.exists(user_config_path):
+        print("NOTE:", user_config_path, "was not found!")
+        print("Please follow the prompts to create it:")
+        path = 'generate_user_files.py'
+        run_python_file(path, [path], [path.decode('ascii')])
 
-if len(sys.argv) > 1:
-    tryimport_pwb()
-    fn = sys.argv[1]
-    argv = sys.argv[1:]
-    argvu = pwb.argvu[1:]
+    if len(sys.argv) > 1:
+        tryimport_pwb()
+        fn = sys.argv[1]
+        argv = sys.argv[1:]
+        #argvu = pwb.argvu[1:]
 
-    if not os.path.exists(fn):
-        testpath = os.path.join(os.path.split(__file__)[0], 'scripts', fn)
-        if os.path.exists(testpath):
-            fn = testpath
-        else:
-            testpath = testpath + '.py'
+        if not os.path.exists(fn):
+            testpath = os.path.join(os.path.split(__file__)[0], 'scripts', fn)
             if os.path.exists(testpath):
                 fn = testpath
             else:
-                raise Exception("%s not found!" % fn)
-    run_python_file(fn, argv, argvu)
-elif __name__ == "__main__":
-    print(__doc__)
+                testpath = testpath + '.py'
+                if os.path.exists(testpath):
+                    fn = testpath
+                else:
+                    raise Exception("%s not found!" % fn)
+        run_python_file(fn, argv, argvu)
+    elif __name__ == "__main__":
+        print(__doc__)

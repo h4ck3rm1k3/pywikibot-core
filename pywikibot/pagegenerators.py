@@ -30,7 +30,8 @@ from . import date
 from pywikibot import config
 from pywikibot import deprecate_arg, i18n
 from pywikibot.comms import pybothttp as http
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+from pywikibot.bot import    user_input
+#calledModuleName, warning, inputChoice, output,  log, 
 
 # ported from version 1 for backwards-compatibility
 # most of these functions just wrap a Site or Page method that returns
