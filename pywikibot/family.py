@@ -19,6 +19,7 @@ import pywikibot
 logger = logging.getLogger("pywiki.wiki.family")
 from pywikibot.page import Page
 
+
 # Parent class for all wiki families
 class Family(object):
     def __init__(self):
