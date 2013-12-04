@@ -24,33 +24,34 @@ import logging
 #from pywikibot.bot import output
 #from pywikibot.bot import inputChoice
 
-transliterator = transliteration.transliterator(config.console_encoding)
-
-colors = [
-    'default',
-    'black',
-    'blue',
-    'green',
-    'aqua',
-    'red',
-    'purple',
-    'yellow',
-    'lightgray',
-    'gray',
-    'lightblue',
-    'lightgreen',
-    'lightaqua',
-    'lightred',
-    'lightpurple',
-    'lightyellow',
-    'white',
-]
-
-colorTagR = re.compile('\03{(?P<name>%s)}' % '|'.join(colors))
 
 
 class UI:
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
+        self.transliterator = transliteration.transliterator(self.config.console_encoding)
+        self.colors = [
+            'default',
+            'black',
+            'blue',
+            'green',
+            'aqua',
+            'red',
+            'purple',
+            'yellow',
+            'lightgray',
+            'gray',
+            'lightblue',
+            'lightgreen',
+            'lightaqua',
+            'lightred',
+            'lightpurple',
+            'lightyellow',
+            'white',
+        ]
+
+        self.colorTagR = re.compile('\03{(?P<name>%s)}' % '|'.join(colors))
+
         self.stdin = sys.stdin
         self.stdout = sys.stdout
         self.stderr = sys.stderr

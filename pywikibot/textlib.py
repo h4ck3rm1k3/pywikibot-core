@@ -20,12 +20,11 @@ import mwparserfromhell
 
 import pywikibot
 import re
-try:
-    from html.parser import HTMLParser
-except ImportError:
-    from html.parser import HTMLParser
+from html.parser import HTMLParser
 
-from pywikibot import config2 as config
+
+
+#from pywikibot import config2 as config
 
 TEMP_REGEX = re.compile(
     '{{(?:msg:)?(?P<name>[^{\|]+?)(?:\|(?P<params>[^{]+?(?:{[^{]+?}[^{]*?)?))?}}')

@@ -16,7 +16,7 @@ import locale
 from pywikibot.exceptions import Error
 from .plural import plural_rules
 import pywikibot
-import pywikibot.config2 as config
+#import pywikibot.config2 as config
 from pywikibot.bot import  user_input
 # output, calledModuleName, log,  warning, inputChoice, 
 
@@ -226,6 +226,7 @@ class TranslationError(Error):
     """ Raised when no correct translation could be found """
     pass
 
+from pywikibot.config import loadconfig
 
 def translate(code, xdict, parameters=None, fallback=True):
     """Return the most appropriate translation from a translation dict.
@@ -259,7 +260,8 @@ def translate(code, xdict, parameters=None, fallback=True):
     if type(parameters) == dict:
         param = parameters
 
-    family = pywikibot.config.family
+    config = loadconfig()
+    family = config
     # If a site is given instead of a code, use its language
     if hasattr(code, 'lang'):
         family = code.family.name

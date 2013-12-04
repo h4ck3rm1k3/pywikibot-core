@@ -1,11 +1,35 @@
+u'''
+from pywikibot.config import loadconfig()
+'''
+
 class Config :
 
     def __init__(self):
-        self.put_throttle=0
+        self._put_throttle = 0
+        self._family = None
+        self._user_names = {}
+        self._sys_op_names = {}
+        self._site_interface = None
 
     @property
     def put_throttle(self):
-        return self.put_throttle
+        return self._put_throttle
+
+    @property
+    def family(self):
+        return self._family
+
+    @property
+    def usernames(self):
+        return self._user_names
+
+    @property
+    def sysopnames(self):
+        return self._sys_op_names
+
+    @property
+    def site_interface(self):
+        return self._site_interface
 
     def makepath(self,path):
         """Return a normalized absolute version of the path argument.

@@ -16,32 +16,38 @@ __version__ = '$Id$'
 #except ImportError:
 #    #from md5 import md5
 #import httplib2
-import datetime
-import itertools
-import os
+#import datetime
+#import itertools
+#import os
 import re
-import sys
+#import sys
 import threading
 import time
 import urllib.request, urllib.parse, urllib.error
-import json
+#import json
 
 import pywikibot
 #from pywikibot import deprecate_arg
-from pywikibot import config
+#from pywikibot import config
 #from pywikibot import deprecated
-from pywikibot.bot import log
+#from pywikibot.bot import log
 #from pywikibot import pagegenerators
 from pywikibot.throttle import Throttle
-from pywikibot.data import api
+#from pywikibot.data import api
 #import pywikibot.data.api as api
-from pywikibot.exceptions import NoSuchSite, Error, UserBlocked,NoPage,NoUsername,EditConflict, SpamfilterError, LockedPage
+from pywikibot.site.pageinuse import PageInUse
+
+from pywikibot.exceptions import (
+    NoSuchSite, 
+    Error, 
+#    UserBlocked,
+#    EditConflict, 
+)
 
 from pywikibot.deprecate import deprecated
-from pywikibot.deprecate import deprecate_arg
 
 
-_logger = "wiki.site"
+from pywikibot.familybase import Family
 
 class BaseSite(object):
     """Site methods that are independent of the communication interface."""
@@ -60,6 +66,7 @@ class BaseSite(object):
         @type sysop: str
 
         """
+        self._logger = "wiki.site"
         self.__code = code.lower()
         if isinstance(fam, str) or fam is None:
             self.__family = Family(fam, fatal=False)
@@ -632,33 +639,5 @@ class BaseSite(object):
         raise NotImplementedError
 
 
-def must_be(group=None, right=None):
-    """ Decorator to require a certain user status. For now, only the values
-        group = 'user' and group = 'sysop' are supported. The right property
-        will be ignored for now.
-
-        @param group: the group the logged in user should belong to
-                      legal values: 'user' and 'sysop'
-        @param right: the rights the logged in user hsould have
-                      not supported yet and thus ignored.
-        @returns: a decorator to make sure the requirement is statisfied when
-                  the decorated function is called.
-    """
-    if group == 'user':
-        run = lambda self: self.login(False)
-    elif group == 'sysop':
-        run = lambda self: self.login(True)
-    else:
-        raise Exception("Not implemented")
-
-    def decorator(fn):
-        def callee(self, *args, **kwargs):
-            run(self)
-            return fn(self, *args, **kwargs)
-        callee.__name__ = fn.__name__
-        callee.__doc__ = fn.__doc__
-        return callee
-
-    return decorator
 
 

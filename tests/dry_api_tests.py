@@ -1,13 +1,16 @@
 import datetime
-import pywikibot
+#import pywikibot
 from pywikibot.data.api import CachedRequest
 from tests.utils import unittest
+
+from pywikibot.site.sitefun import SiteManager
 
 
 class DryAPITests(unittest.TestCase):
 
     def setUp(self):
-        self.parms = {'site': pywikibot.Site('en'),
+        self.siteman = SiteManager()
+        self.parms = {'site': self.siteman.Site('en'),
                       'action': 'query',
                       'meta': 'userinfo'}
         self.req = CachedRequest(expiry=1, **self.parms)

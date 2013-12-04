@@ -1,5 +1,7 @@
 # -*- coding: utf-8  -*-
 """
+from pywikibot.site.apisite import APISite
+
 Objects representing MediaWiki sites (wikis) and families (groups of wikis
 on the same topic in different languages).
 from pywikibot.site import BaseSite
@@ -20,26 +22,28 @@ import datetime
 import itertools
 import os
 import re
-import sys
+#import sys
 import threading
-import time
-import urllib.request, urllib.parse, urllib.error
-import json
-
+#import time
+#import urllib.request, urllib.parse, urllib.error
+#import json
+from mustbe import must_be
+from pywikibot.site.base import BaseSite
+from pywikibot.captcha import Captcha
 import pywikibot
 #from pywikibot import deprecate_arg
 from pywikibot import config
 #from pywikibot import deprecated
 from pywikibot.bot import log
 #from pywikibot import pagegenerators
-from pywikibot.throttle import Throttle
-from pywikibot.data import api
-#import pywikibot.data.api as api
-from pywikibot.exceptions import NoSuchSite, Error, UserBlocked,NoPage,NoUsername,EditConflict, SpamfilterError, LockedPage
+#from pywikibot.throttle import Throttle
+#from pywikibot.data import api
+import pywikibot.data.api
+from pywikibot.exceptions import  Error, UserBlocked,NoPage,NoUsername,EditConflict, SpamfilterError, LockedPage
 
 from pywikibot.deprecate import deprecated
 from pywikibot.deprecate import deprecate_arg
-
+from pywikibot.site.loginstatus import LoginStatus
 
 _logger = "wiki.site"
 
@@ -2143,6 +2147,8 @@ class APISite(BaseSite):
                                         % (self.family.protocol(self.code),
                                            self.family.hostname(self.code),
                                            captcha["url"]))
+
+                        cap_answerwikipedia= Captcha()
                         req['captchaword'] = cap_answerwikipedia.user_input(
                             "Please view CAPTCHA in your browser, "
                             "then type answer here:")

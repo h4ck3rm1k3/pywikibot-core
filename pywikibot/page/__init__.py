@@ -23,7 +23,8 @@ import pywikibot
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
 #from pywikibot import config,  Timestamp, Coordinate, WbTime
 #import pywikibot.site
-from pywikibot.site import Family, APISite
+from pywikibot.site.family import Family
+from pywikibot.site.apisite import APISite
 from pywikibot.textlib import removeLanguageLinks, removeCategoryLinks, removeDisabledParts, extract_templates_and_params, replaceCategoryInPlace, replaceCategoryLinks
 from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName, debug
 
@@ -43,12 +44,12 @@ import pywikibot.data.api # import Request, APIError
 # pywikibot.data.api.Request
 #  pywikibot.data.api.APIError
 
-from pywikibot.site import BaseSite
+from pywikibot.site.base import BaseSite
 from logging import  WARNING
 from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
 #from pywikibot.comms.pybothttp import request 
-import pywikibot.config2 as config
+#import pywikibot.config2 as config
 #, ERROR
 #, CRITICAL
 # DEBUG,
@@ -65,7 +66,8 @@ reNamespace = re.compile("^(.+?) *: *(.*)$")
 # Note: Link objects (defined later on) represent a wiki-page's title, while
 # Page objects (defined here) represent the page itself, including its contents.
 
-from pywikibot.page.category import Category
+#from pywikibot.page.category import Category
+#import pywikibot.page.category
 
 class Page(object):
     """Page: A MediaWiki page

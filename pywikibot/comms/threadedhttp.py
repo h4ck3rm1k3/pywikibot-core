@@ -39,7 +39,8 @@ import http.cookiejar
 #import sys
 
 import pywikibot
-from pywikibot import config
+from pywikibot.bot import debug
+#from pywikibot.config
 
 _logger = "comm.threadedhttp"
 
@@ -67,7 +68,7 @@ class ConnectionPool(object):
                        The pool drops excessive connections added.
 
         """
-        pywikibot.debug("Creating connection pool.", _logger)
+        debug("Creating connection pool.", _logger)
         self.connections = {}
         self.lock = threading.Lock()
         self.maxnum = maxnum
@@ -76,7 +77,7 @@ class ConnectionPool(object):
         """Destructor to close all connections in the pool."""
         self.lock.acquire()
         try:
-            pywikibot.debug("Closing connection pool (%s connections)"
+            debug("Closing connection pool (%s connections)"
                             % len(self.connections),
                             _logger)
             for key in self.connections:
@@ -101,7 +102,7 @@ class ConnectionPool(object):
         try:
             if identifier in self.connections:
                 if len(self.connections[identifier]) > 0:
-                    pywikibot.debug("Retrieved connection from '%s' pool."
+                    debug("Retrieved connection from '%s' pool."
                                     % identifier,
                                     _logger)
                     return self.connections[identifier].pop()
@@ -122,7 +123,7 @@ class ConnectionPool(object):
                 self.connections[identifier] = []
 
             if len(self.connections[identifier]) == self.maxnum:
-                pywikibot.debug("closing %s connection %r"
+                debug("closing %s connection %r"
                                 % (identifier, connection),
                                 _logger)
                 connection.close()
@@ -217,7 +218,7 @@ class Http(httplib2.Http):
         # Redirect hack: we want to regulate redirects
         follow_redirects = self.follow_redirects
         self.follow_redirects = False
-        pywikibot.debug("%r" % (
+        debug("%r" % (
             (uri.replace("%7C", "|"), method, body,
              headers, max_redirects,
              connection_type),
@@ -275,7 +276,7 @@ class Http(httplib2.Http):
             (scheme, authority, path, query, fragment) = httplib2.parse_uri(location)
             if authority is None:
                 response['location'] = urljoin(uri, location)
-                pywikibot.debug("Relative redirect: changed [%s] to [%s]"
+                debug("Relative redirect: changed [%s] to [%s]"
                                 % (location, response['location']),
                                 _logger)
         if response.status == 301 and method in ["GET", "HEAD"]:
@@ -344,11 +345,11 @@ class HttpProcessor(threading.Thread):
     def run(self):
         # The Queue item is expected to either an HttpRequest object
         # or None (to shut down the thread)
-        pywikibot.debug("Thread started, waiting for requests.", _logger)
+        debug("Thread started, waiting for requests.", _logger)
         while True:
             item = self.queue.get()
             if item is None:
-                pywikibot.debug("Shutting down thread.", _logger)
+                debug("Shutting down thread.", _logger)
                 return
             try:
                 item.data = self.http.request(*item.args, **item.kwargs)

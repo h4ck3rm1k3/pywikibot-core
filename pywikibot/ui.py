@@ -5,10 +5,10 @@
 from pywikibot.userinterfaces.terminal_interface_unix  import UnixUI
 
 class UI :
-    def __init__(self):
-        self.ui = UnixUI()
+    def __init__(self, config):
+        self.ui = UnixUI(config)
 
-ui = UI()
+#ui = UI()
 
 def get_ui():
     return ui.ui

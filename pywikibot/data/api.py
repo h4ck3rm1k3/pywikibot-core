@@ -10,7 +10,7 @@ Interface functions to Mediawiki's api.php
 __version__ = '$Id$'
 
 from collections import MutableMapping
-from pywikibot.comms.pybothttp import request
+from pywikibot.comms.pybothttp import HTTP #request
 from email.mime.multipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
 import datetime

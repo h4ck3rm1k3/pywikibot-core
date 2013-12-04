@@ -22,31 +22,29 @@ from pywikibot.exceptions import NoUsername
 from pywikibot.bot import debug, log,  user_input, error
 # NoSuchSite, 
 
-import pywikibot.config2 as config
-
-
-_logger = "wiki.login"
-
+#import pywikibot.config2 as config
 
 # On some wikis you are only allowed to run a bot if there is a link to
 # the bot's user page in a specific list.
 # If bots are listed in a template, the templates name must be given as
 # second parameter, otherwise it must be None
-botList = {
-    'wikipedia': {
-        'en': ['Wikipedia:Bots/Status/active bots', 'BotS'],
-        'simple': ['Wikipedia:Bots', '/links']
-    },
-    'gentoo': {
-        'en': ['Help:Bots', None],
-    }
-}
 
 
 class LoginManager(object):
     @deprecate_arg("username", "user")
     @deprecate_arg("verbose", None)
     def __init__(self, password=None, sysop=False, site=None, user=None):
+        self._logger = "wiki.login"
+        self.botList = {
+            'wikipedia': {
+                'en': ['Wikipedia:Bots/Status/active bots', 'BotS'],
+                'simple': ['Wikipedia:Bots', '/links']
+            },
+            'gentoo': {
+                'en': ['Help:Bots', None],
+            }
+        }
+
         if site is not None:
             self._site = site
         else:
@@ -107,9 +105,9 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
         Checks whether the bot is listed on a specific page to comply with
         the policy on the respective wiki.
         """
-        if self._site.family.name in botList \
-                and self._site.code in botList[self._site.family.name]:
-            botListPageTitle, botTemplate = botList[
+        if self._site.family.name in self.botList \
+                and self._site.code in self.botList[self._site.family.name]:
+            botListPageTitle, botTemplate = self.botList[
                 self._site.family.name][self._site.code]
             botListPage = pywikibot.page.Page(self._site, botListPageTitle)
             if botTemplate:

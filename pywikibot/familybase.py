@@ -1,3 +1,6 @@
+u"""
+from pywikibot.familybase import Family as FamilyBase
+"""
 import sys
 import datetime
 import difflib
@@ -13,7 +16,7 @@ from queue import Queue
 # who want to continue using both
 
 import pywikibot
-from pywikibot import config2 as config
+#from pywikibot import config2 as config
 from pywikibot.bot import warning, output, inputChoice, debug
 from pywikibot.exceptions import Error
 #from pywikibot.textlib import *

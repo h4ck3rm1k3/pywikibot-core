@@ -16,29 +16,31 @@ __version__ = '$Id$'
 #except ImportError:
 #    #from md5 import md5
 #import httplib2
-import datetime
-import itertools
-import os
-import re
-import sys
-import threading
-import time
-import urllib.request, urllib.parse, urllib.error
-import json
+#import datetime
+#import itertools
+#import os
+#import re
+#import sys
+#import threading
+#import time
+#import urllib.request, urllib.parse, urllib.error
+#import json
 
-import pywikibot
+#import pywikibot
 #from pywikibot import deprecate_arg
-from pywikibot import config
+#from pywikibot import config
 #from pywikibot import deprecated
-from pywikibot.bot import log
+#from pywikibot.bot import log
 #from pywikibot import pagegenerators
-from pywikibot.throttle import Throttle
-from pywikibot.data import api
+#from pywikibot.throttle import Throttle
+#from pywikibot.data import api
 #import pywikibot.data.api as api
-from pywikibot.exceptions import NoSuchSite, Error, UserBlocked,NoPage,NoUsername,EditConflict, SpamfilterError, LockedPage
+#from pywikibot.exceptions import NoSuchSite, Error, UserBlocked,NoPage,NoUsername,EditConflict, SpamfilterError, LockedPage
 
-from pywikibot.deprecate import deprecated
-from pywikibot.deprecate import deprecate_arg
+from pywikibot.exceptions import Error
+
+#from pywikibot.deprecate import deprecated
+#from pywikibot.deprecate import deprecate_arg
 
 
 _logger = "wiki.site"
