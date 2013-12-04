@@ -15,7 +15,8 @@ import os
 
 import pywikibot
 import pywikibot.textlib as textlib
-
+from pywikibot.config import loadconfig
+config = loadconfig()
 from tests.utils import unittest
 
 files = {}
@@ -40,7 +41,7 @@ class TestSectionFunctions(unittest.TestCase):
         self.assertContains("enwiki_help_editing", "Editing")
 
     def testExtractTemplates(self):
-        if not (pywikibot.config.use_mwparserfromhell and mwparserfromhell):
+        if not (config.use_mwparserfromhell and mwparserfromhell):
             return  # We'll test the regex function in the test below
         func = textlib.extract_templates_and_params  # It's really long.
         self.assertEqual(func('{{a}}'), [('a', {})])

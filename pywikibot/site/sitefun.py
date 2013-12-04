@@ -2,6 +2,7 @@
 #getSite = Site  # alias for backwards-compability
 from config import loadconfig
 from pywikibot.bot import debug
+from pywikibot.site.base import BaseSite
 class SiteManager :
     def __init__(self):
         self._sites={}
@@ -43,17 +44,22 @@ class SiteManager :
                 sysop = None
         if interface is None:
             interface = config.site_interface
-        try:
-            tmp = __import__('pywikibot.site', fromlist=[interface])
-            __Site = getattr(tmp, interface)
-        except ImportError:
-            raise ValueError("Invalid interface name '%(interface)s'" % locals())
+        # try:
+        #     tmp = __import__('pywikibot.site', fromlist=[interface])
+        #     __Site = getattr(tmp, interface)
+        # except ImportError:
+        #     raise ValueError("Invalid interface name '%(interface)s'" % locals())
+
         key = '%s:%s:%s' % (fam, code, user)
-        if not key in self._sites or not isinstance(self._sites[key], __Site):
-            self._sites[key] = __Site(code=code, fam=fam, user=user, sysop=sysop)
-            debug("Instantiating Site object '%(site)s'"
-                            % {'site':self._sites[key]}, _logger)
-        return self._sites[key]
+        #if not key in self._sites or not isinstance(self._sites[key], __Site):
+        #    self._sites[key] = interface(code=code, fam=fam, user=user, sysop=sysop)
+        #    debug("Instantiating Site object '%(site)s'"
+        #                    % {'site':self._sites[key]}, _logger)
+        if key in self._sites:
+            return self._sites[key]
+        else :
+            return BaseSite(code, fam, user, sysop)
+            
 
 
 

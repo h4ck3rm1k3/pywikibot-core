@@ -21,10 +21,13 @@ import mwparserfromhell
 import pywikibot
 import re
 from html.parser import HTMLParser
+from pywikibot.families.familybase import Family as FamilyBase
+
+from pywikibot.link_regex import link_regex
 
 
-
-#from pywikibot import config2 as config
+from pywikibot.config import loadconfig
+config = loadconfig()
 
 TEMP_REGEX = re.compile(
     '{{(?:msg:)?(?P<name>[^{\|]+?)(?:\|(?P<params>[^{]+?(?:{[^{]+?}[^{]*?)?))?}}')
@@ -409,7 +412,7 @@ def getLanguageLinks(text, insite=None, pageLink="[[]]",
     # when interwiki links forward to another family, retrieve pages & other
     # infos there
     if fam.interwiki_forward:
-        fam = pywikibot.Family(fam.interwiki_forward)
+        fam = FamilyBase(fam.interwiki_forward)
     result = {}
     # Ignore interwiki links within nowiki tags, includeonly tags, pre tags,
     # and HTML comments
@@ -1048,7 +1051,7 @@ def extract_templates_and_params_regex(text):
                 # Replace wikilinks with markers
                 links = {}
                 count2 = 0
-                for m2 in pywikibot.link_regex.finditer(paramString):
+                for m2 in link_regex.finditer(paramString):
                     count2 += 1
                     item = m2.group(0)
                     paramString = paramString.replace(

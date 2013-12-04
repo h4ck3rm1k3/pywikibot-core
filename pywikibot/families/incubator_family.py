@@ -2,8 +2,8 @@
 
 __version__ = '$Id$'
 
-from pywikibot.family import WikimediaFamily
 
+from pywikibot.families.familybase import WikimediaFamily
 
 # The Wikimedia Incubator family
 class Family(WikimediaFamily):

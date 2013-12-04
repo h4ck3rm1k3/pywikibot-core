@@ -38,7 +38,7 @@ See [[:en:User:DumZiBoT/refLinks]] for more information on the bot.
 #
 __version__ = '$Id$'
 #
-
+from pywikibot.page.htmlunicode import html2unicode
 #import sys
 import re
 import urllib.request, urllib.error, urllib.parse
@@ -238,7 +238,7 @@ class RefLink:
         """Normalize the title"""
         #convert html entities
         if not ispdf:
-            self.title = pywikibot.html2unicode(self.title)
+            self.title = html2unicode(self.title)
         self.title = re.sub(r'-+', '-', self.title)
         #remove formatting, i.e long useless strings
         self.title = re.sub(r'[\.+\-=]{4,}', ' ', self.title)

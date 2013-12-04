@@ -4,9 +4,8 @@ from pywikibot import deprecate_arg
 from pywikibot import deprecated
 from pywikibot import config
 import pywikibot.site
-
 import hashlib
-import htmlentitydefs
+import html.entities 
 import logging
 import re
 import unicodedata

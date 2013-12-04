@@ -1,8 +1,8 @@
 # -*- coding: utf-8  -*-
 __version__ = '$Id$'
 
-from pywikibot.family import Family as FamilyBase
 
+from pywikibot.families.familybase import Family as FamilyBase
 
 # The Anarchopedia family
 class Family(FamilyBase):

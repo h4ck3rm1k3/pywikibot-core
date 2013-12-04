@@ -16,7 +16,7 @@ from queue import Queue
 # who want to continue using both
 
 import pywikibot
-#from pywikibot import config2 as config
+from pywikibot.config import loadconfig
 from pywikibot.bot import warning, output, inputChoice, debug
 from pywikibot.exceptions import Error
 #from pywikibot.textlib import *
@@ -33,6 +33,8 @@ def Family(fam=None, fatal=True):
     @return: a Family instance configured for the named family.
 
     """
+    config = loadconfig()
+
     if fam is None:
         fam = config.family
     try:

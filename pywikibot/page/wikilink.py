@@ -3,15 +3,16 @@ import pywikibot
 from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
 #from pywikibot.config import loadconfig
-import pywikibot.site
+from pywikibot.site.base import BaseSite
 
 import hashlib
-#import htmlentitydefs
+import html.entities 
 import logging
 import re
 import unicodedata
 import urllib
 import collections
+from pywikibot.page.htmlunicode import html2unicode
 
 class Link(object):
     """A Mediawiki link (local or interwiki)

@@ -1,13 +1,14 @@
 # Utility functions for parsing page titles
 
 import pywikibot
-from pywikibot import deprecate_arg
-from pywikibot import deprecated
-from pywikibot import config
+from pywikibot.deprecate import deprecate_arg
+from pywikibot.deprecate import deprecated
+from pywikibot.config import loadconfig
+config = loadconfig()
 import pywikibot.site
 
 import hashlib
-import htmlentitydefs
+import html.entities 
 import logging
 import re
 import unicodedata

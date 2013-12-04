@@ -23,7 +23,8 @@ import pywikibot
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
 #from pywikibot import config,  Timestamp, Coordinate, WbTime
 #import pywikibot.site
-from pywikibot.site.family import Family
+#from pywikibot.families.familybase import Family
+
 from pywikibot.site.apisite import APISite
 from pywikibot.textlib import removeLanguageLinks, removeCategoryLinks, removeDisabledParts, extract_templates_and_params, replaceCategoryInPlace, replaceCategoryLinks
 from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName, debug

@@ -3,7 +3,7 @@ PYTHONPATH=/mnt/data/home/mdupont/experiments/wiki/pywikibot-core:/mnt/data/home
 PYTHON=PYTHONPATH=$(PYTHONPATH) python3
 
 test :
-	-$(PYTHON) test.py
+	$(PYTHON) tests/testinclude.py
 	-$(PYTHON) tests/dry_api_tests.py
 	-$(PYTHON) tests/textlib_tests.py
 	-$(PYTHON) tests/page_tests.py

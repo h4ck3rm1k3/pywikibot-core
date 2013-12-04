@@ -81,11 +81,15 @@ from pywikibot import pagegenerators
 from pywikibot import i18n
 from pywikibot import config2 as config
 from pywikibot.bot import log
+from pywikibot.page.htmlunicode import html2unicode
+
 warning = """
 ATTENTION: You can run this script as a stand-alone for testing purposes.
 However, the changes that are made are only minor, and other users
 might get angry if you fill the version histories and watchlists with such
 irrelevant changes. Some wikis prohibit stand-alone running."""
+
+
 
 docuReplacements = {
     '&params;': pagegenerators.parameterHelp,
@@ -528,7 +532,7 @@ class CosmeticChangesToolkit:
         #    ignore += [39]
         if self.template:
             ignore += [58]
-        text = pywikibot.html2unicode(text, ignore=ignore)
+        text = html2unicode(text, ignore=ignore)
         return text
 
     def validXhtml(self, text):

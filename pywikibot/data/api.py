@@ -33,7 +33,7 @@ import urllib.request
 #import warnings
 from pywikibot.bot import log, error
 import pywikibot
-from pywikibot import config
+from pywikibot.config import loadconfig
 #, login
 
 from pywikibot.login import LoginManager as LoginManagerBase
@@ -137,11 +137,17 @@ class Request(MutableMapping, object):
             self.site = kwargs.pop("site")
         except KeyError:
             self.site = pywikibot.Site()
+
+        if  self.site is None :
+
+            raise Exception()
+
         self.mime = kwargs.pop("mime", False)
+        self.config = loadconfig()
         self.max_retries = kwargs.pop(
             "max_retries",
-            pywikibot.config.max_retries)
-        self.retry_wait = kwargs.pop("retry_wait", pywikibot.config.retry_wait)
+            self.config.max_retries)
+        self.retry_wait = kwargs.pop("retry_wait", self.config.retry_wait)
         self.params = {}
         if "action" not in kwargs:
             raise ValueError("'action' specification missing from Request.")
@@ -210,8 +216,8 @@ class Request(MutableMapping, object):
                     inprop = self.params.get("inprop", [])
                     info = set(inprop + ["protection", "talkid", "subjectid"])
                     self.params["info"] = list(info)
-        if "maxlag" not in self.params and config.maxlag:
-            self.params["maxlag"] = [str(config.maxlag)]
+        if "maxlag" not in self.params and self.config.maxlag:
+            self.params["maxlag"] = [str(self.config.maxlag)]
         if "format" not in self.params:
             print("before setting ")
             self.params["format"] = [b"json"]
@@ -239,7 +245,7 @@ class Request(MutableMapping, object):
                                     + self.http_params())
 
     def _simulate(self, action):
-        if action and config.simulate and action in config.actions_to_block:
+        if action and self.config.simulate and action in self.config.actions_to_block:
             pywikibot.output(
                 '\03{lightyellow}SIMULATION: %s action blocked.\03{default}'
                 % action)
@@ -260,10 +266,10 @@ class Request(MutableMapping, object):
             self.site.throttle(write=self.write)
             uri = self.site.scriptpath() + "/api.php"
             ssl = False
-            if self.site.family.name in config.available_ssl_project:
-                if action == "login" and config.use_SSL_onlogin:
+            if self.site.family.name in self.config.available_ssl_project:
+                if action == "login" and self.config.use_SSL_onlogin:
                     ssl = True
-                elif config.use_SSL_always:
+                elif self.config.use_SSL_always:
                     ssl = True
             try:
                 if self.mime:
@@ -438,6 +444,7 @@ class CachedRequest(Request):
 
     def __init__(self, expiry, *args, **kwargs):
         """ expiry should be either a number of days or a datetime.timedelta object """
+        self.config = loadconfig()
         super(CachedRequest, self).__init__(*args, **kwargs)
         if not isinstance(expiry, datetime.timedelta):
             expiry = datetime.timedelta(expiry)
@@ -446,7 +453,7 @@ class CachedRequest(Request):
         self._cachetime = None
 
     def _get_cache_dir(self):
-        path = os.path.join(pywikibot.config2.base_dir, 'apicache')
+        path = os.path.join(self.config.base_dir, 'apicache')
         self._make_dir(path)
         return path
 

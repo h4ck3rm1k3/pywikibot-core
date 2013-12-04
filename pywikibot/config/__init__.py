@@ -16,6 +16,30 @@ class Config :
         return self._put_throttle
 
     @property
+    def max_retries(self):
+        return 0
+
+    @property
+    def retry_wait(self):
+        return 0
+
+    @property
+    def use_mwparserfromhell(self):
+        return True
+
+    @property
+    def maxlag(self):
+        return 0
+
+    @property
+    def base_dir(self):
+        return "~/experiments/wiki/pywikibot-core/pywikibot/"
+
+    @property
+    def line_separator(self):
+        return "\n"
+
+    @property
     def family(self):
         return self._family
 

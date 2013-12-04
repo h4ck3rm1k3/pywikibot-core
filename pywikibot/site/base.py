@@ -2,7 +2,8 @@
 """
 Objects representing MediaWiki sites (wikis) and families (groups of wikis
 on the same topic in different languages).
-from pywikibot.site import BaseSite
+
+from pywikibot.site.base import BaseSite
 """
 #
 # (C) Pywikibot team, 2008-2012
@@ -30,7 +31,7 @@ import pywikibot
 #from pywikibot import deprecate_arg
 #from pywikibot import config
 #from pywikibot import deprecated
-#from pywikibot.bot import log
+from pywikibot.bot import log
 #from pywikibot import pagegenerators
 from pywikibot.throttle import Throttle
 #from pywikibot.data import api
@@ -48,6 +49,7 @@ from pywikibot.deprecate import deprecated
 
 
 from pywikibot.familybase import Family
+from config import loadconfig
 
 class BaseSite(object):
     """Site methods that are independent of the communication interface."""
@@ -90,8 +92,9 @@ class BaseSite(object):
                         and oldcode == pywikibot.config.mylang:
                     pywikibot.config.mylang = self.__code
             else:
-                raise NoSuchSite("Language %s does not exist in family %s"
-                                 % (self.__code, self.__family.name))
+                message= "Language %s does not exist in family %s"  % (self.__code, self.__family.name)
+                log(message)
+                raise NoSuchSite(message)
 
         self.nocapitalize = self.code in self.family.nocapitalize
         if not self.nocapitalize:

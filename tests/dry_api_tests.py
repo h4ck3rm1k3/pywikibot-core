@@ -15,8 +15,8 @@ class DryAPITests(unittest.TestCase):
                       'meta': 'userinfo'}
         self.req = CachedRequest(expiry=1, **self.parms)
         self.expreq = CachedRequest(expiry=0, **self.parms)
-        self.diffreq = CachedRequest(expiry=1, site=pywikibot.Site('en'), action='query', meta='siteinfo')
-        self.diffsite = CachedRequest(expiry=1, site=pywikibot.Site('de'), action='query', meta='userinfo')
+        self.diffreq = CachedRequest(expiry=1, site= self.siteman.Site('en'), action='query', meta='siteinfo')
+        self.diffsite = CachedRequest(expiry=1, site= self.siteman.Site('de'), action='query', meta='userinfo')
 
     def test_expiry_formats(self):
         self.assertEqual(self.req.expiry, CachedRequest(datetime.timedelta(days=1), **self.parms).expiry)
