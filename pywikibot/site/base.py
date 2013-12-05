@@ -62,8 +62,13 @@ class BaseSite(object):
     def hasExtension(self, string, tf):
         pass
 
-    def pagelinks(self, page, namespaces=None, follow_redirects=False,
-                  step=None, total=None, content=False):
+    def pagelinks(self, 
+                  page=None, 
+                  namespaces=None, 
+                  step=None,
+                  total=None, 
+                  content=None
+              ):
         pass
 
 
@@ -71,6 +76,22 @@ class BaseSite(object):
 #getText=True, sysop=None):
         pass
 
+    def pagelanglinks(self, step, total):
+        pass
+
+    def pagelinks(self):
+        pass
+
+    def language (self, code='en'):
+        return "en"
+
+
+    def case(self, code='en'):
+        return "first-letter"
+
+
+    def page_isredirect(self, page):
+        pass
 
     def pagereferences(
             self,

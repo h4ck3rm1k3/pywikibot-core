@@ -16,8 +16,9 @@ __version__ = '$Id$'
 #from pywikibot import deprecate_arg
 #from pywikibot import deprecated
 #from pywikibot import async_request
-#import pywikibot # import link_regex, _sites
+
 import pywikibot 
+from pywikibot.link_regex import link_regex
 
 
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
@@ -997,8 +998,11 @@ class Page(object):
         @return: a generator that yields Page objects.
 
         """
-        return self.site.pagelinks(self, namespaces=namespaces, step=step,
-                                   total=total, content=content)
+        return self.site.pagelinks(self, 
+                                   namespaces=namespaces, 
+                                   step=step,
+                                   total=total, 
+                                   content=content)
 
     def interwiki(self, expand=True):
         """Iterate interwiki links in the page text, excluding language links.
@@ -1015,7 +1019,7 @@ class Page(object):
             text = self.expand_text()
         else:
             text = self.text
-        for linkmatch in pywikibot.link_regex.finditer(
+        for linkmatch in link_regex.finditer(
                 removeDisabledParts(text)):
             linktitle = linkmatch.group("title")
             link = Link(linktitle, self.site)

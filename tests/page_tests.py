@@ -264,9 +264,28 @@ class TestPageObject(PywikibotTestCase):
         pg._pageprops = set()
         self.assertFalse(pg.isDisambig())
 
+
+    def testReferences2(self):
+        self.assertType(site, Site)
+        #self.assertEqual(site, 0)
+        #Site("en", "wikipedia")
+        x= site.pagereferences(
+            None,
+            followRedirects=True,
+            filterRedirects=False,
+            withTemplateInclusion=False,
+            onlyTemplateInclusion=False,
+            namespaces=[],
+            step=1,
+            total=2,
+            content=3
+        )
+
+
     def testReferences(self):
         count = 0
         #Ignore redirects for time considerations
+        self.assertType(mainpage, pywikibot.page.Page)
         for p in mainpage.getReferences(follow_redirects=False):
             count += 1
             self.assertType(p, pywikibot.page.Page)
@@ -285,10 +304,22 @@ class TestPageObject(PywikibotTestCase):
             if count >= 10:
                 break
 
+    def testLinks2(self):
+        self.assertType(site, pywikibot.page.Page)
+        x = site.pagelinks(None, 
+                           namespaces=None, 
+                           step=1,
+                           total=2, 
+                           content="bla")
+
     def testLinks(self):
-        self.assertIsNotNull(mainpage.linkedPages())
-        for p in mainpage.linkedPages():
-            self.assertType(p, pywikibot.page.Page)
+        self.assertType(mainpage, pywikibot.page.Page)
+        linked_pages = mainpage.linkedPages()
+        self.assertEqual(linked_pages, None)
+        if (linked_pages is not None):
+            for p in linked_pages:
+                self.assertEqual(p, None)
+                self.assertType(p, pywikibot.page.Page)
         iw = list(mainpage.interwiki(expand=True))
         for p in iw:
             self.assertType(p, pywikibot.Link)
@@ -338,4 +369,5 @@ if __name__ == '__main__':
         except SystemExit:
             pass
     finally:
-        pywikibot.stopme()
+        #pywikibot.stopme()
+        pass

@@ -4,9 +4,13 @@ PYTHON=PYTHONPATH=$(PYTHONPATH) python3
 
 test :
 	$(PYTHON) tests/testinclude.py
+test2 :
 	-$(PYTHON) tests/dry_api_tests.py
+test3 :
 	-$(PYTHON) tests/textlib_tests.py
+test4 :
 	-$(PYTHON) tests/page_tests.py
+test5 :
 	-$(PYTHON) tests/dry_site_tests.py
 	-$(PYTHON) tests/__init__.py
 	-$(PYTHON) tests/utils.py
@@ -23,7 +27,7 @@ test :
 setuptest:
 	PYTHONPATH=/mnt/data/home/mdupont/experiments/wiki/pywikibot-core:/mnt/data/home/mdupont/experiments/wiki/pywikibot-core/pywikibot:/mnt/data/home/mdupont/.local/lib/python3.3/site-packages python3 setup.py test
 
-test2 :
+test10 :
 #	PYTHONPATH=. python  pywikibot/login.py
 	PYTHONPATH=/mnt/data/home/mdupont/experiments/wiki/pywikibot-core 	python3 pywikibot/login.py
 

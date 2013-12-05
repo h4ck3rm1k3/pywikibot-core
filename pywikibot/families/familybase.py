@@ -27,18 +27,6 @@ from pywikibot.deprecate import deprecated
 # Parent class for all wiki families
 class Family(object):
 
-    def language (self, code, *args, **kwargs):
-        return "en"
-
-    def pagelinks(self):
-        pass
-
-    def page_isredirect(self):
-        pass
-
-    def case(self, code, *args, **kwargs):
-        return "first-letter"
-
     def __init__(self):
         self.config = pywikibot.config.loadconfig()
         if not hasattr(self, 'name'):
