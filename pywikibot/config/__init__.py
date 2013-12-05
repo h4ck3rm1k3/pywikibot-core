@@ -1,6 +1,8 @@
 u'''
 from pywikibot.config import loadconfig()
 '''
+#from pywikibot.families.familybase import Family
+import pywikibot.families.familybase 
 
 class Config :
 
@@ -20,6 +22,14 @@ class Config :
         return 0
 
     @property
+    def maxlag(self):
+        return 0
+
+    @property
+    def simulate(self):
+        return True
+
+    @property
     def retry_wait(self):
         return 0
 
@@ -28,8 +38,12 @@ class Config :
         return True
 
     @property
-    def maxlag(self):
-        return 0
+    def use_mwparserfromhell(self):
+        return True
+
+    @property
+    def mylang(self):
+        return "en"
 
     @property
     def base_dir(self):
@@ -40,7 +54,19 @@ class Config :
         return "\n"
 
     @property
+    def console_encoding(self):
+        return "utf-8"
+
+    @property
+    def base_dir(self):
+        return "/tmp/"
+        
+    @property
     def family(self):
+
+        if self._family is None:
+            self._family = pywikibot.families.familybase.Family()
+
         return self._family
 
     @property
@@ -94,7 +120,11 @@ class Config :
             return path[len(base_dir) + len(os.path.sep):]
         return path
 
+globalconf = None
 
 def loadconfig ():
-    return Config()
+    global globalconf
+    if (globalconf is None ):
+        globalconf = Config()
+    return globalconf
 

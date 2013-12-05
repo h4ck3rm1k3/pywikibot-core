@@ -119,7 +119,7 @@ class TestLinkObject(unittest.TestCase):
 
 class TestPageObject(PywikibotTestCase):
     def testGeneral(self):
-        self.assertEqual(str(mainpage), "[[%s:%s]]"
+        self.assertEqual(mainpage, "[[%s:%s]]"
                                         % (site.lang, mainpage.title()))
         self.assertTrue(mainpage < maintalk)
 
@@ -135,7 +135,7 @@ class TestPageObject(PywikibotTestCase):
 
     def testTitle(self):
         """Test title() method options."""
-        p1 = pywikibot.Page(site, "Help:Test page#Testing")
+        p1 = pywikibot.page.Page(site, "Help:Test page#Testing")
         self.assertEqual(p1.title(),
                          "Help:Test page#Testing")
         self.assertEqual(p1.title(underscore=True),
@@ -155,7 +155,7 @@ class TestPageObject(PywikibotTestCase):
         self.assertEqual(p1.title(asLink=True, textlink=True),
                          p1.title(asLink=True))
         # also test a page with non-ASCII chars and a different namespace
-        p2 = pywikibot.Page(site, "File:Jean-Léon Gérôme 003.jpg")
+        p2 = pywikibot.page.Page(site, "File:Jean-Léon Gérôme 003.jpg")
         self.assertEqual(p2.title(),
                          "File:Jean-Léon Gérôme 003.jpg")
         self.assertEqual(p2.title(underscore=True),
@@ -180,17 +180,17 @@ class TestPageObject(PywikibotTestCase):
     def testSection(self):
         """Test section() method."""
         # use same pages as in previous test
-        p1 = pywikibot.Page(site, "Help:Test page#Testing")
-        p2 = pywikibot.Page(site, "File:Jean-Léon Gérôme 003.jpg")
+        p1 = pywikibot.page.Page(site, "Help:Test page#Testing")
+        p2 = pywikibot.page.Page(site, "File:Jean-Léon Gérôme 003.jpg")
         self.assertEqual(p1.section(), "Testing")
         self.assertEqual(p2.section(), None)
 
     def testIsTalkPage(self):
         """Test isTalkPage() method."""
-        p1 = pywikibot.Page(site, "First page")
-        p2 = pywikibot.Page(site, "Talk:First page")
-        p3 = pywikibot.Page(site, "User:Second page")
-        p4 = pywikibot.Page(site, "User talk:Second page")
+        p1 = pywikibot.page.Page(site, "First page")
+        p2 = pywikibot.page.Page(site, "Talk:First page")
+        p3 = pywikibot.page.Page(site, "User:Second page")
+        p4 = pywikibot.page.Page(site, "User talk:Second page")
         self.assertEqual(p1.isTalkPage(), False)
         self.assertEqual(p2.isTalkPage(), True)
         self.assertEqual(p3.isTalkPage(), False)
@@ -198,31 +198,31 @@ class TestPageObject(PywikibotTestCase):
 
     def testIsCategory(self):
         """Test isCategory method."""
-        p1 = pywikibot.Page(site, "First page")
-        p2 = pywikibot.Page(site, "Category:Second page")
-        p3 = pywikibot.Page(site, "Category talk:Second page")
+        p1 = pywikibot.page.Page(site, "First page")
+        p2 = pywikibot.page.Page(site, "Category:Second page")
+        p3 = pywikibot.page.Page(site, "Category talk:Second page")
         self.assertEqual(p1.isCategory(), False)
         self.assertEqual(p2.isCategory(), True)
         self.assertEqual(p3.isCategory(), False)
 
     def testIsImage(self):
-        p1 = pywikibot.Page(site, "First page")
-        p2 = pywikibot.Page(site, "File:Second page")
-        p3 = pywikibot.Page(site, "Image talk:Second page")
+        p1 = pywikibot.page.Page(site, "First page")
+        p2 = pywikibot.page.Page(site, "File:Second page")
+        p3 = pywikibot.page.Page(site, "Image talk:Second page")
         self.assertEqual(p1.isImage(), False)
         self.assertEqual(p2.isImage(), True)
         self.assertEqual(p3.isImage(), False)
 
     def testIsRedirect(self):
-        p1 = pywikibot.Page(site, 'User:Legoktm/R1')
-        p2 = pywikibot.Page(site, 'User:Legoktm/R2')
+        p1 = pywikibot.page.Page(site, 'User:Legoktm/R1')
+        p2 = pywikibot.page.Page(site, 'User:Legoktm/R2')
         self.assertTrue(p1.isRedirectPage())
         self.assertEqual(p1.getRedirectTarget(), p2)
 
     def testPageGet(self):
-        p1 = pywikibot.Page(site, 'User:Legoktm/R2')
-        p2 = pywikibot.Page(site, 'User:Legoktm/R1')
-        p3 = pywikibot.Page(site, 'User:Legoktm/R3')
+        p1 = pywikibot.page.Page(site, 'User:Legoktm/R2')
+        p2 = pywikibot.page.Page(site, 'User:Legoktm/R1')
+        p3 = pywikibot.page.Page(site, 'User:Legoktm/R3')
 
         text = 'This page is used in the [[mw:Manual:Pywikipediabot]] testing suite.'
         self.assertEqual(p1.get(), text)
@@ -258,7 +258,7 @@ class TestPageObject(PywikibotTestCase):
         """
         if not site.hasExtension('Disambiguator', False):
             raise unittest.SkipTest('Disambiguator extension not loaded on test site')
-        pg = pywikibot.Page(site, 'Random')
+        pg = pywikibot.page.Page(site, 'Random')
         pg._pageprops = set(['disambiguation', ''])
         self.assertTrue(pg.isDisambig())
         pg._pageprops = set()
@@ -269,25 +269,26 @@ class TestPageObject(PywikibotTestCase):
         #Ignore redirects for time considerations
         for p in mainpage.getReferences(follow_redirects=False):
             count += 1
-            self.assertType(p, pywikibot.Page)
+            self.assertType(p, pywikibot.page.Page)
             if count >= 10:
                 break
         count = 0
         for p in mainpage.backlinks(followRedirects=False):
             count += 1
-            self.assertType(p, pywikibot.Page)
+            self.assertType(p, pywikibot.page.Page)
             if count >= 10:
                 break
         count = 0
         for p in mainpage.embeddedin():
             count += 1
-            self.assertType(p, pywikibot.Page)
+            self.assertType(p, pywikibot.page.Page)
             if count >= 10:
                 break
 
     def testLinks(self):
+        self.assertIsNotNull(mainpage.linkedPages())
         for p in mainpage.linkedPages():
-            self.assertType(p, pywikibot.Page)
+            self.assertType(p, pywikibot.page.Page)
         iw = list(mainpage.interwiki(expand=True))
         for p in iw:
             self.assertType(p, pywikibot.Link)
@@ -299,9 +300,9 @@ class TestPageObject(PywikibotTestCase):
         for p in mainpage.imagelinks():
             self.assertType(p, pywikibot.ImagePage)
         for p in mainpage.templates():
-            self.assertType(p, pywikibot.Page)
+            self.assertType(p, pywikibot.page.Page)
         for t, params in mainpage.templatesWithParams():
-            self.assertType(t, pywikibot.Page)
+            self.assertType(t, pywikibot.page.Page)
             self.assertType(params, list)
         for p in mainpage.categories():
             self.assertType(p, pywikibot.Category)

@@ -22,6 +22,8 @@ import pywikibot
 
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
 #from pywikibot import config,  Timestamp, Coordinate, WbTime
+from pywikibot.config import loadconfig
+config = loadconfig()
 #import pywikibot.site
 #from pywikibot.families.familybase import Family
 
@@ -194,6 +196,12 @@ class Page(object):
                (allowInterwiki and
                 (self.site.family.name != config.family
                  or self.site.code != config.mylang)):
+
+                log( self.site.family.name)
+                log (config.family)
+                log (self.site.family.name)
+                log(self.site.code)
+
                 if self.site.family.name != config.family \
                    and self.site.family.name != self.site.code:
                     return '[[%s:%s:%s]]' % (self.site.family.name,
@@ -332,8 +340,10 @@ class Page(object):
         except IsRedirectPage:
             if not get_redirect:
                 raise
-
-        return self._revisions[self._revid].text
+        if self._revid in self._revisions:
+            return self._revisions[self._revid].text
+        else:
+            return None
 
     def _getInternals(self, sysop):
         """Helper function for get().

@@ -1,5 +1,7 @@
 # -*- coding: utf-8  -*-
-
+'''
+from pywikibot.families.familybase immport Family
+'''
 #
 # (C) Pywikibot team, 2004-2013
 #
@@ -12,8 +14,8 @@ import logging
 import re
 #import urllib
 import collections
+import pywikibot.config
 
-from pywikibot.config import loadconfig
 import pywikibot
 
 logger = logging.getLogger("pywiki.wiki.family")
@@ -24,15 +26,33 @@ from pywikibot.deprecate import deprecated
 
 # Parent class for all wiki families
 class Family(object):
+
+    def language (self, code, *args, **kwargs):
+        return "en"
+
+    def pagelinks(self):
+        pass
+
+    def page_isredirect(self):
+        pass
+
+    def case(self, code, *args, **kwargs):
+        return "first-letter"
+
     def __init__(self):
-        self.config = loadconfig()
+        self.config = pywikibot.config.loadconfig()
         if not hasattr(self, 'name'):
-            self.name = None
+            self.name = "Base Family Class"
         self.alphabetic = []
+        
         self.alphabetic_revised = []
-        self.langs = {}
+        self.langs = {
+            'en' : "english",
+            'de' : "german"
+        }
         self.known_families={}
         self.crossnamespace = {}
+        self._namespaces = {}
 
         # For interwiki sorting order see
         # http://meta.wikimedia.org/wiki/Interwiki_sorting_order
@@ -112,7 +132,7 @@ class Family(object):
         self.fyinterwiki.remove('nb')
         self.fyinterwiki.sort(key=lambda x: x.replace("y", "i") + x.count("y") * "!")
 
-        self.langs = {}
+
 
         self.namespacesWithSubpage = [2] + list(range(1, 16, 2))
 

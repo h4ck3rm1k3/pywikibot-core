@@ -56,6 +56,35 @@ class BaseSite(object):
     # to implement a specific interface, define a Site class that inherits
     # from this
 
+    def page_isredirect(self, page):
+        return False
+
+    def hasExtension(self, string, tf):
+        pass
+
+    def pagelinks(self, page, namespaces=None, follow_redirects=False,
+                  step=None, total=None, content=False):
+        pass
+
+
+    def loadrevisions(self, *args, **kwargs):
+#getText=True, sysop=None):
+        pass
+
+
+    def pagereferences(
+            self,
+            followRedirects,
+            filterRedirects,
+            withTemplateInclusion,
+            onlyTemplateInclusion,
+            namespaces,
+            step,
+            total,
+            content,
+        ):
+        pass
+
     def __init__(self, code, fam=None, user=None, sysop=None):
         """
         @param code: the site's language code
@@ -68,6 +97,7 @@ class BaseSite(object):
         @type sysop: str
 
         """
+        self._namespaces = {}
         self._logger = "wiki.site"
         self.__code = code.lower()
         if isinstance(fam, str) or fam is None:
@@ -92,6 +122,9 @@ class BaseSite(object):
                         and oldcode == pywikibot.config.mylang:
                     pywikibot.config.mylang = self.__code
             else:
+                #log (str(self))
+                log (str(self.__family))
+                log (str(self.__family.langs))
                 message= "Language %s does not exist in family %s"  % (self.__code, self.__family.name)
                 log(message)
                 raise NoSuchSite(message)
@@ -171,6 +204,7 @@ class BaseSite(object):
             return getattr(self.__class__, attr)
         try:
             method = getattr(self.family, attr)
+            log("Attr %s got Method to call is %s" % (attr, method))
             f = lambda *args, **kwargs: method(self.code, *args, **kwargs)
             if hasattr(method, "__doc__"):
                 f.__doc__ = method.__doc__
@@ -181,7 +215,10 @@ class BaseSite(object):
 
     def sitename(self):
         """Return string representing this Site's name and code."""
-
+        #log(self)
+        log(self.family)
+        log(self.family.name)
+        log(self.code)
         return self.family.name + ':' + self.code
 
     __str__ = sitename
