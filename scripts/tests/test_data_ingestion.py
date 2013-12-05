@@ -9,7 +9,7 @@ import unittest
 #import test_utils
 #import pywikibot
 #import data_ingestion
-from scripts.data_ingestion 
+import scripts.data_ingestion 
 
 
 class TestPhoto(unittest.TestCase):

@@ -2,6 +2,9 @@ PYTHONPATH=/mnt/data/home/mdupont/experiments/wiki/pywikibot-core:/mnt/data/home
 
 PYTHON=PYTHONPATH=$(PYTHONPATH) python3
 
+alltests:
+	~/.local/bin/nosetests
+
 test :
 	$(PYTHON) tests/testinclude.py
 test2 :

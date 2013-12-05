@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+u'''
+from pywikibot.families.wikimedia_family import Family
 
+'''
 __version__ = '$Id$'
 
 from pywikibot import family

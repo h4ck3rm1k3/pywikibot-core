@@ -998,6 +998,7 @@ class Page(object):
         @return: a generator that yields Page objects.
 
         """
+        log("Site is :%s" % self.site)
         return self.site.pagelinks(self, 
                                    namespaces=namespaces, 
                                    step=step,

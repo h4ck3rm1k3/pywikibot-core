@@ -2,8 +2,6 @@
 
 __version__ = '$Id$'
 
-
-
 from pywikibot.families.familybase import WikimediaFamily
 
 # The test wikipedia family

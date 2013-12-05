@@ -1,6 +1,6 @@
 #_sites = {}
 #getSite = Site  # alias for backwards-compability
-from config import loadconfig
+from pywikibot.config import loadconfig
 from pywikibot.bot import debug
 from pywikibot.site.base import BaseSite
 class SiteManager :

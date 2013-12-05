@@ -49,7 +49,7 @@ from pywikibot.deprecate import deprecated
 
 
 from pywikibot.familybase import Family
-from config import loadconfig
+from pywikibot.config import loadconfig
 
 class BaseSite(object):
     """Site methods that are independent of the communication interface."""

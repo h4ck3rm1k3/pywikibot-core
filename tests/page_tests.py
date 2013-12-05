@@ -13,7 +13,7 @@ __version__ = '$Id$'
 import pywikibot
 import pywikibot.page
 from pywikibot.site.base import BaseSite
-
+from pywikibot.page.wikilink import Link
 from tests.utils import PywikibotTestCase, unittest
 
 site = pywikibot.Site(
@@ -308,16 +308,28 @@ class TestPageObject(PywikibotTestCase):
                 break
 
     def testLinks2(self):
+        l= Link()
+        x = l.site.pagelinks(None, 
+                           namespaces=None, 
+                           step=1,
+                           total=2, 
+                           content="bla")
+
+    def testLinks2(self):
         self.assertType(site, pywikibot.page.Page)
-        x = site.pagelinks(None, 
+        x = mainpage._link.site.pagelinks(None, 
                            namespaces=None, 
                            step=1,
                            total=2, 
                            content="bla")
 
 
-    def testLinks(self):
+    def testLinks3(self):
         self.assertType(mainpage, pywikibot.page.Page)
+
+        some_site = mainpage._link.site
+        self.assertType(some_site, pywikibot.page.Page)
+
         linked_pages = mainpage.linkedPages()
         self.assertEqual(linked_pages, None)
         if (linked_pages is not None):

@@ -50,7 +50,7 @@ class Photo(object):
             self.contents = io.StringIO(imageFile)
         return self.contents
 
-    def findDuplicateImages(self, site=pywikibot.getSite('commons', 'commons')):
+    def findDuplicateImages(self, site=pywikibot.Site('commons', 'commons')):
         '''
         Takes the photo, calculates the SHA1 hash and asks the mediawiki api for a list of duplicates.
 
