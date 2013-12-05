@@ -12,6 +12,7 @@ __version__ = '$Id$'
 
 import pywikibot
 import pywikibot.page
+from pywikibot.site.base import BaseSite
 
 from tests.utils import PywikibotTestCase, unittest
 
@@ -266,7 +267,7 @@ class TestPageObject(PywikibotTestCase):
 
 
     def testReferences2(self):
-        self.assertType(site, Site)
+        self.assertType(site, BaseSite)
         #self.assertEqual(site, 0)
         #Site("en", "wikipedia")
         x= site.pagereferences(
@@ -286,7 +287,9 @@ class TestPageObject(PywikibotTestCase):
         count = 0
         #Ignore redirects for time considerations
         self.assertType(mainpage, pywikibot.page.Page)
-        for p in mainpage.getReferences(follow_redirects=False):
+        references = mainpage.getReferences(follow_redirects=False)
+        self.assertType(references, pywikibot.page.Page)
+        for p in references:
             count += 1
             self.assertType(p, pywikibot.page.Page)
             if count >= 10:
@@ -311,6 +314,7 @@ class TestPageObject(PywikibotTestCase):
                            step=1,
                            total=2, 
                            content="bla")
+
 
     def testLinks(self):
         self.assertType(mainpage, pywikibot.page.Page)

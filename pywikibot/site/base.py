@@ -63,7 +63,7 @@ class BaseSite(object):
         pass
 
     def pagelinks(self, 
-                  page=None, 
+                  page, 
                   namespaces=None, 
                   step=None,
                   total=None, 
@@ -95,6 +95,7 @@ class BaseSite(object):
 
     def pagereferences(
             self,
+            page, 
             followRedirects,
             filterRedirects,
             withTemplateInclusion,
