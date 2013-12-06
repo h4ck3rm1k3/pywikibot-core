@@ -41,7 +41,7 @@ class Link(object):
         '|&#x[0-9A-Fa-f]+;'
     )
 
-    def __init__(self, text, source=None, defaultNamespace=0):
+    def __init__(self, text, source, defaultNamespace=0):
         """Constructor
 
         @param text: the link text (everything appearing between [[ and ]]
@@ -59,7 +59,11 @@ class Link(object):
             "source parameter should be a Site object"
 
         self._text = text
-        self._source = source or pywikibot.Site()
+        if (source):
+            self._source = source 
+        else:
+            raise Exception()
+            
         self._defaultns = defaultNamespace
 
         # preprocess text (these changes aren't site-dependent)
@@ -166,11 +170,33 @@ class Link(object):
 
             fam = self._site.family
             prefix = t[:t.index(":")].lower()
+
+            print("parse|"  + "|".join([
+                t,
+                str(fam),
+                #str(prefix)
+            ]
+            )
+            )
+
             ns = self._site.ns_index(prefix)
             if ns:
                 # Ordinary namespace
                 t = t[t.index(":"):].lstrip(":").lstrip(" ")
                 self._namespace = ns
+
+                print(
+                   "NAMESPACE"  + "|".join(
+                        [
+                            t,
+                            str(fam),
+                            str(prefix),
+                            str(ns),
+                        ]
+                    )
+                )
+
+
                 break
             if prefix in list(fam.langs.keys())\
                     or prefix in fam.get_known_families(site=self._site):
@@ -182,14 +208,28 @@ class Link(object):
                         % self._text)
                 t = t[t.index(":"):].lstrip(":").lstrip(" ")
                 if prefix in list(fam.langs.keys()):
-                    newsite = pywikibot.Site(prefix, fam)
+                    newsite = BaseSite(prefix, fam)
                 else:
                     otherlang = self._site.code
+
                     familyName = fam.get_known_families(site=self._site)[prefix]
+                    print(
+                        "LANG" + "|".join(
+                            [
+                                t,
+                                str(fam),
+                                str(prefix),
+                                str(ns),
+                                str(familyName),
+                                str(list(fam.langs.keys())),
+                                str(self._site.code),
+                            ]
+                        )
+                    )
                     if familyName in ['commons', 'meta']:
                         otherlang = familyName
                     try:
-                        newsite = pywikibot.Site(otherlang, familyName)
+                        newsite = BaseSite(otherlang, familyName)
                     except ValueError:
                         raise Error(
                             """\
@@ -369,7 +409,7 @@ not supported by PyWikiBot!"""
                                  allowInterwiki=False,
                                  withSection=False)
         link._anchor = None
-        link._source = source or pywikibot.Site()
+        link._source = source or BaseSite()
 
         return link
 
@@ -380,7 +420,7 @@ not supported by PyWikiBot!"""
         Assumes that the lang & title come clean, no checks are made.
         """
         link = Link.__new__(Link)
-        link._site = pywikibot.Site(lang, source.family.name)
+        link._site = BaseSite(lang, source.family.name)
         link._section = None
         link._source = source
 

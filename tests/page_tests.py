@@ -10,9 +10,9 @@ Tests for the page module.
 __version__ = '$Id$'
 
 
-import pywikibot
+#import pywikibot
 import pywikibot.page
-from pywikibot.site.base import BaseSite
+from pywikibot.site.base import BaseSite as Site
 from pywikibot.page.wikilink import Link
 #from pywikibot.page import Link
 from tests.utils import PywikibotTestCase, unittest
@@ -20,22 +20,23 @@ from tests.utils import PywikibotTestCase, unittest
 from pywikibot.families.wikipedia_family import Family as WikipediaFamily
 from pywikibot.families.wiktionary_family import Family as WiktionaryFamily
 from pywikibot.page import Page
-
+import pprint
 class TestBase(PywikibotTestCase):
 
     def __init__(self,  tests):
         PywikibotTestCase.__init__(self, tests)
 
     def setUp(self):
+        self.maxDiff=None
         # we turn this around, create a site based on the family
         self.wikipedia = WikipediaFamily()
         self.wiktionary = WiktionaryFamily()
-        self.enwiki = pywikibot.Site("en", self.wikipedia)
-        self.frwiki = pywikibot.Site("fr", self.wikipedia)
-        self.itwikt = pywikibot.Site("it", self.wiktionary)
-        self.mainpage = Page(Link(
-            u"Main Page", 
-            self.enwiki))
+        self.enwiki = Site("en", self.wikipedia)
+        self.frwiki = Site("fr", self.wikipedia)
+        self.itwikt = Site("it", self.wiktionary)
+        assert(self.enwiki)
+        link = Link(u"Main Page", self.enwiki)
+        self.mainpage = Page(link,self.enwiki)
         self.maintalk = Page(Link(
             u"Talk:Main Page", 
             self.enwiki))
@@ -94,22 +95,30 @@ class TestLinkObject(TestBase):
         """Test that Link() normalizes namespace names"""
         for num in self.namespaces:
             for prefix in self.namespaces[num]:
+                print ("NAMESPACE: %s %s " % (str(prefix), str(num)))
                 l = Link(prefix + list(self.titles.keys())[0],
                                         self.enwiki)
                 self.assertEqual(l.namespace, num)
                 # namespace prefixes are case-insensitive
-                m = Link(prefix.lower() + list(self.titles.keys())[1],
-                                        self.enwiki)
+                m = Link(
+                    prefix.lower() + list(self.titles.keys())[1]
+                    ,
+                    self.enwiki
+                )
+
                 self.assertEqual(m.namespace, num)
 
     def testTitles(self):
         """Test that Link() normalizes titles"""
         for title in self.titles:
             for num in (0, 1):
-                l = Link(self.namespaces[num][0] + title)
+                l = Link(self.namespaces[num][0] + title, self.enwiki)
                 self.assertEqual(l.title, self.titles[title])
                 # prefixing name with ":" shouldn't change result
-                m = Link(":" + self.namespaces[num][0] + title)
+                m = Link(
+                    ":" + self.namespaces[num][0] + title, 
+                    self.enwiki
+                     )
                 self.assertEqual(m.title, self.titles[title])
 
     def testHashCmp(self):
@@ -118,8 +127,17 @@ class TestLinkObject(TestBase):
         l2 = Link('en:Test', source=self.frwiki)
         l3 = Link('wikipedia:en:Test', source=self.itwikt)
 
+        pprint.pprint(l1)
+        pprint.pprint(l2)
+        pprint.pprint(l3)
+
         def assertHashCmp(link1, link2):
-            self.assertEqual(str(link1.__dict__), str(link2.__dict__))
+            #self.assertEqual(str(link1.__dict__), str(link2.__dict__))
+            self.assertEqual(
+                link1.__repr__()
+                ,
+                link2.__repr__()
+            )
             self.assertEqual(hash(link1), hash(link2))
 
         assertHashCmp(l1, l2)
@@ -170,6 +188,10 @@ class TestPageObject(TestBase):
                          "Help:Test page#Testing")
         self.assertEqual(p1.title(underscore=True),
                          "Help:Test_page#Testing")
+
+        print(p1.title(withNamespace=False))
+        print(p1.title(withNamespace=True))
+
         self.assertEqual(p1.title(withNamespace=False),
                          "Test page#Testing")
         self.assertEqual(p1.title(withSection=False),
@@ -296,7 +318,7 @@ class TestPageObject(TestBase):
 
 
     def testReferences2(self):
-        self.assertType(self.enwiki, BaseSite)
+        self.assertType(self.enwiki, Site)
         #self.assertEqual(self.enwiki, 0)
         #Site("en", "wikipedia")
         x= self.enwiki.pagereferences(
@@ -317,6 +339,8 @@ class TestPageObject(TestBase):
         #Ignore redirects for time considerations
         self.assertType(self.mainpage, Page)
         references = self.mainpage.getReferences(follow_redirects=False)
+        print (references)
+        print (type(references))
         self.assertType(references, Page)
         for p in references:
             count += 1

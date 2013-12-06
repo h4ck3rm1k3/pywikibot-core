@@ -59,7 +59,8 @@ from pywikibot.deprecate import deprecated
 # DEBUG,
 # INFO, 
 
-from pywikibot.page.wikilink import Link
+#from 
+import pywikibot.page.wikilink 
 
 logger = logging.getLogger("pywiki.wiki.page")
 
@@ -124,16 +125,16 @@ class Page(object):
         self._text          = ""
 
         if isinstance(source, BaseSite):
-            self._link = Link(title, source=source, defaultNamespace=ns)
+            self._link = pywikibot.page.wikilink.Link(title, source=source, defaultNamespace=ns)
             self._revisions = {}
         elif isinstance(source, Page):
             # copy all of source's attributes to this object
             self.__dict__ = source.__dict__
             if title:
                 # overwrite title
-                self._link = Link(title, source=source.site,
+                self._link = pywikibot.page.wikilink.Link(title, source=source.site,
                                   defaultNamespace=ns)
-        elif isinstance(source, Link):
+        elif isinstance(source, pywikibot.page.wikilink.Link):
             self._link = source
             self._revisions = {}
         else:
@@ -551,7 +552,7 @@ class Page(object):
     def getCategoryRedirectTarget(self):
         """If this is a category redirect, return the target category title."""
         if self.isCategoryRedirect():
-            return Category(Link(self._catredirect, self.site))
+            return Category(pywikibot.page.wikilink.Link(self._catredirect, self.site))
         raise IsNotRedirectPage(self.title())
 
     def isEmpty(self):
@@ -1023,7 +1024,7 @@ class Page(object):
         for linkmatch in link_regex.finditer(
                 removeDisabledParts(text)):
             linktitle = linkmatch.group("title")
-            link = Link(linktitle, self.site)
+            link = pywikibot.page.wikilink.Link(linktitle, self.site)
             # only yield links that are to a different site and that
             # are not language links
             try:
@@ -1138,7 +1139,7 @@ class Page(object):
         # element into a list in the format used by old scripts
         result = []
         for template in templates:
-            link = Link(template[0], self.site,
+            link = pywikibot.page.wikilink.Link(template[0], self.site,
                                   defaultNamespace=10)
             try:
                 if link.canonical_title() not in titles:
