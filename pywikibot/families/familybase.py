@@ -24,8 +24,13 @@ logger = logging.getLogger("pywiki.wiki.family")
 
 from pywikibot.deprecate import deprecated
 
+from pywikibot.site.base import BaseSite
+
 # Parent class for all wiki families
 class Family(object):
+
+    def Site(self, lang): # factory for a site 
+        return BaseSite(code=lang, fam=self)
 
     def __init__(self):
         self.config = pywikibot.config.loadconfig()

@@ -12,7 +12,7 @@ import re
 import sys
 import pywikibot
 #import pywikibot as wikipedia
-from pywikibot import config
+#from pywikibot import config
 from pywikibot.bot import  VERBOSE, INFO, STDOUT, INPUT
 #WARNING, DEBUG,
 import logging

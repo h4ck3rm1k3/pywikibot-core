@@ -1,6 +1,8 @@
 # -*- coding: utf-8  -*-
-from pywikibot.families.familybase import WikimediaFamily 
-
+'''
+from pywikibot.families.wikipedia_family import Family as WikipediaFamily
+'''
+from pywikibot.families.familybase import WikimediaFamily
 __version__ = '$Id$'
 
 

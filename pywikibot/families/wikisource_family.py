@@ -2,8 +2,10 @@
 
 __version__ = '$Id$'
 
-from pywikibot.family import WikimediaFamily
+from pywikibot.families.familybase import WikimediaFamily
+
 # The Wikimedia family that is known as Wikisource
+
 class Family(WikimediaFamily):
     def __init__(self):
         self.alphabetic = []

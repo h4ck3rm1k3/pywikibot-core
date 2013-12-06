@@ -16,7 +16,7 @@ import threading
 import time
 
 import pywikibot
-from pywikibot import config
+#from pywikibot import config
 from pywikibot.bot import log
 _logger = "wiki.throttle"
 

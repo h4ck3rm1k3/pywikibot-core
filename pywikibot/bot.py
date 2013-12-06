@@ -34,7 +34,7 @@ VERBOSE = 18
 INPUT = 25
 
 import pywikibot
-from pywikibot import config
+#from pywikibot import config
 from pywikibot import version
 from pywikibot.exceptions import Error
 

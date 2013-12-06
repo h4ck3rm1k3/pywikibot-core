@@ -97,7 +97,7 @@ def CSVReader(fileobj, urlcolumn, *args, **kwargs):
 from . import upload
 
 class DataIngestionBot:
-    def __init__(self, reader, titlefmt, pagefmt, site=pywikibot.getSite('commons', 'commons')):
+    def __init__(self, reader, titlefmt, pagefmt, site=pywikibot.Site('commons', 'commons')):
         self.reader = reader
         self.titlefmt = titlefmt
         self.pagefmt = pagefmt

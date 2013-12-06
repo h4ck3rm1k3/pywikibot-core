@@ -48,8 +48,8 @@ from pywikibot.exceptions import (
 from pywikibot.deprecate import deprecated
 
 
-from pywikibot.familybase import Family
-from pywikibot.config import loadconfig
+#from pywikibot.familybase import Family
+#from pywikibot.config import loadconfig
 
 class BaseSite(object):
     """Site methods that are independent of the communication interface."""
@@ -122,10 +122,8 @@ class BaseSite(object):
         self._namespaces = {}
         self._logger = "wiki.site"
         self.__code = code.lower()
-        if isinstance(fam, str) or fam is None:
-            self.__family = Family(fam, fatal=False)
-        else:
-            self.__family = fam
+        self.__family = fam
+
 
         # if we got an outdated language code, use the new one instead.
         if self.__code in self.__family.obsolete:

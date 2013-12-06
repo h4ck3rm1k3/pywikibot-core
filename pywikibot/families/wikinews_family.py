@@ -2,7 +2,7 @@
 
 __version__ = '$Id$'
 
-from pywikibot.family import WikimediaFamily
+from pywikibot.families.familybase import WikimediaFamily
 
 # The Wikimedia family that is known as Wikinews
 class Family(WikimediaFamily):
