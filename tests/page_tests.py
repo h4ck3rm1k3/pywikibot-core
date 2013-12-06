@@ -95,9 +95,18 @@ class TestLinkObject(TestBase):
         """Test that Link() normalizes namespace names"""
         for num in self.namespaces:
             for prefix in self.namespaces[num]:
-                print ("NAMESPACE: %s %s " % (str(prefix), str(num)))
+                print ("TEST NAMESPACE: %s %s " % (str(prefix), str(num)))
                 l = Link(prefix + list(self.titles.keys())[0],
                                         self.enwiki)
+                print ("TEST NAMESPACE2: %s" % (l.__repr__()))
+
+                # for x in self.titles.keys() :
+                #     print ("TEST NAMESPACE3: %s" % (
+                #         str(x
+                #             #, 
+                #             #"utf-8"
+                #         )))            
+
                 self.assertEqual(l.namespace, num)
                 # namespace prefixes are case-insensitive
                 m = Link(

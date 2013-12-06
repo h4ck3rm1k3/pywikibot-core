@@ -13,6 +13,13 @@ import unicodedata
 import urllib
 import collections
 from pywikibot.page.htmlunicode import html2unicode
+def enc(x):
+    if x is None:
+        return "None"
+    else:
+        #return x.encode('utf-8')
+        return "X"
+    
 
 class Link(object):
     """A Mediawiki link (local or interwiki)
@@ -173,8 +180,9 @@ class Link(object):
 
             print("parse|"  + "|".join([
                 t,
-                str(fam),
-                #str(prefix)
+                fam.__repr__(),
+                #str(prefix,"utf-8")
+                prefix
             ]
             )
             )
@@ -189,9 +197,9 @@ class Link(object):
                    "NAMESPACE"  + "|".join(
                         [
                             t,
-                            str(fam),
-                            str(prefix),
-                            str(ns),
+                            enc(fam),
+                            enc(prefix),
+                            enc(ns),
                         ]
                     )
                 )
@@ -217,12 +225,12 @@ class Link(object):
                         "LANG" + "|".join(
                             [
                                 t,
-                                str(fam),
-                                str(prefix),
-                                str(ns),
-                                str(familyName),
+                                fam.__repr__(),
+                                enc(prefix),
+                                enc(ns),
+                                enc(familyName),
                                 str(list(fam.langs.keys())),
-                                str(self._site.code),
+                                enc(self._site.code),
                             ]
                         )
                     )
