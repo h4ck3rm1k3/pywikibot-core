@@ -77,30 +77,6 @@ class APISite(BaseSite):
 
     def __init__(self, code, fam=None, user=None, sysop=None):
         BaseSite.__init__(self, code, fam, user, sysop)
-        self._namespaces = {
-            # These are the MediaWiki built-in names, which always work.
-            # Localized names are loaded later upon accessing the wiki.
-            # Namespace prefixes are always case-insensitive, but the
-            # canonical forms are capitalized
-            -2: ["Media"],
-            -1: ["Special"],
-            0: [""],
-            1: ["Talk"],
-            2: ["User"],
-            3: ["User talk"],
-            4: ["Project"],
-            5: ["Project talk"],
-            6: ["Image"],
-            7: ["Image talk"],
-            8: ["MediaWiki"],
-            9: ["MediaWiki talk"],
-            10: ["Template"],
-            11: ["Template talk"],
-            12: ["Help"],
-            13: ["Help talk"],
-            14: ["Category"],
-            15: ["Category talk"],
-        }
         if self.family.versionnumber(self.code) >= 14:
             self._namespaces[6] = ["File"]
             self._namespaces[7] = ["File talk"]
@@ -428,6 +404,9 @@ class APISite(BaseSite):
 
     def _getsiteinfo(self, force=False):
         """Retrieve siteinfo and namespaces from site."""
+
+        print("get site info called")
+
         sirequest = pywikibot.data.api.CachedRequest(
             expiry=(0 if force else config.API_config_expiry),
             site=self,
@@ -435,9 +414,13 @@ class APISite(BaseSite):
             meta="siteinfo",
             siprop="general|namespaces|namespacealiases|extensions"
         )
+        print ("after create request")
         try:
+            print ("going to make request")
             sidata = sirequest.submit()
-        except pywikibot.data.api.APIError:
+        except pywikibot.data.api.APIError as e:
+            print ("error")
+            print(e)
             # hack for older sites that don't support 1.12 properties
             # probably should delete if we're not going to support pre-1.12
             sirequest = pywikibot.data.api.Request(
@@ -455,6 +438,7 @@ class APISite(BaseSite):
                "API siteinfo response lacks 'general' key"
         assert 'namespaces' in sidata, \
                "API siteinfo response lacks 'namespaces' key"
+        print(sidata)
         self._siteinfo = sidata['general']
         nsdata = sidata['namespaces']
         for nskey in nsdata:
@@ -502,8 +486,9 @@ class APISite(BaseSite):
     @property
     def siteinfo(self):
         """Site information dict."""
-
+        print("siteinfo called")
         if not hasattr(self, "_siteinfo"):
+            print("_siteinfo missing")
             self._getsiteinfo()
         return self._siteinfo
 

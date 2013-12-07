@@ -9,9 +9,12 @@ Tests for the page module.
 #
 __version__ = '$Id$'
 
+import sys
+print(sys.getdefaultencoding())
 
 #import pywikibot
 import pywikibot.page
+#from pywikibot.site.apisite import APISite as Site
 from pywikibot.site.base import BaseSite as Site
 from pywikibot.page.wikilink import Link
 #from pywikibot.page import Link
@@ -95,18 +98,20 @@ class TestLinkObject(TestBase):
         """Test that Link() normalizes namespace names"""
         for num in self.namespaces:
             for prefix in self.namespaces[num]:
-                print ("TEST NAMESPACE: %s %s " % (str(prefix), str(num)))
+                print ("TEST NAMESPACE first: prefix:'%s' number:'%s' " % (str(prefix), str(num)))
                 l = Link(prefix + list(self.titles.keys())[0],
                                         self.enwiki)
-                print ("TEST NAMESPACE2: %s" % (l.__repr__()))
+                print (("Link: %s" % l).encode("utf-8"))
 
-                # for x in self.titles.keys() :
-                #     print ("TEST NAMESPACE3: %s" % (
-                #         str(x
-                #             #, 
-                #             #"utf-8"
-                #         )))            
+                x = list(self.titles.keys())[0]
+                print (("First Item %s" % x).encode("utf-8"))
+                #print ("TEST NAMESPACE3: %s" % (("%s" % x).encode("utf-8")   ))
+                #print ("TEST NAMESPACE3: %s" % (
+                #    ("%s" % x).encode("ascii","replace")
+                #))
 
+                print ("link namespace: %s" % (l.namespace))
+                print ("expected namespace: %s" % (num))
                 self.assertEqual(l.namespace, num)
                 # namespace prefixes are case-insensitive
                 m = Link(

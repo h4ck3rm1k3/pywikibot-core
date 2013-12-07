@@ -172,7 +172,33 @@ class BaseSite(object):
         @type sysop: str
 
         """
-        self._namespaces = {}
+#        self._namespaces = {}
+        self._namespaces = {
+            # These are the MediaWiki built-in names, which always work.
+            # Localized names are loaded later upon accessing the wiki.
+            # Namespace prefixes are always case-insensitive, but the
+            # canonical forms are capitalized
+            -2: ["Media"],
+            -1: ["Special"],
+            0: [""],
+            1: ["Talk"],
+            2: ["User"],
+            3: ["User talk"],
+            4: ["Project"],
+            5: ["Project talk"],
+            6: ["Image"],
+            7: ["Image talk"],
+            8: ["MediaWiki"],
+            9: ["MediaWiki talk"],
+            10: ["Template"],
+            11: ["Template talk"],
+            12: ["Help"],
+            13: ["Help talk"],
+            14: ["Category"],
+            15: ["Category talk"],
+        }
+
+        
         self._logger = "wiki.site"
         self.__code = code.lower()
         if isinstance(fam,str):
@@ -338,9 +364,16 @@ class BaseSite(object):
 
     def ns_index(self, namespace):
         """Given a namespace name, return its int index, or None if invalid."""
-        print(namespace)
-        print(str(self.namespaces()))
+        print("namespace:%s" % namespace)
+        print("namespaces:%s" %str(self.namespaces()))
         for ns in self.namespaces():
+            print("check namespace:%s" % ns)
+
+            print("check list %s " % str(self.namespaces()))
+            print("check list %s " % str([name.lower()
+                                      for name in self.namespaces()[ns]]))
+
+
             if namespace.lower() in [name.lower()
                                      for name in self.namespaces()[ns]]:
                 return ns

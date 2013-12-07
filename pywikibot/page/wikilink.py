@@ -13,12 +13,19 @@ import unicodedata
 import urllib
 import collections
 from pywikibot.page.htmlunicode import html2unicode
-def enc(x):
+def  tryencode(x):
+
     if x is None:
+        print ("NONE TYPE:%s" % type(x))
         return "None"
-    else:
-        #return x.encode('utf-8')
-        return "X"
+    elif isinstance(x,bytes):
+        print ("BYTES TYPE:%s" % type(x))
+        return x.decode('utf-8')
+    elif isinstance(x,str):
+        print ("STR TYPE:%s" % type(x))
+        print ("STR:%s" % x)
+        return ("STR:%s" % x)
+
     
 
 class Link(object):
@@ -178,15 +185,18 @@ class Link(object):
             fam = self._site.family
             prefix = t[:t.index(":")].lower()
 
+            encprefix = tryencode(prefix)
+
             print("parse|"  + "|".join([
-                t,
-                fam.__repr__(),
+                tryencode(t),
+                tryencode(fam.__repr__()),
                 #str(prefix,"utf-8")
-                prefix
+                encprefix 
             ]
             )
             )
-
+            print ("parse site: %s " % self._site)
+            print ("parse site: %s " % type(self._site))
             ns = self._site.ns_index(prefix)
             if ns:
                 # Ordinary namespace
@@ -196,10 +206,10 @@ class Link(object):
                 print(
                    "NAMESPACE"  + "|".join(
                         [
-                            t,
-                            enc(fam),
-                            enc(prefix),
-                            enc(ns),
+                            tryencode(t),
+                            tryencode(fam),
+                            tryencode(prefix),
+                            tryencode(ns),
                         ]
                     )
                 )
@@ -374,7 +384,11 @@ not supported by PyWikiBot!"""
                                   title)
 
     def __str__(self):
-        return self.astext().encode("ascii", "backslashreplace")
+#        return self.astext().encode("ascii", "backslashreplace")
+        val= self.astext()
+#        print(val)
+#        print("%s" % val)
+        return val
 
     def __cmp__(self, other):
         """Test for equality and inequality of Link objects.
