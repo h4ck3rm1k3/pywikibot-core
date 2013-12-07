@@ -337,6 +337,7 @@ class Request(MutableMapping, object):
                 log("%s, %s" % (uri, paramstring))
                 self.wait()
                 continue
+
             if not isinstance(rawdata, str):
                 rawdata = rawdata.decode(self.site.encoding())
             debug("API response received:\n" + rawdata, _logger)

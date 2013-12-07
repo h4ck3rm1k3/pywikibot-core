@@ -24,11 +24,11 @@ class Config :
 
     @property
     def max_retries(self):
-        return 4
+        return 1
 
     @property
     def maxlag(self):
-        return 10
+        return 1
 
     @property
     def simulate(self):
