@@ -12,21 +12,11 @@ import re
 import unicodedata
 import urllib
 import collections
+import traceback
 from pywikibot.page.htmlunicode import html2unicode
-def  tryencode(x):
 
-    if x is None:
-        print ("NONE TYPE:%s" % type(x))
-        return "None"
-    elif isinstance(x,bytes):
-        print ("BYTES TYPE:%s" % type(x))
-        return x.decode('utf-8')
-    elif isinstance(x,str):
-        print ("STR TYPE:%s" % type(x))
-        print ("STR:%s" % x)
-        return ("STR:%s" % x)
-
-    
+from pywikibot.debug import tryencode
+from pywikibot.debug import debugprint
 
 class Link(object):
     """A Mediawiki link (local or interwiki)
@@ -187,33 +177,30 @@ class Link(object):
 
             encprefix = tryencode(prefix)
 
-            print("parse|"  + "|".join([
+            debugprint("parse T"  + tryencode(t))
+            debugprint("parse Fam"  + tryencode(fam))
+            debugprint("parse prefix"  + tryencode(prefix))
+
+            debugprint("parse|"  + "|".join([
                 tryencode(t),
                 tryencode(fam.__repr__()),
                 #str(prefix,"utf-8")
-                encprefix 
+                tryencode(encprefix )
             ]
             )
             )
-            print ("parse site: %s " % self._site)
-            print ("parse site: %s " % type(self._site))
+            debugprint ("parse site: %s " % self._site)
+            debugprint ("parse site: %s " % type(self._site))
             ns = self._site.ns_index(prefix)
             if ns:
                 # Ordinary namespace
                 t = t[t.index(":"):].lstrip(":").lstrip(" ")
                 self._namespace = ns
 
-                print(
-                   "NAMESPACE"  + "|".join(
-                        [
-                            tryencode(t),
-                            tryencode(fam),
-                            tryencode(prefix),
-                            tryencode(ns),
-                        ]
-                    )
-                )
-
+                debugprint("parse T"  + tryencode(t))
+                debugprint("parse Fam"  + tryencode(fam))
+                debugprint("parse prefix"  + tryencode(prefix))
+                debugprint("parse ns"  + tryencode(ns))
 
                 break
             if prefix in list(fam.langs.keys())\
@@ -229,21 +216,16 @@ class Link(object):
                     newsite = BaseSite(prefix, fam)
                 else:
                     otherlang = self._site.code
-
                     familyName = fam.get_known_families(site=self._site)[prefix]
-                    print(
-                        "LANG" + "|".join(
-                            [
-                                t,
-                                fam.__repr__(),
-                                enc(prefix),
-                                enc(ns),
-                                enc(familyName),
-                                str(list(fam.langs.keys())),
-                                enc(self._site.code),
-                            ]
-                        )
-                    )
+
+                    debugprint("LANG T:" +  t)
+                    debugprint("LANG FAM:" +fam.__repr__())
+                    debugprint("LANG PREFIX:" +tryencode(prefix))
+                    debugprint("LANG NS" +tryencode(ns))
+                    debugprint("LANG FAM" +tryencode(familyName))
+                    debugprint("LANG LANG Keys" +            str(list(fam.langs.keys())))
+                    debugprint("LANG SITE" +tryencode(self._site.code))
+
                     if familyName in ['commons', 'meta']:
                         otherlang = familyName
                     try:
@@ -386,8 +368,8 @@ not supported by PyWikiBot!"""
     def __str__(self):
 #        return self.astext().encode("ascii", "backslashreplace")
         val= self.astext()
-#        print(val)
-#        print("%s" % val)
+#        debugprint(val)
+#        debugprint("%s" % val)
         return val
 
     def __cmp__(self, other):

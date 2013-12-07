@@ -24,6 +24,7 @@ from pywikibot.families.wikipedia_family import Family as WikipediaFamily
 from pywikibot.families.wiktionary_family import Family as WiktionaryFamily
 from pywikibot.page import Page
 import pprint
+from pywikibot.debug import debugprint
 class TestBase(PywikibotTestCase):
 
     def __init__(self,  tests):
@@ -98,20 +99,20 @@ class TestLinkObject(TestBase):
         """Test that Link() normalizes namespace names"""
         for num in self.namespaces:
             for prefix in self.namespaces[num]:
-                print ("TEST NAMESPACE first: prefix:'%s' number:'%s' " % (str(prefix), str(num)))
+                debugprint ("TEST NAMESPACE first: prefix:'%s' number:'%s' " % (str(prefix), str(num)))
                 l = Link(prefix + list(self.titles.keys())[0],
                                         self.enwiki)
-                print (("Link: %s" % l).encode("utf-8"))
+                debugprint (("Link: %s" % l).encode("utf-8"))
 
                 x = list(self.titles.keys())[0]
-                print (("First Item %s" % x).encode("utf-8"))
-                #print ("TEST NAMESPACE3: %s" % (("%s" % x).encode("utf-8")   ))
-                #print ("TEST NAMESPACE3: %s" % (
+                debugprint (("First Item %s" % x).encode("utf-8"))
+                #debugprint ("TEST NAMESPACE3: %s" % (("%s" % x).encode("utf-8")   ))
+                #debugprint ("TEST NAMESPACE3: %s" % (
                 #    ("%s" % x).encode("ascii","replace")
                 #))
 
-                print ("link namespace: %s" % (l.namespace))
-                print ("expected namespace: %s" % (num))
+                debugprint ("link namespace: %s" % (l.namespace))
+                debugprint ("expected namespace: %s" % (num))
                 self.assertEqual(l.namespace, num)
                 # namespace prefixes are case-insensitive
                 m = Link(
@@ -141,9 +142,9 @@ class TestLinkObject(TestBase):
         l2 = Link('en:Test', source=self.frwiki)
         l3 = Link('wikipedia:en:Test', source=self.itwikt)
 
-        pprint.pprint(l1)
-        pprint.pprint(l2)
-        pprint.pprint(l3)
+        debugpprint(l1)
+        debugpprint(l2)
+        debugpprint(l3)
 
         def assertHashCmp(link1, link2):
             #self.assertEqual(str(link1.__dict__), str(link2.__dict__))
@@ -203,8 +204,8 @@ class TestPageObject(TestBase):
         self.assertEqual(p1.title(underscore=True),
                          "Help:Test_page#Testing")
 
-        print(p1.title(withNamespace=False))
-        print(p1.title(withNamespace=True))
+        debugprint(p1.title(withNamespace=False))
+        debugprint(p1.title(withNamespace=True))
 
         self.assertEqual(p1.title(withNamespace=False),
                          "Test page#Testing")
@@ -353,8 +354,8 @@ class TestPageObject(TestBase):
         #Ignore redirects for time considerations
         self.assertType(self.mainpage, Page)
         references = self.mainpage.getReferences(follow_redirects=False)
-        print (references)
-        print (type(references))
+        debugprint (references)
+        debugprint (type(references))
         self.assertType(references, Page)
         for p in references:
             count += 1

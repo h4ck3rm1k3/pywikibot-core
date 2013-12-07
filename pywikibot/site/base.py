@@ -37,6 +37,7 @@ from pywikibot.throttle import Throttle
 #from pywikibot.data import api
 #import pywikibot.data.api as api
 from pywikibot.site.pageinuse import PageInUse
+from pywikibot.debug import debugprint
 
 from pywikibot.exceptions import (
     NoSuchSite, 
@@ -184,9 +185,9 @@ class BaseSite(object):
             1: ["Talk"],
             2: ["User"],
             3: ["User talk"],
-            4: ["Project"],
-            5: ["Project talk"],
-            6: ["Image"],
+            4: ["Project", "WP", "Wikipedia"],
+            5: ["Project talk", "Wikipedia Talk", "WT"],
+            6: ["Image", "File"],
             7: ["Image talk"],
             8: ["MediaWiki"],
             9: ["MediaWiki talk"],
@@ -196,6 +197,8 @@ class BaseSite(object):
             13: ["Help talk"],
             14: ["Category"],
             15: ["Category talk"],
+            100: ["Portal"],
+            101: ["Portal talk", "Portal_talk"],
         }
 
         
@@ -364,14 +367,15 @@ class BaseSite(object):
 
     def ns_index(self, namespace):
         """Given a namespace name, return its int index, or None if invalid."""
-        print("namespace:%s" % namespace)
-        print("namespaces:%s" %str(self.namespaces()))
+        debugprint("namespace:%s" % namespace)
+        debugprint("namespaces:%s" %str(self.namespaces()))
+        
         for ns in self.namespaces():
-            print("check namespace:%s" % ns)
+            debugprint("check namespace:%s" % ns)
 
-            print("check list %s " % str(self.namespaces()))
-            print("check list %s " % str([name.lower()
-                                      for name in self.namespaces()[ns]]))
+            #            debugprint("check list %s " % str(self.namespaces()))
+            debugprint("check list %s " % str([name.lower()
+                                          for name in self.namespaces()[ns]]))
 
 
             if namespace.lower() in [name.lower()
@@ -384,6 +388,17 @@ class BaseSite(object):
         """Return dict of valid namespaces on this wiki."""
 
         return self._namespaces
+
+    def namespace(self, num, all=False):
+        """Return string containing local name of namespace 'num'.
+
+        If optional argument 'all' is true, return a list of all recognized
+        values for this namespace.
+
+        """
+        if all:
+            return self.namespaces()[num]
+        return self.namespaces()[num][0]
 
     def ns_normalize(self, value):
         """Return canonical local form of namespace name.
