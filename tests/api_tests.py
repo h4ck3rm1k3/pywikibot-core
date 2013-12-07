@@ -11,8 +11,9 @@ import pywikibot
 import pywikibot.data.api as api
 from tests.utils import PywikibotTestCase, unittest
 
-mysite = pywikibot.Site('en', 'wikipedia')
-
+#mysite = pywikibot.Site('en', 'wikipedia')
+from pywikibot.site.apisite import APISite as Site
+mysite = Site('en', 'wikipedia')
 
 class TestApiFunctions(unittest.TestCase):
 
@@ -21,7 +22,7 @@ class TestApiFunctions(unittest.TestCase):
         req = api.Request(site=mysite, action="test", foo="", bar="test")
         self.assertTrue(req)
         self.assertEqual(req.site, mysite)
-        self.assert_("foo" in req.params)
+        self.assertTrue("foo" in req.params)
         self.assertEqual(req["bar"], "test")
         # test item assignment
         req["one"] = "1"
@@ -29,8 +30,8 @@ class TestApiFunctions(unittest.TestCase):
         # test compliance with dict interface
         # req.keys() should contain "action", "foo", "bar", "one"
         self.assertEqual(len(list(req.keys())), 4)
-        self.assert_("test" in list(req.values()))
-        self.assert_(all(len(item) == 2 for item in req.items()))
+        self.assertTrue("test" in list(req.values()))
+        self.assertTrue(all(len(item) == 2 for item in req.items()))
 
 
 class TestPageGenerator(PywikibotTestCase):

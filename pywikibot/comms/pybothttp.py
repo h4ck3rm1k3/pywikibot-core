@@ -27,7 +27,7 @@ import queue
 #import urllib.parse
 #import logging
 import atexit
-from pywikibot.bot import log
+from pywikibot.bot import log, debug
 
 from ssl import SSLError as SSLHandshakeError
 from pywikibot import config
@@ -52,7 +52,7 @@ class HTTP :
         # '<script>/<revision> Pywikipediabot/2.0', where '<script>' is the currently
         # executing script and version is the SVN revision of Pywikipediabot.
         self.USER_AGENT_FORMAT = '{script}/r{version[rev]} Pywikipediabot/2.0'
-        self.useragent = USER_AGENT_FORMAT.format(script=pywikibot.bot.calledModuleName(),
+        self.useragent = self.USER_AGENT_FORMAT.format(script=pywikibot.bot.calledModuleName(),
                                          version=pywikibot.version.getversiondict())
         self.numthreads = 1
         self.threads = []
@@ -62,19 +62,22 @@ class HTTP :
 
         self.cookie_jar = threadedhttp.LockableCookieJar(config.datafilepath("pywikibot.lwp"))
         try:
-            cookie_jar.load()
+            self.cookie_jar.load()
         except (IOError, LoadError):
-            pywikibot.debug("Loading cookies failed.", _logger)
+            debug("Loading cookies failed.", self._logger)
         else:
-            pywikibot.debug("Loaded cookies from file.", _logger)
+            debug("Loaded cookies from file.", self._logger)
 
 
         # Build up HttpProcessors
-        log('Starting %(numthreads)i threads...' % locals())
-        for i in range(numthreads):
-            proc = threadedhttp.HttpProcessor(http_queue, cookie_jar, connection_pool)
+        log('Starting %di threads...' % self.numthreads)
+        for i in range(self.numthreads):
+            proc = threadedhttp.HttpProcessor(
+                self.http_queue, 
+                self.cookie_jar, 
+                self.connection_pool)
             proc.setDaemon(True)
-            threads.append(proc)
+            self.threads.append(proc)
             proc.start()
 
         atexit.register(self._flush)
@@ -83,7 +86,7 @@ class HTTP :
     # Prepare flush on quit
     def _flush():
         for i in threads:
-            http_queue.put(None)
+            self.http_queue.put(None)
         log('Waiting for threads to finish... ')
         for i in threads:
             i.join()
@@ -94,7 +97,7 @@ class HTTP :
 
 
 
-    def request(site, uri, ssl=False, *args, **kwargs):
+    def request(self,site, uri, ssl=False, *args, **kwargs):
         """Queue a request to be submitted to Site.
 
         All parameters not listed below are the same as
@@ -124,14 +127,14 @@ class HTTP :
 
         # set default user-agent string
         kwargs.setdefault("headers", {})
-        kwargs["headers"].setdefault("user-agent", useragent)
+        kwargs["headers"].setdefault("user-agent", self.useragent)
         request = threadedhttp.HttpRequest(baseuri, *args, **kwargs)
-        http_queue.put(request)
+        self.http_queue.put(request)
         request.lock.acquire()
 
         #TODO: do some error correcting stuff
         if isinstance(request.data, SSLHandshakeError):
-            if SSL_CERT_VERIFY_FAILED in str(request.data):
+            if self.SSL_CERT_VERIFY_FAILED in str(request.data):
                 raise FatalServerError(str(request.data))
 
         #if all else fails

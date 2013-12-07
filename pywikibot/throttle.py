@@ -14,7 +14,7 @@ __version__ = '$Id$'
 import math
 import threading
 import time
-
+from pywikibot.config import loadconfig
 import pywikibot
 #from pywikibot import config
 from pywikibot.bot import log
@@ -38,18 +38,19 @@ class Throttle(object):
     """
     def __init__(self, site, mindelay=None, maxdelay=None, writedelay=None,
                  multiplydelay=True, verbosedelay=False):
+        self.config = loadconfig()
         self.lock = threading.RLock()
         self.mysite = str(site)
-        self.ctrlfilename = config.datafilepath('throttle.ctrl')
+        self.ctrlfilename = self.config.datafilepath('throttle.ctrl')
         self.mindelay = mindelay
         if self.mindelay is None:
-            self.mindelay = config.minthrottle
+            self.mindelay = self.config.minthrottle
         self.maxdelay = maxdelay
         if self.maxdelay is None:
-            self.maxdelay = config.maxthrottle
+            self.maxdelay = self.config.maxthrottle
         self.writedelay = writedelay
         if self.writedelay is None:
-            self.writedelay = config.put_throttle
+            self.writedelay = self.config.put_throttle
         self.last_read = 0
         self.last_write = 0
         self.next_multiplicity = 1.0
@@ -149,7 +150,7 @@ class Throttle(object):
             if delay is None:
                 delay = self.mindelay
             if writedelay is None:
-                writedelay = config.put_throttle
+                writedelay = self.config.put_throttle
             if absolute:
                 self.maxdelay = delay
                 self.mindelay = delay
@@ -253,7 +254,7 @@ class Throttle(object):
             self.next_multiplicity = math.log(1 + requestsize) / math.log(2.0)
             # Announce the delay if it exceeds a preset limit
             if wait > 0:
-                if wait > config.noisysleep or self.verbosedelay:
+                if wait > self.config.noisysleep or self.verbosedelay:
                     pywikibot.output(
                         "Sleeping for %(wait).1f seconds, %(now)s"
                         % {'wait': wait,
@@ -291,7 +292,7 @@ class Throttle(object):
             # account for any time we waited while acquiring the lock
             wait = delay - (time.time() - started)
             if wait > 0:
-                if wait > config.noisysleep:
+                if wait > self.config.noisysleep:
                     pywikibot.output(
                         "Sleeping for %(wait).1f seconds, %(now)s"
                         % {'wait': wait,

@@ -39,6 +39,11 @@ from pywikibot.throttle import Throttle
 from pywikibot.site.pageinuse import PageInUse
 from pywikibot.debug import debugprint
 
+import pywikibot.families.familybase 
+import pywikibot.families.wikipedia_family
+import pywikibot.families.wiktionary_family
+
+
 from pywikibot.exceptions import (
     NoSuchSite, 
     Error, 

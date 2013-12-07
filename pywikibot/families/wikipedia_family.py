@@ -2,12 +2,15 @@
 '''
 from pywikibot.families.wikipedia_family import Family as WikipediaFamily
 '''
-from pywikibot.families.familybase import WikimediaFamily
+
+import pywikibot.families.familybase 
+
+#from 
 __version__ = '$Id$'
 
 
 # The Wikimedia family that is known as Wikipedia, the Free Encyclopedia
-class Family(WikimediaFamily):
+class Family(pywikibot.families.familybase.WikimediaFamily):
     def __init__(self):
         self.alphabetic = []
         self.alphabetic_revised = []
@@ -16,7 +19,7 @@ class Family(WikimediaFamily):
         self.crossnamespace = {}
         self.fyinterwiki = {}
 
-        WikimediaFamily.__init__(self)
+        pywikibot.families.familybase.WikimediaFamily.__init__(self)
         self.name = 'wikipedia'
 
         self.languages_by_size = [

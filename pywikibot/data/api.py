@@ -133,6 +133,9 @@ class Request(MutableMapping, object):
     """
 
     def __init__(self, **kwargs):
+        self.config = loadconfig()
+        self.http = HTTP(self.config)
+
         try:
             self.site = kwargs.pop("site")
         except KeyError:
@@ -143,7 +146,7 @@ class Request(MutableMapping, object):
             raise Exception()
 
         self.mime = kwargs.pop("mime", False)
-        self.config = loadconfig()
+
         self.max_retries = kwargs.pop(
             "max_retries",
             self.config.max_retries)
@@ -263,7 +266,8 @@ class Request(MutableMapping, object):
             simulate = self._simulate(action)
             if simulate:
                 return simulate
-            self.site.throttle(write=self.write)
+
+#            self.site.throttle(write=self.write)
             uri = self.site.scriptpath() + "/api.php"
             ssl = False
             if self.site.family.name in self.config.available_ssl_project:
@@ -307,10 +311,10 @@ class Request(MutableMapping, object):
                     body = body[eoh + len(marker):]
                     # retrieve the headers from the MIME object
                     mimehead = dict(list(container.items()))
-                    rawdata = request(self.site, uri, ssl, method="POST",
+                    rawdata = self.http.request(self.site, uri, ssl, method="POST",
                                       headers=mimehead, body=body)
                 else:
-                    rawdata = request(self.site, uri, ssl, method="POST",
+                    rawdata = self.http.request(self.site, uri, ssl, method="POST",
                                       headers={
                                           'Content-Type': 'application/x-www-form-urlencoded'},
                                       body=paramstring)
@@ -527,6 +531,7 @@ class QueryGenerator(object):
         assumed.
 
         """
+        self.config = loadconfig()
         if "action" in kwargs and "action" != "query":
             raise Error("%s: 'action' must be 'query', not %s"
                         % (self.__class__.__name__, kwargs["query"]))
@@ -584,7 +589,7 @@ class QueryGenerator(object):
     def _modules(self):
         """Query api on self.site for paraminfo on querymodule=self.module"""
         if not set(self.module.split('|')) <= set(self.__modules.keys()):
-            paramreq = CachedRequest(expiry=config.API_config_expiry,
+            paramreq = CachedRequest(expiry=self.config.API_config_expiry,
                                      site=self.site, action="paraminfo",
                                      querymodules=self.module)
             data = paramreq.submit()

@@ -1,9 +1,10 @@
 u'''
-from pywikibot.config import loadconfig()
+from pywikibot.config import loadconfig
 '''
 #from pywikibot.families.familybase import Family
 import pywikibot.families.familybase 
-
+import os.path
+import os
 class Config :
 
     def __init__(self):
@@ -16,6 +17,10 @@ class Config :
     @property
     def put_throttle(self):
         return self._put_throttle
+
+    @property
+    def actions_to_block(self):
+        return []
 
     @property
     def max_retries(self):
@@ -48,6 +53,18 @@ class Config :
     @property
     def base_dir(self):
         return "~/experiments/wiki/pywikibot-core/pywikibot/"
+
+    @property
+    def available_ssl_project(self):
+        return []
+
+    @property
+    def proxy(self):
+        return None
+
+    @property
+    def API_config_expiry(self):
+        return 0      
 
     @property
     def line_separator(self):
@@ -94,7 +111,7 @@ class Config :
         from holger@trillke.net 2002/03/18
 
         """
-        import os
+
         dpath = os.path.normpath(os.path.dirname(path))
         if not os.path.exists(dpath):
             os.makedirs(dpath)
@@ -109,15 +126,15 @@ class Config :
         directories in the path that do not already exist are created.
 
         """
-        import os.path
-        return makepath(os.path.join(base_dir, *filename))
+
+        return self.makepath(os.path.join(self.base_dir, *filename))
 
 
     def shortpath(self, path):
         """Return a file path relative to config.base_dir."""
-        import os.path
-        if path.startswith(base_dir):
-            return path[len(base_dir) + len(os.path.sep):]
+
+        if path.startswith(self.base_dir):
+            return path[len(self.base_dir) + len(os.path.sep):]
         return path
 
 globalconf = None

@@ -10,7 +10,8 @@ Exception classes used throughout the framework.
 __version__ = '$Id$'
 
 
-#from pywikibot import config
+from pywikibot.config import loadconfig
+config = loadconfig()
 
 # TODO: These are copied from wikipedia.py; not certain that all of them
 # will be needed in the rewrite.

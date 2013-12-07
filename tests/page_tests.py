@@ -11,15 +11,12 @@ __version__ = '$Id$'
 
 import sys
 print(sys.getdefaultencoding())
-
-#import pywikibot
 import pywikibot.page
 #from pywikibot.site.apisite import APISite as Site
 from pywikibot.site.base import BaseSite as Site
 from pywikibot.page.wikilink import Link
 #from pywikibot.page import Link
 from tests.utils import PywikibotTestCase, unittest
-
 from pywikibot.families.wikipedia_family import Family as WikipediaFamily
 from pywikibot.families.wiktionary_family import Family as WiktionaryFamily
 from pywikibot.page import Page
