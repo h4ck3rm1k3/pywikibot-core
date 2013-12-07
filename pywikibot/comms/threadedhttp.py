@@ -36,6 +36,8 @@ class RedirectLimit (Exception):
 from urllib.parse import urljoin, splittype, splithost, unquote
 #urllib.error
 import http.cookiejar
+import urllib
+import cookielib
 #import sys
 
 import pywikibot
@@ -127,17 +129,17 @@ class ConnectionPool(object):
                                 % (identifier, connection),
                                 _logger)
                 connection.close()
-                #del connection
+                del connection
             else:
                 self.connections[identifier].append(connection)
         finally:
             self.lock.release()
 
 
-class LockableCookieJar(http.cookiejar.LWPCookieJar):
+class LockableCookieJar(cookielib.LWPCookieJar):
     """CookieJar with integrated Lock object."""
     def __init__(self, *args, **kwargs):
-        http.cookiejar.LWPCookieJar.__init__(self, *args, **kwargs)
+        cookielib.LWPCookieJar.__init__(self, *args, **kwargs)
         self.lock = threading.Lock()
 
 
@@ -397,11 +399,11 @@ class DummyRequest(object):
     def __init__(self, url, headers=None):
         self.url = url
         self.headers = headers
-        self.origin_req_host = http.cookiejar.request_host(self)
-        self.type, r = splittype(url)
-        self.host, r = splithost(r)
+        self.origin_req_host = cookielib.request_host(self)
+        self.type, r = urllib.splittype(url)
+        self.host, r = urllib.splithost(r)
         if self.host:
-            self.host = unquote(self.host)
+            self.host = urllib.unquote(self.host)
 
     def get_full_url(self):
         return self.url

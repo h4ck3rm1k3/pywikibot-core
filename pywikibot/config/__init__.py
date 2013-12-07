@@ -24,11 +24,11 @@ class Config :
 
     @property
     def max_retries(self):
-        return 0
+        return 4
 
     @property
     def maxlag(self):
-        return 0
+        return 10
 
     @property
     def simulate(self):
@@ -36,7 +36,7 @@ class Config :
 
     @property
     def retry_wait(self):
-        return 0
+        return 1
 
     @property
     def use_mwparserfromhell(self):

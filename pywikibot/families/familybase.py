@@ -1092,4 +1092,4 @@ class WikimediaFamily(Family):
         return ('commons', 'commons')
 
     def protocol(self, code):
-        return 'https'
+        return 'http'

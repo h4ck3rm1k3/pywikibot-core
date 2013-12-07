@@ -31,7 +31,7 @@ import urllib.request
 # urllib.parse
 # urllib.error
 #import warnings
-from pywikibot.bot import log, error
+from pywikibot.bot import log, error, warning, debug
 import pywikibot
 from pywikibot.config import loadconfig
 #, login
@@ -165,7 +165,7 @@ class Request(MutableMapping, object):
             "wbremovereferences"
         )
         if self.params[u"action"] == u"edit":
-            pywikibot.debug("Adding user assertion", _logger)
+            debug("Adding user assertion", _logger)
             self.params["assert"] = "user"  # make sure user is logged in
 
     # implement dict interface
@@ -339,7 +339,7 @@ class Request(MutableMapping, object):
                 continue
             if not isinstance(rawdata, str):
                 rawdata = rawdata.decode(self.site.encoding())
-            pywikibot.debug("API response received:\n" + rawdata, _logger)
+            debug("API response received:\n" + rawdata, _logger)
             if rawdata.startswith("unknown_action"):
                 raise APIError(rawdata[:14], rawdata[16:])
             try:
@@ -347,10 +347,10 @@ class Request(MutableMapping, object):
             except ValueError:
                 # if the result isn't valid JSON, there must be a server
                 # problem.  Wait a few seconds and try again
-                pywikibot.warning(
+                warning(
                     "Non-JSON response received from server %s; the server may be down."
                     % self.site)
-                pywikibot.debug(rawdata, _logger)
+                debug(rawdata, _logger)
                 # there might also be an overflow, so try a smaller limit
                 for param in self.params:
                     if param.endswith("limit"):
@@ -402,7 +402,7 @@ class Request(MutableMapping, object):
                         # This is just a warning, we shouldn't raise an
                         # exception because of it
                         continue
-                    pywikibot.warning(
+                    warning(
                         "API warning (%s): %s"
                         % (mod, text))
             if "error" not in result:
@@ -437,7 +437,7 @@ class Request(MutableMapping, object):
         self.max_retries -= 1
         if self.max_retries < 0:
             raise TimeoutError("Maximum retries attempted without success.")
-        pywikibot.warning("Waiting %s seconds before retrying."
+        warning("Waiting %s seconds before retrying."
                           % self.retry_wait)
         time.sleep(self.retry_wait)
         # double the next wait, but do not exceed 120 seconds
@@ -651,7 +651,7 @@ class QueryGenerator(object):
                         self.api_limit = int(param["max"])
                     if self.prefix is None:
                         self.prefix = self._modules[mod]["prefix"]
-                    pywikibot.debug("%s: Set query_limit to %i."
+                    debug("%s: Set query_limit to %i."
                                     % (self.__class__.__name__,
                                        self.api_limit),
                                     _logger)
@@ -709,22 +709,22 @@ class QueryGenerator(object):
                     self.set_query_increment(old_limit // 2)
                     continue
             if not self.data or not isinstance(self.data, dict):
-                pywikibot.debug(
+                debug(
                     "%s: stopped iteration because no dict retrieved from api."
                     % self.__class__.__name__,
                     _logger)
                 return
             if "query" not in self.data:
-                pywikibot.debug(
+                debug(
                     "%s: stopped iteration because 'query' not found in api response. %s"
                     % (self.__class__.__name__, self.resultkey),
                     _logger)
-                pywikibot.debug(str(self.data), _logger)
+                debug(str(self.data), _logger)
                 return
             if self.resultkey in self.data["query"]:
                 resultdata = self.data["query"][self.resultkey]
                 if isinstance(resultdata, dict):
-                    pywikibot.debug("%s received %s; limit=%s"
+                    debug("%s received %s; limit=%s"
                                     % (self.__class__.__name__,
                                        list(resultdata.keys()),
                                        self.limit),
@@ -740,7 +740,7 @@ class QueryGenerator(object):
                         resultdata = [resultdata[k]
                                       for k in sorted(resultdata.keys())]
                 else:
-                    pywikibot.debug("%s received %s; limit=%s"
+                    debug("%s received %s; limit=%s"
                                     % (self.__class__.__name__,
                                        resultdata,
                                        self.limit),
@@ -950,7 +950,7 @@ class LoginManager(LoginManagerBase):
         if hasattr(self, '_waituntil'):
             if datetime.datetime.now() < self._waituntil:
                 diff = self._waituntil - datetime.datetime.now()
-                pywikibot.warning("Too many tries, waiting %s seconds before retrying."
+                warning("Too many tries, waiting %s seconds before retrying."
                                   % diff.seconds)
                 time.sleep(diff.seconds)
         login_request = Request(site=LoginManagerBase.get_site(self),

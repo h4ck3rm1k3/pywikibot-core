@@ -115,12 +115,17 @@ class HTTP :
         """
         if site:
             if ssl:
+                print ("use ssl")
                 proto = "https"
                 host = site.ssl_hostname()
                 uri = site.ssl_pathprefix() + uri
             else:
+                print ("dont use ssl")
                 proto = site.protocol()
                 host = site.hostname()
+
+            print ("proto:%s" % proto)
+            print ("host:%s" % host)
             baseuri = urljoin("%(proto)s://%(host)s" % locals(), uri)
         else:
             baseuri = uri
@@ -133,6 +138,7 @@ class HTTP :
         request.lock.acquire()
 
         #TODO: do some error correcting stuff
+        print("debug:%s" % request.data)
         if isinstance(request.data, SSLHandshakeError):
             if self.SSL_CERT_VERIFY_FAILED in str(request.data):
                 raise FatalServerError(str(request.data))
@@ -140,12 +146,16 @@ class HTTP :
         #if all else fails
         if isinstance(request.data, Exception):
             raise Exception(request.data)
+            
+        if request.data is not None :
+            print("debug:%s" % request.data)
+            print("debug:%s" % request.data[0])
+            if request.data[0].status == 504:
+                raise Server504Error("Server %s timed out" % site.hostname())
+            if request.data[0].status != 200:
+                pywikibot.warning("Http response status %(status)s"
+                                % {'status': request.data[0].status})
 
-        if request.data[0].status == 504:
-            raise Server504Error("Server %s timed out" % site.hostname())
-
-        if request.data[0].status != 200:
-            pywikibot.warning("Http response status %(status)s"
-                              % {'status': request.data[0].status})
-
-        return request.data[1]
+            return request.data[1]
+        else:
+            raise Exception("no data")
