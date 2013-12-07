@@ -36,7 +36,7 @@ class Config :
 
     @property
     def retry_wait(self):
-        return 1
+        return 0
 
     @property
     def use_mwparserfromhell(self):

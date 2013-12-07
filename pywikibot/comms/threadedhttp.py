@@ -24,7 +24,7 @@ __docformat__ = 'epytext'
 import httplib2
 import re
 import threading
-
+import traceback
 #import time
 #import logging
 #from httplib2 import
@@ -227,13 +227,19 @@ class Http(httplib2.Http):
              connection_type),
         ), _logger)
         try:
+            debug("going to do request %s " % uri)
             (response, content) = httplib2.Http.request(
                 self, uri, method, body, headers,
                 max_redirects, connection_type
             )
+            debug("after request %s " % response)
+            #debug("after content %s " % content)
         except Exception as e:  # what types?
             # return exception instance to be retrieved by the calling thread
-            return e
+            print(traceback.format_exc())
+            print("exp %s" % (exp))
+            raise e
+            #return e
         self.follow_redirects = follow_redirects
 
         # return connection to pool
@@ -245,6 +251,9 @@ class Http(httplib2.Http):
         self.cookiejar.lock.acquire()
         try:
             self.cookiejar.extract_cookies(DummyResponse(response), req)
+        except Exception as exp:
+            print(traceback.format_exc())
+            print("cookie exp %s" % (exp))
         finally:
             self.cookiejar.lock.release()
 
@@ -351,13 +360,23 @@ class HttpProcessor(threading.Thread):
         debug("Thread started, waiting for requests.", _logger)
         while True:
             item = self.queue.get()
+            print("got item")
             if item is None:
-                debug("Shutting down thread.", _logger)
+                print("Shutting down thread.", _logger)
                 return
             try:
+                print("args %s" % (str(*item.args)))
+                print("kwargs %s" % (item.kwargs))
                 item.data = self.http.request(*item.args, **item.kwargs)
+#                print("got data %s" % (str(item.data)))
+                print("got response ")
+            except Exception as exp:
+                print(traceback.format_exc())
+                print("exp %s" % (exp))
+                raise exp
             finally:
                 if item.lock:
+                    print("release lock")
                     item.lock.release()
 
 

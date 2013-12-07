@@ -12,9 +12,7 @@ __version__ = '$Id$'
 # Note: the intention is to develop this module (at some point) into a Bot
 # class definition that can be subclassed to create new, functional bot
 # scripts, instead of writing each one from scratch.
-
-
-
+import traceback
 
 import logging
 import logging.handlers
@@ -357,6 +355,7 @@ def logoutput(text, decoder=None, newline=True, _level=INFO, _logger="",
 
     # logger.log(_level, text, extra=context, **kwargs)
     print(text)
+    traceback.print_stack(limit=3)
 
 def output(text, decoder=None, newline=True, toStdout=False, **kwargs):
     """Output a message to the user via the userinterface.
@@ -387,6 +386,7 @@ def output(text, decoder=None, newline=True, toStdout=False, **kwargs):
     # else:
     #     logoutput(text, decoder, newline, INFO, **kwargs)
     print(text)
+    traceback.print_stack(limit=3)
 
 def stdout(text, decoder=None, newline=True, **kwargs):
     """Output script results to the user via the userinterface."""
@@ -405,8 +405,8 @@ def error(text, decoder=None, newline=True, **kwargs):
 
 def log(text, decoder=None, newline=True, **kwargs):
     """Output a record to the log file."""
-    #logoutput(text, decoder, newline, VERBOSE, **kwargs)
-    print(text)
+    logoutput(text, decoder, newline, VERBOSE, **kwargs)
+    #print(text)
 
 
 def critical(text, decoder=None, newline=True, **kwargs):
@@ -414,13 +414,13 @@ def critical(text, decoder=None, newline=True, **kwargs):
     logoutput(text, decoder, newline, CRITICAL, **kwargs)
 
 
-def debug(text, layer, decoder=None, newline=True, **kwargs):
+def debug(text, layer="funky", decoder=None, newline=True, **kwargs):
     """Output a debug record to the log file.
 
     @param layer: The name of the logger that text will be sent to.
     """
-    #logoutput(text, decoder, newline, DEBUG, layer, **kwargs)
-    print (text)
+    logoutput(text, decoder, newline, DEBUG, layer, **kwargs)
+    #print (text)
 
 
 def exception(msg=None, decoder=None, newline=True, tb=False, **kwargs):

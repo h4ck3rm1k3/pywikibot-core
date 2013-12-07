@@ -134,7 +134,8 @@ class Request(MutableMapping, object):
 
     def __init__(self, **kwargs):
         self.config = loadconfig()
-        self.http = HTTP(self.config)
+        # we want only one http server
+        self.http = pywikibot.comms.pybothttp.global_http
 
         try:
             self.site = kwargs.pop("site")
@@ -173,7 +174,7 @@ class Request(MutableMapping, object):
         return self.params[key]
 
     def __setitem__(self, key, value):
-        print("setting %s=%s" % (key, value))
+        debug("setting %s=%s" % (key, value))
         self.params[key] = value
 
     def __delitem__(self, key):
@@ -222,24 +223,37 @@ class Request(MutableMapping, object):
         if "maxlag" not in self.params and self.config.maxlag:
             self.params["maxlag"] = [str(self.config.maxlag)]
         if "format" not in self.params:
-            print("before setting ")
-            self.params["format"] = [b"json"]
-            print("setting %s" % self.params["format"])
+            debug("before setting ")
+            self.params["format"] = "json"
+            debug("setting %s" % self.params["format"])
 
-        if self.params['format'] != [b"json"]:
-            print("Param: %s" % str(self.params))
-            raise TypeError("Query format '%s' cannot be parsed."
-                            % self.params['format'])
+#        if self.params['format'] != "['json']":
+
+#            raise TypeError("Query format '%s' cannot be parsed."
+#                            % self.params['format'])
+        debug("Param: %s" % str(self.params))
         for key in self.params:
             try:
-                self.params[key] = "|".join(self.params[key])
+                value = self.params[key]
+                if (isinstance(value,bytes)):
+                    value = value.decode("utf8")
+                elif (isinstance(value,list)):
+                    self.params[key] = "|".join(value)
+                #value = value.
+                #debug(value)
+
                 if isinstance(self.params[key], str):
                     self.params[key] = self.params[
                         key].encode(self.site.encoding())
-            except Exception:
+
+            except Exception as exp:
                 error(
                     "http_params: Key '%s' could not be encoded to '%s'; params=%r"
                     % (key, self.site.encoding(), self.params[key]))
+                print(traceback.format_exc())
+                raise exp
+        debug("after Param: %s" % str(self.params))
+                
         return urllib.parse.urlencode(self.params)
 
     def __str__(self):
@@ -331,7 +345,7 @@ class Request(MutableMapping, object):
                 raise
             # TODO: what other exceptions can occur here?
             except Exception as e:
-                print(e)
+                debug(e)
                 # for any other error on the http request, wait and retry
                 error(traceback.format_exc())
                 log("%s, %s" % (uri, paramstring))
@@ -345,13 +359,15 @@ class Request(MutableMapping, object):
                 raise APIError(rawdata[:14], rawdata[16:])
             try:
                 result = json.loads(rawdata)
-            except ValueError:
+            except ValueError as exp:
+                warning(exp)
+                traceback.print_stack(limit=3)
                 # if the result isn't valid JSON, there must be a server
                 # problem.  Wait a few seconds and try again
                 warning(
                     "Non-JSON response received from server %s; the server may be down."
                     % self.site)
-                debug(rawdata, _logger)
+                #debug(rawdata, _logger)
                 # there might also be an overflow, so try a smaller limit
                 for param in self.params:
                     if param.endswith("limit"):

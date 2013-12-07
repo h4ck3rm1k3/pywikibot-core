@@ -320,7 +320,7 @@ class BaseSite(object):
             return getattr(self.__class__, attr)
         try:
             method = getattr(self.family, attr)
-            log("Attr %s got Method to call is %s" % (attr, method))
+            #log("Attr %s got Method to call is %s" % (attr, method))
             f = lambda *args, **kwargs: method(self.code, *args, **kwargs)
             if hasattr(method, "__doc__"):
                 f.__doc__ = method.__doc__

@@ -84,7 +84,7 @@ class HTTP :
         #self.pywikibot.cookie_jar = cookie_jar
 
     # Prepare flush on quit
-    def _flush():
+    def _flush(self):
         for i in threads:
             self.http_queue.put(None)
         log('Waiting for threads to finish... ')
@@ -134,11 +134,15 @@ class HTTP :
         kwargs.setdefault("headers", {})
         kwargs["headers"].setdefault("user-agent", self.useragent)
         request = threadedhttp.HttpRequest(baseuri, *args, **kwargs)
+        print (self.http_queue)
         self.http_queue.put(request)
+        print (self.http_queue)
+        print ("before lock")
         request.lock.acquire()
+        print ("after lock")
 
         #TODO: do some error correcting stuff
-        print("debug:%s" % request.data)
+        #print("debug:%s" % request.data)
         if isinstance(request.data, SSLHandshakeError):
             if self.SSL_CERT_VERIFY_FAILED in str(request.data):
                 raise FatalServerError(str(request.data))
@@ -148,8 +152,8 @@ class HTTP :
             raise Exception(request.data)
             
         if request.data is not None :
-            print("debug:%s" % request.data)
-            print("debug:%s" % request.data[0])
+            #print("debug:%s" % request.data)
+            #print("debug:%s" % request.data[0])
             if request.data[0].status == 504:
                 raise Server504Error("Server %s timed out" % site.hostname())
             if request.data[0].status != 200:
@@ -159,3 +163,8 @@ class HTTP :
             return request.data[1]
         else:
             raise Exception("no data")
+
+# global object
+from pywikibot.config import loadconfig
+config = loadconfig()
+global_http = HTTP(config)
