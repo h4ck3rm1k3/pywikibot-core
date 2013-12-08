@@ -19,7 +19,7 @@ from tests.utils import PywikibotTestCase, unittest
 mysite = None
 mainpage = None
 imagepage = None
-
+from Category import Category
 
 class TestSiteObject(PywikibotTestCase):
     """Test cases for Site methods."""
@@ -29,7 +29,7 @@ class TestSiteObject(PywikibotTestCase):
     @classmethod
     def setUpClass(cls):
         global mysite, mainpage, imagepage
-        mysite = pywikibot.Site(cls.code, cls.family)
+        mysite = Site(cls.code, cls.family)
         mainpage = pywikibot.Page(pywikibot.Link("Main Page", mysite))
         imagepage = next(iter(mainpage.imagelinks()))  # 1st image on main page
 
@@ -38,7 +38,7 @@ class TestSiteObject(PywikibotTestCase):
         self.assertEqual(mysite.family.name, self.family)
         self.assertEqual(mysite.code, self.code)
         self.assertType(mysite.lang, str)
-        self.assertEqual(mysite, pywikibot.Site("en", "wikipedia"))
+        self.assertEqual(mysite, Site("en", "wikipedia"))
         self.assertType(mysite.user(), (str, type(None)))
         self.assertEqual(mysite.sitename(),
                          "%s:%s" % (self.family,
@@ -48,7 +48,7 @@ class TestSiteObject(PywikibotTestCase):
                          % (self.code, self.family))
         self.assertType(mysite.linktrail(), str)
         self.assertType(mysite.redirect(default=True), str)
-        self.assertType(mysite.disambcategory(), pywikibot.Category)
+        self.assertType(mysite.disambcategory(), Category)
         self.assertEqual(mysite.linkto("foo"), "[[Foo]]")  # deprecated
         self.assertFalse(mysite.isInterwikiLink("foo"))
         self.assertType(mysite.redirectRegex().pattern, str)
@@ -61,12 +61,12 @@ class TestSiteObject(PywikibotTestCase):
 
     def testConstructors(self):
         """Test cases for site constructors"""
-        self.assertEqual(pywikibot.site.APISite.fromDBName('enwiki'), pywikibot.Site('en', 'wikipedia'))
-        self.assertEqual(pywikibot.site.APISite.fromDBName('eswikisource'), pywikibot.Site('es', 'wikisource'))
-        self.assertEqual(pywikibot.site.APISite.fromDBName('dewikinews'), pywikibot.Site('de', 'wikinews'))
-        self.assertEqual(pywikibot.site.APISite.fromDBName('ukwikivoyage'), pywikibot.Site('uk', 'wikivoyage'))
+        self.assertEqual(APISite.fromDBName('enwiki'), Site('en', 'wikipedia'))
+        self.assertEqual(APISite.fromDBName('eswikisource'), Site('es', 'wikisource'))
+        self.assertEqual(APISite.fromDBName('dewikinews'), Site('de', 'wikinews'))
+        self.assertEqual(APISite.fromDBName('ukwikivoyage'), Site('uk', 'wikivoyage'))
 
-        self.assertRaises(ValueError, pywikibot.site.APISite.fromDBName, 'metawiki')
+        self.assertRaises(ValueError, APISite.fromDBName, 'metawiki')
 
     def testLanguageMethods(self):
         """Test cases for languages() and related methods"""
@@ -263,7 +263,7 @@ class TestSiteObject(PywikibotTestCase):
             self.assertFalse(target.isRedirectPage())
         # test pagecategories
         for cat in mysite.pagecategories(mainpage):
-            self.assertType(cat, pywikibot.Category)
+            self.assertType(cat, Category)
             for cm in mysite.categorymembers(cat):
                 self.assertType(cat, pywikibot.Page)
         # test pageimages
@@ -389,17 +389,17 @@ class TestSiteObject(PywikibotTestCase):
 
         ac = list(mysite.allcategories(total=10))
         self.assertTrue(len(ac) <= 10)
-        self.assertTrue(all(isinstance(cat, pywikibot.Category)
+        self.assertTrue(all(isinstance(cat, Category)
                             for cat in ac))
         for cat in mysite.allcategories(total=5, start="Abc"):
-            self.assertType(cat, pywikibot.Category)
+            self.assertType(cat, Category)
             self.assertTrue(cat.title(withNamespace=False) >= "Abc")
         for cat in mysite.allcategories(total=5, prefix="Def"):
-            self.assertType(cat, pywikibot.Category)
+            self.assertType(cat, Category)
             self.assertTrue(cat.title(withNamespace=False).startswith("Def"))
 ##        # Bug # 15985
 ##        for cat in mysite.allcategories(total=5, start="Hij", reverse=True):
-##            self.assertType(cat, pywikibot.Category)
+##            self.assertType(cat, Category)
 ##            self.assertTrue(cat.title(withNamespace=False) <= "Hij")
 
     def testAllUsers(self):

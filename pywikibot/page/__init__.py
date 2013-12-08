@@ -72,8 +72,8 @@ reNamespace = re.compile("^(.+?) *: *(.*)$")
 # Note: Link objects (defined later on) represent a wiki-page's title, while
 # Page objects (defined here) represent the page itself, including its contents.
 
-#from pywikibot.page.category import Category
-#import pywikibot.page.category
+#from Category import Category
+#import Category
 
 class Page(object):
     """Page: A MediaWiki page

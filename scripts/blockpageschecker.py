@@ -71,7 +71,7 @@ import pywikibot
 from pywikibot import i18n
 from pywikibot import pagegenerators
 from pywikibot import config
-
+from Category import Category
 # This is required for the text that is shown when you run this script
 # with the parameter -help.
 docuReplacements = {
@@ -265,7 +265,7 @@ def main():
         pywikibot.output('Loading categories...')
         # Define the category if no other generator has been setted
         for CAT in category:
-            cat = pywikibot.Category(site, CAT)
+            cat = Category(site, CAT)
             # Define the generator
             gen = pagegenerators.CategorizedPageGenerator(cat)
             for pageCat in gen:

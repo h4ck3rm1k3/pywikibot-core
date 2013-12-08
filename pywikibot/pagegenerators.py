@@ -32,6 +32,7 @@ from pywikibot import deprecate_arg, i18n
 from pywikibot.comms import pybothttp as http
 from pywikibot.bot import    user_input
 #calledModuleName, warning, inputChoice, output,  log, 
+from Category import Category
 
 # ported from version 1 for backwards-compatibility
 # most of these functions just wrap a Site or Page method that returns
@@ -247,7 +248,7 @@ class GeneratorFactory(object):
             startfrom = categoryname[ind + 1:]
             categoryname = categoryname[:ind]
 
-        cat = pywikibot.Category(pywikibot.Link(categoryname,
+        cat = Category(pywikibot.Link(categoryname,
                                                 defaultNamespace=14))
         # Link constructor automatically prepends localized namespace
         # if not included in user's input
@@ -267,7 +268,7 @@ class GeneratorFactory(object):
         else:
             startfrom = None
 
-        cat = pywikibot.Category(pywikibot.Link(categoryname,
+        cat = Category(pywikibot.Link(categoryname,
                                                 defaultNamespace=14))
         return SubCategoriesPageGenerator(cat, start=startfrom,
                                           recurse=recurse, content=content)
@@ -831,7 +832,7 @@ def CategoryGenerator(generator):
 
     """
     for page in generator:
-        yield pywikibot.Category(page)
+        yield Category(page)
 
 
 def PageWithTalkPageGenerator(generator):

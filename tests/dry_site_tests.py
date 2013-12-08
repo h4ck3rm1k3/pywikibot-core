@@ -1,9 +1,9 @@
 import pywikibot
-
+from mustbe import must_be
 from tests.utils import unittest
+from pywikibot.site.apisite import APISite
 
-
-class DrySite(pywikibot.site.APISite):
+class DrySite(APISite):
     @property
     def userinfo(self):
         return self._userinfo
@@ -45,7 +45,7 @@ class SiteMock(object):
 class TestSiteMock(unittest.TestCase):
     def test_must_be_user(self):
         x = SiteMock()
-        wrapped_inner = pywikibot.site.must_be(group='user')(x.inner_fn)
+        wrapped_inner = must_be(group='user')(x.inner_fn)
         self.assertEqual(
             wrapped_inner(x, 1, 2, 3, a='a', b='b'),
             (
@@ -58,7 +58,7 @@ class TestSiteMock(unittest.TestCase):
 
     def test_must_be_sysop(self):
         x = SiteMock()
-        wrapped_inner = pywikibot.site.must_be(group='sysop')(x.inner_fn)
+        wrapped_inner = must_be(group='sysop')(x.inner_fn)
         self.assertEqual(
             wrapped_inner(x, 1, 2, 3, a='a', b='b'),
             (

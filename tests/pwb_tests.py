@@ -10,7 +10,7 @@ import os
 import sys
 import subprocess
 import pywikibot
-
+from pywikibot.config import loadconfig
 from tests.utils import unittest
 
 pypath = sys.executable
@@ -26,7 +26,8 @@ def check_output(command):
 class TestPwb(unittest.TestCase):
     def setUp(self):
         self.oldenviron = os.environ.copy()
-        os.environ['PYWIKIBOT2_DIR'] = pywikibot.config.base_dir
+        self.config=loadconfig()
+        os.environ['PYWIKIBOT2_DIR'] = self.config.base_dir
 
     def tearDown(self):
         del os.environ['PYWIKIBOT2_DIR']

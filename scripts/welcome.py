@@ -514,7 +514,7 @@ class WelcomeBot(object):
                     pywikibot.output("The whitelist's page doesn't exist!")
             else:
                 showStatus(4)
-                pywikibot.warning("The whitelist hasn't been setted!")
+                warning("The whitelist hasn't been setted!")
 
             # Join the whitelist words.
             self._whitelist = list_white + whitelist_default
@@ -958,7 +958,7 @@ if __name__ == "__main__":
                                                  % (pywikibot.Site().family.name,
                                                     pywikibot.Site().code))
         if globalvar.offset and globalvar.timeoffset:
-            pywikibot.warning(
+            warning(
                 'both -offset and -timeoffset were provided, ignoring -offset')
             globalvar.offset = 0
         bot = WelcomeBot()

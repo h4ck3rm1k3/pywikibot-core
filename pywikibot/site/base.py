@@ -26,7 +26,7 @@ import threading
 import time
 import urllib.request, urllib.parse, urllib.error
 #import json
-
+from Category import Category
 import pywikibot
 #from pywikibot import deprecate_arg
 #from pywikibot import config
@@ -218,7 +218,11 @@ class BaseSite(object):
                 raise Exception("Family is not object %s" % fam)
             
         else:
-            self.__family = fam
+            if fam is None:
+                # just take the wikipedia if we have nothing
+                self.__family = pywikibot.families.wikipedia_family.Family()
+            else:
+                self.__family = fam
 
         log ("Family: %s " % str(self.__family))
         # if we got an outdated language code, use the new one instead.
@@ -480,7 +484,7 @@ class BaseSite(object):
         except KeyError:
             raise Error("No disambiguation category name found for %(site)s"
                         % {'site': self})
-        return pywikibot.Category(pywikibot.Link(name, self))
+        return Category(pywikibot.Link(name, self))
 
     @deprecated("pywikibot.Link")
     def linkto(self, title, othersite=None):

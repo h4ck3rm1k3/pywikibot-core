@@ -94,7 +94,7 @@ This will move all pages in the category US to the category United States.
 #
 __version__ = '$Id$'
 #
-
+from Category import Category
 import os
 import re
 import pickle
@@ -394,7 +394,7 @@ class CategoryMoveRobot:
                  useSummaryForDeletion=True):
         #site = pywikibot.getSite()
         self.editSummary = editSummary
-        self.oldCat = pywikibot.Category(
+        self.oldCat = Category(
             pywikibot.Link('Category:' + oldCatTitle))
         self.newCatTitle = newCatTitle
         self.inPlace = inPlace
@@ -406,7 +406,7 @@ class CategoryMoveRobot:
 
     def run(self):
         site = pywikibot.getSite()
-        newCat = pywikibot.Category(
+        newCat = Category(
             pywikibot.Link('Category:' + self.newCatTitle))
         newcat_contents = set(newCat.members())
         # set edit summary message

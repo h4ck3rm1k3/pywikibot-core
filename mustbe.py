@@ -1,3 +1,6 @@
+'''
+from mustbe import must_be
+'''
 def must_be(group=None, right=None):
     """ Decorator to require a certain user status. For now, only the values
         group = 'user' and group = 'sysop' are supported. The right property

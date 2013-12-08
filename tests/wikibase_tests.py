@@ -15,12 +15,22 @@ import json
 
 from tests.utils import PywikibotTestCase, unittest
 
-site = pywikibot.Site('en', 'wikipedia')
-mainpage = pywikibot.page.Page(pywikibot.page.Link("Main Page", site))
-wikidata = site.data_repository()
+from pywikibot.site.base import BaseSite as Site
+from pywikibot.page.wikilink import Link
+#from pywikibot.page import Link
+from tests.utils import PywikibotTestCase, unittest
+from pywikibot.families.wikipedia_family import Family as WikipediaFamily
+from pywikibot.families.wiktionary_family import Family as WiktionaryFamily
+from pywikibot.page import Page
 
 
 class TestGeneral(PywikibotTestCase):
+    def setUp(self):
+        self.site = Site('en', 'wikipedia')
+        self.mainpage = Page(Link("Main Page", site))
+        self.wikidata = site.data_repository()
+
+class TestGeneral(TestGeneral):
     def testWikibase(self):
         if not site.has_transcluded_data:
             return

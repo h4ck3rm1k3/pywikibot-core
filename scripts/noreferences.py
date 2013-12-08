@@ -35,7 +35,7 @@ a list of affected articles
 """
 
 __version__ = '$Id$'
-
+from Category import Category
 import re
 #import sys
 import pywikibot
@@ -692,7 +692,7 @@ def main():
         else:
             if not namespaces:
                 namespaces = [0]
-            cat = pywikibot.Category(site, "%s:%s" % (
+            cat = Category(site, "%s:%s" % (
                 site.category_namespace(), cat))
             gen = pagegenerators.CategorizedPageGenerator(cat)
     if not gen:

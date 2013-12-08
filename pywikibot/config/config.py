@@ -3,7 +3,7 @@
 # confusion with similarly-named modules in version 1 framework, for users
 # who want to continue using both
 
-import pywikibot
+
 from pywikibot import config2 as config
 from pywikibot.bot import warning, output, inputChoice, debug
 #from pywikibot.exceptions import *

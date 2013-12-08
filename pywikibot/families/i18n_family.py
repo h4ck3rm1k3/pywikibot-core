@@ -2,7 +2,7 @@
 
 __version__ = '$Id$'
 
-from pywikibot import family
+from pywikibot.families.familybase import Family
 
 
 # The Wikimedia i18n family

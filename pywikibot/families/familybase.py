@@ -1,6 +1,6 @@
 # -*- coding: utf-8  -*-
 '''
-from pywikibot.families.familybase immport Family
+from pywikibot.families.familybase import Family
 '''
 #
 # (C) Pywikibot team, 2004-2013

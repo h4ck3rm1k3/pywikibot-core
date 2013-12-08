@@ -5,7 +5,7 @@ from pywikibot.families.wikimedia_family import Family
 '''
 __version__ = '$Id$'
 
-from pywikibot import family
+from pywikibot.families.familybase import Family
 
 
 # The wikis of Chapters of the Wikimedia Foundation living at a xy.wikimedia.org url

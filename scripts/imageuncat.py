@@ -23,6 +23,7 @@ import pywikibot
 #from pywikibot import config
 from pywikibot import pagegenerators
 import query
+from Category import Category
 
 #Probably unneeded because these are hidden categories. Have to figure it out.
 ignoreCategories = ['[[Category:CC-BY-SA-3.0]]',

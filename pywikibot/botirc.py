@@ -4,6 +4,9 @@ User-interface related functions for building bots
 
 Note: the script requires the Python IRC library
 http://python-irclib.sourceforge.net/
+
+from pywikibot.botirc import IRCBot
+
 """
 #
 # (C) Balasyum
@@ -23,7 +26,7 @@ __version__ = '$Id$'
        # all output goes thru python std library "logging" module
 import re
 
-from ircbot import SingleServerIRCBot
+from irc.bot import SingleServerIRCBot
 #from irclib import ip_quad_to_numstr
 
 # logging levels
@@ -34,7 +37,10 @@ STDOUT = 16
 VERBOSE = 18
 INPUT = 25
 
-import pywikibot
+import pywikibot.bot
+from pywikibot.bot import output
+
+from pywikibot.comms.pybothttp import request
 
 
 class IRCBot(pywikibot.bot.Bot, SingleServerIRCBot):
@@ -76,6 +82,23 @@ class IRCBot(pywikibot.bot.Bot, SingleServerIRCBot):
     def on_privmsg(self, c, e):
         pass
 
+    def dolookup(self, msg):
+
+        if self.other_ns.match(msg):
+            return
+        name = msg[8:msg.find('14', 9)]
+        text = request(self.site, self.api_url)
+        text = text.decode()
+        entry = self.api_found.findall(text)
+        page = pywikibot.page.Page(self.site, name)
+        try:
+                text = page.get()
+        except pywikibot.page.NoPage:
+                return
+        except pywikibot.page.IsRedirectPage:
+                return
+        output(str((entry[0], name)))
+
     def on_pubmsg(self, c, e):
         match = self.re_edit.match(e.arguments()[0])
         if not match:
@@ -89,7 +112,7 @@ class IRCBot(pywikibot.bot.Bot, SingleServerIRCBot):
         if self.other_ns.match(msg):
             return
         name = msg[8:msg.find('14', 9)]
-        text = pywikibot.comms.http.request(self.site, self.api_url)
+        text = request(self.site, self.api_url)
         entry = self.api_found.findall(text)
         page = pywikibot.page.Page(self.site, name)
         try:
@@ -98,7 +121,7 @@ class IRCBot(pywikibot.bot.Bot, SingleServerIRCBot):
                 return
         except pywikibot.page.IsRedirectPage:
                 return
-        pywikibot.output(str((entry[0], name)))
+        output(str((entry[0], name)))
 
     def on_dccmsg(self, c, e):
         pass
@@ -111,3 +134,12 @@ class IRCBot(pywikibot.bot.Bot, SingleServerIRCBot):
 
     def on_quit(self, e, cmd):
         pass
+
+if __name__=="__main__":
+
+    from pywikibot.families.wikipedia_family import Family as WikipediaFamily
+    from pywikibot.site.base import BaseSite as Site
+    site = Site("en", WikipediaFamily())
+
+    bot = IRCBot(site, channel="#mdupont-bot-test", nickname="pywikibot", server="irc.freenode.net")
+    bot.start()

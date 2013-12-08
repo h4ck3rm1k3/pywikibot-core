@@ -23,7 +23,7 @@ __version__ = '$Id$'
 #
 __version__ = '$Id$'
 #
-
+from Category import Category
 import pickle
 #import math
 import re
@@ -141,9 +141,9 @@ class CategoryRedirectBot(object):
         """The worker function that moves pages out of oldCat into newCat"""
         while True:
             try:
-                oldCat = pywikibot.Category(self.site,
+                oldCat = Category(self.site,
                                             self.catprefix + oldCatTitle)
-                newCat = pywikibot.Category(self.site,
+                newCat = Category(self.site,
                                             self.catprefix + newCatTitle)
 
                 oldCatLink = oldCat.title()
@@ -316,7 +316,7 @@ class CategoryRedirectBot(object):
         comment = i18n.twtranslate(self.site.lang, self.move_comment)
         counts, destmap, catmap = {}, {}, {}
         catlist, nonemptypages = [], []
-        redircat = pywikibot.Category(
+        redircat = Category(
             pywikibot.Link(self.cat_redirect_cat
                            [self.site.family.name][self.site.code], self.site))
 
@@ -359,7 +359,7 @@ class CategoryRedirectBot(object):
 
         # delete record entries for non-existent categories
         for cat_name in list(record.keys()):
-            if pywikibot.Category(self.site,
+            if Category(self.site,
                                   self.catprefix + cat_name) not in catpages:
                 del record[cat_name]
 

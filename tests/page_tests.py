@@ -20,8 +20,11 @@ from tests.utils import PywikibotTestCase, unittest
 from pywikibot.families.wikipedia_family import Family as WikipediaFamily
 from pywikibot.families.wiktionary_family import Family as WiktionaryFamily
 from pywikibot.page import Page
+from pywikibot.exceptions import NoPage
 import pprint
-from pywikibot.debug import debugprint
+from pywikibot.bot import debug
+from pywikibot.timestamp import TimeStamp
+
 class TestBase(PywikibotTestCase):
 
     def __init__(self,  tests):
@@ -96,20 +99,20 @@ class TestLinkObject(TestBase):
         """Test that Link() normalizes namespace names"""
         for num in self.namespaces:
             for prefix in self.namespaces[num]:
-                debugprint ("TEST NAMESPACE first: prefix:'%s' number:'%s' " % (str(prefix), str(num)))
+                debug("TEST NAMESPACE first: prefix:'%s' number:'%s' " % (str(prefix), str(num)))
                 l = Link(prefix + list(self.titles.keys())[0],
                                         self.enwiki)
-                debugprint (("Link: %s" % l).encode("utf-8"))
+                debug(("Link: %s" % l).encode("utf-8"))
 
                 x = list(self.titles.keys())[0]
-                debugprint (("First Item %s" % x).encode("utf-8"))
-                #debugprint ("TEST NAMESPACE3: %s" % (("%s" % x).encode("utf-8")   ))
-                #debugprint ("TEST NAMESPACE3: %s" % (
+                debug(("First Item %s" % x).encode("utf-8"))
+                #debug ("TEST NAMESPACE3: %s" % (("%s" % x).encode("utf-8")   ))
+                #debug ("TEST NAMESPACE3: %s" % (
                 #    ("%s" % x).encode("ascii","replace")
                 #))
 
-                debugprint ("link namespace: %s" % (l.namespace))
-                debugprint ("expected namespace: %s" % (num))
+                debug("link namespace: %s" % (l.namespace))
+                debug ("expected namespace: %s" % (num))
                 self.assertEqual(l.namespace, num)
                 # namespace prefixes are case-insensitive
                 m = Link(
@@ -139,9 +142,9 @@ class TestLinkObject(TestBase):
         l2 = Link('en:Test', source=self.frwiki)
         l3 = Link('wikipedia:en:Test', source=self.itwikt)
 
-        debugpprint(l1)
-        debugpprint(l2)
-        debugpprint(l3)
+        debug(l1)
+        debug(l2)
+        debug(l3)
 
         def assertHashCmp(link1, link2):
             #self.assertEqual(str(link1.__dict__), str(link2.__dict__))
@@ -178,7 +181,7 @@ class TestPageObject(TestBase):
                 self.enwiki.lang, 
                 self.mainpage.title()
             ))
-        self.assertTrue(mainpage < maintalk)
+        self.assertTrue(self.mainpage < self.maintalk)
 
     def testSite(self):
         """Test site() method"""
@@ -201,8 +204,8 @@ class TestPageObject(TestBase):
         self.assertEqual(p1.title(underscore=True),
                          "Help:Test_page#Testing")
 
-        debugprint(p1.title(withNamespace=False))
-        debugprint(p1.title(withNamespace=True))
+        debug(p1.title(withNamespace=False))
+        debug(p1.title(withNamespace=True))
 
         self.assertEqual(p1.title(withNamespace=False),
                          "Test page#Testing")
@@ -299,19 +302,19 @@ class TestPageObject(TestBase):
         # we only check that the returned objects are of correct type.
         self.assertType(self.mainpage.get(), str)
         self.assertType(self.maintalk.get(), str)
-        self.assertRaises(pywikibot.NoPage, self.badpage.get)
+        self.assertRaises(NoPage, self.badpage.get)
         self.assertType(self.mainpage.latestRevision(), int)
         self.assertType(self.mainpage.userName(), str)
         self.assertType(self.mainpage.isIpEdit(), bool)
         self.assertType(self.mainpage.exists(), bool)
         self.assertType(self.mainpage.isRedirectPage(), bool)
         self.assertType(self.mainpage.isEmpty(), bool)
-        self.assertEqual(self.mainpage.toggleTalkPage(), maintalk)
-        self.assertEqual(maintalk.toggleTalkPage(), mainpage)
+        self.assertEqual(self.mainpage.toggleTalkPage(), self.maintalk)
+        self.assertEqual(self.maintalk.toggleTalkPage(), self.mainpage)
         self.assertType(self.mainpage.isDisambig(), bool)
         self.assertType(self.mainpage.canBeEdited(), bool)
         self.assertType(self.mainpage.botMayEdit(), bool)
-        self.assertType(self.mainpage.editTime(), pywikibot.Timestamp)
+        self.assertType(self.mainpage.editTime(), Timestamp)
         self.assertType(self.mainpage.previousRevision(), int)
         self.assertType(self.mainpage.permalink(), str)
 
@@ -351,8 +354,8 @@ class TestPageObject(TestBase):
         #Ignore redirects for time considerations
         self.assertType(self.mainpage, Page)
         references = self.mainpage.getReferences(follow_redirects=False)
-        debugprint (references)
-        debugprint (type(references))
+        debug (references)
+        debug (type(references))
         self.assertType(references, Page)
         for p in references:
             count += 1
@@ -382,7 +385,7 @@ class TestPageObject(TestBase):
 
     def testLinks2(self):
         self.assertType(self.enwiki, Page)
-        x = self.mainpage._link.enwiki.pagelinks(None, 
+        x = self.mainpage._link.site.pagelinks(None, 
                            namespaces=None, 
                            step=1,
                            total=2, 
@@ -403,21 +406,21 @@ class TestPageObject(TestBase):
                 self.assertType(p, Page)
         iw = list(self.mainpage.interwiki(expand=True))
         for p in iw:
-            self.assertType(p, pywikibot.Link)
+            self.assertType(p, Link)
         for p2 in self.mainpage.interwiki(expand=False):
-            self.assertType(p2, pywikibot.Link)
+            self.assertType(p2, Link)
             self.assertTrue(p2 in iw)
         for p in self.mainpage.langlinks():
-            self.assertType(p, pywikibot.Link)
+            self.assertType(p, Link)
         for p in self.mainpage.imagelinks():
-            self.assertType(p, pywikibot.ImagePage)
+            self.assertType(p, ImagePage)
         for p in self.mainpage.templates():
             self.assertType(p, Page)
         for t, params in self.mainpage.templatesWithParams():
             self.assertType(t, Page)
             self.assertType(params, list)
         for p in self.mainpage.categories():
-            self.assertType(p, pywikibot.Category)
+            self.assertType(p, Category)
         for p in self.mainpage.extlinks():
             self.assertType(p, str)
 

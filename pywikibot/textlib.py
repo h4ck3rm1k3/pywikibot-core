@@ -17,7 +17,7 @@ __version__ = '$Id$'
 from pywikibot.exceptions import Error
 import collections
 import mwparserfromhell
-
+from Category import Category
 import pywikibot
 import re
 from html.parser import HTMLParser
@@ -665,7 +665,7 @@ def getCategoryLinks(text, site=None):
                    r'(?:\|(?P<sortKey>.+?))?\s*\]\]'
                    % catNamespace, re.I)
     for match in R.finditer(text):
-        cat = pywikibot.Category(pywikibot.Link(
+        cat = Category(pywikibot.Link(
                                  '%s:%s' % (match.group('namespace'),
                                             match.group('catName')),
                                  site),

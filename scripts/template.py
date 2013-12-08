@@ -113,7 +113,7 @@ import pywikibot
 from pywikibot import i18n
 from pywikibot import  pagegenerators #, catlib, config
 from scripts import replace
-
+from Category import Category
 
 def UserEditFilterGenerator(generator, username, timestamp=None, skip=False):
     """
@@ -215,7 +215,7 @@ class TemplateRobot:
         self.addedCat = addedCat
         site = pywikibot.Site()
         if self.addedCat:
-            self.addedCat = pywikibot.Category(
+            self.addedCat = Category(
                 site, '%s:%s' % (site.namespace(14), self.addedCat))
 
         # get edit summary message if it's empty

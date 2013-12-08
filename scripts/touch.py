@@ -49,7 +49,7 @@ class TouchBot:
                 pywikibot.error("Page %s does not exist."
                                 % page.title(asLink=True))
             except pywikibot.IsRedirectPage:
-                pywikibot.warning("Page %s is a redirect; skipping."
+                warning("Page %s is a redirect; skipping."
                                   % page.title(asLink=True))
             except pywikibot.LockedPage:
                 pywikibot.error("Page %s is locked."

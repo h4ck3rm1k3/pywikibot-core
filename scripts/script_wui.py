@@ -198,7 +198,7 @@ class ScriptWUIBot(pywikibot.botirc.IRCBot):
             # (done according to subster in trunk and submit in rewrite/.../data/api.py)
             # TODO: is this error handling here needed at all??!?
             pywikibot.exception(tb=True)  # secure traceback print (from api.py submit)
-            pywikibot.warning("Unable to start thread")
+            warning("Unable to start thread")
 
             wiki_logger(traceback.format_exc(), self.refs[page_title], rev)
 

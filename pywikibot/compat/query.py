@@ -1,4 +1,4 @@
-import pywikibot
+
 from pywikibot.data import api
 from pywikibot import deprecated
 from pywikibot import deprecate_arg
@@ -16,7 +16,7 @@ def GetData(request, site=None, back_response=False):
     result = req.submit()
 
     if back_response:
-        pywikibot.warning("back_response is no longer supported; an empty response object will be returned")
+        warning("back_response is no longer supported; an empty response object will be returned")
         import io
         res_dummy = io.StringIO()
         res_dummy.__dict__.update({'code': 0, 'msg': ''})

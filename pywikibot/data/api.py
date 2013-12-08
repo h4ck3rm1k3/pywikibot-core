@@ -38,6 +38,9 @@ from pywikibot.config import loadconfig
 
 from pywikibot.login import LoginManager as LoginManagerBase
 #from pywikibot.page import Page, Category, ImagePage, Link
+
+from Category import Category
+
 from pywikibot.exceptions import (Server504Error, FatalServerError, Error)
 #, AutoblockUser
 #, UserActionRefuse
@@ -863,7 +866,7 @@ class CategoryPageGenerator(PageGenerator):
 
     def result(self, pagedata):
         p = PageGenerator.result(self, pagedata)
-        return pywikibot.page.Category(p)
+        return Category(p)
 
 
 class ImagePageGenerator(PageGenerator):

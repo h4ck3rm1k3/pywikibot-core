@@ -31,6 +31,8 @@ STDOUT = 16
 VERBOSE = 18
 INPUT = 25
 
+from pywikibot.config import loadconfig
+
 import pywikibot
 #from pywikibot import config
 from pywikibot import version
@@ -175,6 +177,8 @@ def init_handlers(strm=None):
     Accordingly, do ''not'' use print statements in bot code; instead,
     use pywikibot.output function.
     """
+
+    config=loadconfig()
 
     #global _handlers_initialized
 

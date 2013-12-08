@@ -77,10 +77,10 @@ from pywikibot import i18n
 from pywikibot.pagegenerators import PreloadingGenerator
 interactive=None
 afterpage=None
-
+from Category import Category
 def CAT(site, name, hide):
     name = site.namespace(14) + ':' + name
-    cat = pywikibot.Category(site, name)
+    cat = Category(site, name)
     for article in cat.articles(endsort=hide):
         yield article
     if hide:
@@ -100,7 +100,7 @@ def DATA(site, name, hide):
         title = dp.getSitelink(site)
     except pywikibot.PageNotFound:
         return
-    cat = pywikibot.Category(site, title)
+    cat = Category(site, title)
     for article in cat.articles(endsort=hide):
         yield article
     if hide:

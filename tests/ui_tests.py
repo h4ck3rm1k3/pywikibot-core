@@ -35,7 +35,10 @@ import os
 import sys
 import time
 import pywikibot.bot
+from pywikibot.bot import output
+from pywikibot.config import loadconfig
 from tests.utils import unittest
+from bot import DEBUG, VERBOSE, INFO, STDOUT, INPUT, WARNING, ERROR, CRITICAL
 
 if os.name == "nt":
     from multiprocessing.managers import BaseManager
@@ -44,19 +47,18 @@ if os.name == "nt":
 
     class pywikibotWrapper(object):
         def init(self):
-            #import pywikibot
+            self.config = loadconfig()
+
             pass
 
         def output(self, *args, **kwargs):
-            import pywikibot
-            return pywikibot.bot.output(*args, **kwargs)
+            return output(*args, **kwargs)
 
         def request_input(self, *args, **kwargs):
-            import pywikibot
             self.input = None
 
             def threadedinput():
-                self.input = pywikibot.input(*args, **kwargs)
+                self.input = input(*args, **kwargs)
             self.inputthread = threading.Thread(target=threadedinput)
             self.inputthread.start()
 
@@ -65,12 +67,11 @@ if os.name == "nt":
             return self.input
 
         def set_config(self, key, value):
-            import pywikibot
-            setattr(pywikibot.config, key, value)
+            
+            setattr(config, key, value)
 
         def set_ui(self, key, value):
-            import pywikibot
-            setattr(pywikibot.ui, key, value)
+            setattr(ui, key, value)
 
         def cls(self):
             os.system('cls')
@@ -105,11 +106,10 @@ if __name__ == "__main__":
 
     try:
         patch()
-        import pywikibot
     finally:
         unpatch()
 
-    from pywikibot.bot import DEBUG, VERBOSE, INFO, STDOUT, INPUT, WARNING, ERROR, CRITICAL
+
 
     logger = logging.getLogger('pywiki')
     loggingcontext = {'caller_name': "ui_tests",
@@ -123,11 +123,11 @@ if __name__ == "__main__":
             newstdout.truncate(0)
             newstderr.truncate(0)
             newstdin.truncate(0)
-
-            pywikibot.config.colorized_output = True
-            pywikibot.config.transliterate = False
-            pywikibot.ui.transliteration_target = None
-            pywikibot.ui.encoding = 'utf-8'
+            self.config = loadconfig()
+            self.config.colorized_output = True
+            self.config.transliterate = False
+            ui.transliteration_target = None
+            ui.encoding = 'utf-8'
 
         def tearDown(self):
             unpatch()
@@ -174,32 +174,32 @@ if __name__ == "__main__":
             self.assertEqual(newstderr.getvalue(), "CRITICAL: CRITICAL\n")
 
         def test_output(self):
-            pywikibot.output("output", toStdout=True)
+            output("output", toStdout=True)
             self.assertEqual(newstdout.getvalue(), "output\n")
             self.assertEqual(newstderr.getvalue(), "")
 
         def test_warning(self):
-            pywikibot.bot.warning("warning")
+            warning("warning")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "WARNING: warning\n")
 
         def test_error(self):
-            pywikibot.bot.error("error")
+            error("error")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "ERROR: error\n")
 
         def test_log(self):
-            pywikibot.bot.log("log")
+            log("log")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "")
 
         def test_critical(self):
-            pywikibot.bot.critical("critical")
+            critical("critical")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "CRITICAL: critical\n")
 
         def test_debug(self):
-            pywikibot.debug("debug", "test")
+            debug("debug", "test")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "")
 
@@ -209,7 +209,7 @@ if __name__ == "__main__":
             try:
                 raise TestException("Testing Exception")
             except TestException:
-                pywikibot.bot.exception("exception", tb=True)
+                exception("exception", tb=True)
             self.assertEqual(newstdout.getvalue(), "")
             stderrlines = newstderr.getvalue().split("\n")
             self.assertEqual(stderrlines[0], "ERROR: TestException: Testing Exception")
@@ -224,7 +224,7 @@ if __name__ == "__main__":
             newstdin.write("input to read\n")
             newstdin.seek(0)
 
-            returned = pywikibot.user_input("question")
+            returned = user_input("question")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ")
@@ -237,7 +237,7 @@ if __name__ == "__main__":
             newstdin.write("\n")
             newstdin.seek(0)
 
-            returned = pywikibot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
+            returned = inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) ")
@@ -249,7 +249,7 @@ if __name__ == "__main__":
             newstdin.write("N\n")
             newstdin.seek(0)
 
-            returned = pywikibot.bot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
+            returned = inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) ")
@@ -261,7 +261,7 @@ if __name__ == "__main__":
             newstdin.write("n\n")
             newstdin.seek(0)
 
-            returned = pywikibot.bot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
+            returned = inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) ")
@@ -273,7 +273,7 @@ if __name__ == "__main__":
             newstdin.write("X\nN\n")
             newstdin.seek(0)
 
-            returned = pywikibot.bot.inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
+            returned = inputChoice("question", ["answer 1", "answer 2", "answer 3"], ["A", "N", "S"], "A")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "question ([A]nswer 1, a[N]swer 2, an[S]wer 3) " * 2)
@@ -284,32 +284,32 @@ if __name__ == "__main__":
     @unittest.skipUnless(os.name == "posix", "requires Unix console")
     class TestTerminalOutputColorUnix(UITestCase):
         def testOutputColorizedText(self):
-            pywikibot.output("normal text \03{lightpurple}light purple text\03{default} normal text")
+            output("normal text \03{lightpurple}light purple text\03{default} normal text")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "normal text \x1b[35;1mlight purple text\x1b[0m normal text\n\x1b[0m")
 
         def testOutputNoncolorizedText(self):
-            pywikibot.config.colorized_output = False
-            pywikibot.output("normal text \03{lightpurple}light purple text\03{default} normal text")
+            self.config.colorized_output = False
+            output("normal text \03{lightpurple}light purple text\03{default} normal text")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "normal text light purple text normal text ***\n")
 
         @unittest.expectedFailure
         def testOutputColorCascade(self):
-            pywikibot.output("normal text \03{lightpurple} light purple \03{lightblue} light blue \03{default} light purple \03{default} normal text")
+            output("normal text \03{lightpurple} light purple \03{lightblue} light blue \03{default} light purple \03{default} normal text")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "normal text \x1b[35;1m light purple \x1b[94;1m light blue \x1b[35;1m light purple \x1b[0m normal text\n\x1b[0m")
 
         def testOutputColorCascade_incorrect(self):
             ''' This test documents current (incorrect) behavior '''
-            pywikibot.output("normal text \03{lightpurple} light purple \03{lightblue} light blue \03{default} light purple \03{default} normal text")
+            output("normal text \03{lightpurple} light purple \03{lightblue} light blue \03{default} light purple \03{default} normal text")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "normal text \x1b[35;1m light purple \x1b[94;1m light blue \x1b[0m light purple \x1b[0m normal text\n\x1b[0m")
 
     @unittest.skipUnless(os.name == "posix", "requires Unix console")
     class TestTerminalUnicodeUnix(UITestCase):
         def testOutputUnicodeText(self):
-            pywikibot.output("Заглавная_страница")
+            output("Заглавная_страница")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "Заглавная_страница\n".encode('utf-8'))
 
@@ -317,7 +317,7 @@ if __name__ == "__main__":
             newstdin.write("Заглавная_страница\n".encode('utf-8'))
             newstdin.seek(0)
 
-            returned = pywikibot.input("Википедию? ")
+            returned = input("Википедию? ")
 
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "Википедию?  ".encode('utf-8'))
@@ -328,9 +328,9 @@ if __name__ == "__main__":
     @unittest.skipUnless(os.name == "posix", "requires Unix console")
     class TestTransliterationUnix(UITestCase):
         def testOutputTransliteratedUnicodeText(self):
-            pywikibot.ui.encoding = 'latin-1'
-            pywikibot.config.transliterate = True
-            pywikibot.output("abcd АБГД αβγδ あいうえお")
+            ui.encoding = 'latin-1'
+            self.config.transliterate = True
+            output("abcd АБГД αβγδ あいうえお")
             self.assertEqual(newstdout.getvalue(), "")
             self.assertEqual(newstderr.getvalue(), "abcd \x1b[33;1mA\x1b[0m\x1b[33;1mB\x1b[0m\x1b[33;1mG\x1b[0m\x1b[33;1mD\x1b[0m \x1b[33;1ma\x1b[0m\x1b[33;1mb\x1b[0m\x1b[33;1mg\x1b[0m\x1b[33;1md\x1b[0m \x1b[33;1ma\x1b[0m\x1b[33;1mi\x1b[0m\x1b[33;1mu\x1b[0m\x1b[33;1me\x1b[0m\x1b[33;1mo\x1b[0m\n\x1b[0m")  # noqa
 

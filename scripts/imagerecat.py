@@ -32,7 +32,7 @@ The following command line parameters are supported:
 #
 __version__ = '$Id$'
 #
-
+from Category import Category
 import sys
 import re
 import urllib.request, urllib.parse, urllib.error
@@ -247,16 +247,16 @@ def getCategoryByName(name, parent='', grandparent=''):
 
     if not parent == '':
         workname = name.strip() + ',_' + parent.strip()
-        workcat = pywikibot.Category(pywikibot.Site('commons', 'commons'), workname)
+        workcat = Category(pywikibot.Site('commons', 'commons'), workname)
         if workcat.exists():
             return workname
     if not grandparent == '':
         workname = name.strip() + ',_' + grandparent.strip()
-        workcat = pywikibot.Category(pywikibot.Site('commons', 'commons'), workname)
+        workcat = Category(pywikibot.Site('commons', 'commons'), workname)
         if workcat.exists():
             return workname
     workname = name.strip()
-    workcat = pywikibot.Category(pywikibot.Site('commons', 'commons'), workname)
+    workcat = Category(pywikibot.Site('commons', 'commons'), workname)
     if workcat.exists():
         return workname
     return ''
@@ -355,7 +355,7 @@ def filterCountries(categories):
                     listCountries.append(country)
     if len(listByCountry) > 0:
         for bc in listByCountry:
-            category = pywikibot.Category(
+            category = Category(
                 pywikibot.Site('commons', 'commons'), 'Category:' + bc)
             for subcategory in category.subcategories():
                 for country in listCountries:
@@ -469,7 +469,7 @@ def main(args):
     generator = genFactory.getCombinedGenerator()
     if not generator:
         generator = pagegenerators.CategorizedPageGenerator(
-            pywikibot.Category(site, 'Category:Media needing categories'),
+            Category(site, 'Category:Media needing categories'),
             recurse=True)
     initLists()
     categorizeImages(generator, onlyFilter, onlyUncat)

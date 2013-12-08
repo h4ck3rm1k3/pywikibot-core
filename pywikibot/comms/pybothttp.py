@@ -168,3 +168,7 @@ class HTTP :
 from pywikibot.config import loadconfig
 config = loadconfig()
 global_http = HTTP(config)
+
+
+def request(site, uri, ssl=False, *args, **kwargs):
+    return global_http.request(site, uri, ssl=False, *args, **kwargs)
