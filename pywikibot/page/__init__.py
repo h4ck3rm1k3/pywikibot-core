@@ -1,6 +1,7 @@
 # -*- coding: utf-8  -*-
 """
 Objects representing various types of MediaWiki pages.
+from pywikibot.page import Page
 """
 #
 # (C) Pywikibot team, 2008-2013

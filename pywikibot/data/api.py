@@ -513,7 +513,7 @@ class CachedRequest(Request):
     def _write_cache(self, data):
         """ writes data to self._cachefile_path() """
         data = [str(self.site), str(self), data, datetime.datetime.now()]
-        pickle.dump(data, open(self._cachefile_path(), 'w'))
+        pickle.dump(data, open(self._cachefile_path(), 'wb'))
 
     def submit(self):
         cached_available = self._load_cache()
@@ -700,7 +700,10 @@ class QueryGenerator(object):
         while True:
             if self.query_limit is not None:
                 if self.limit is None:
-                    new_limit = self.query_limit
+                    if self.query_limit :
+                        new_limit = self.query_limit
+                    else: 
+                        new_limit = 0
                 elif self.limit > 0:
                     new_limit = min(self.query_limit, self.limit - count)
                 else:
@@ -771,7 +774,7 @@ class QueryGenerator(object):
                 for item in resultdata:
                     yield self.result(item)
                     count += 1
-                    if self.limit > 0 and count >= self.limit:
+                    if self.limit and (self.limit > 0) and count >= self.limit:
                         return
             if self.module == "random" and self.limit:
                 # "random" module does not return "query-continue"

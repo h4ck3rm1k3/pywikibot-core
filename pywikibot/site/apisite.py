@@ -32,9 +32,10 @@ from pywikibot.site.base import BaseSite
 from pywikibot.captcha import Captcha
 import pywikibot
 #from pywikibot import deprecate_arg
-from pywikibot import config
+#from pywikibot import config
+from pywikibot.config import loadconfig
 #from pywikibot import deprecated
-from pywikibot.bot import log
+from pywikibot.bot import log, debug
 #from pywikibot import pagegenerators
 #from pywikibot.throttle import Throttle
 #from pywikibot.data import api
@@ -77,6 +78,7 @@ class APISite(BaseSite):
 
     def __init__(self, code, fam=None, user=None, sysop=None):
         BaseSite.__init__(self, code, fam, user, sysop)
+        self.config = loadconfig()
         if self.family.versionnumber(self.code) >= 14:
             self._namespaces[6] = ["File"]
             self._namespaces[7] = ["File talk"]
@@ -152,6 +154,9 @@ class APISite(BaseSite):
         if sysop and 'sysop' not in self.userinfo['groups']:
             return False
 
+        if not self.userinfo:
+            return False
+
         if not self.userinfo['name']:
             return False
 
@@ -221,8 +226,8 @@ class APISite(BaseSite):
         if (not hasattr(self, "_userinfo")
                 or (self._userinfo and 
                     "rights" not in self._userinfo)
-                or self._userinfo['name']
-                   != self._username["sysop" in self._userinfo["groups"]]):
+                or (self._userinfo) and (self._userinfo['name']
+                   != self._username["sysop" in self._userinfo["groups"]])):
             uirequest = pywikibot.data.api.Request(
                 site=self,
                 action="query",
@@ -251,7 +256,7 @@ class APISite(BaseSite):
 
     def isBlocked(self, sysop=False):
         """Deprecated synonym for is_blocked"""
-        pywikibot.debug(
+        debug(
             "Site method 'isBlocked' should be changed to 'is_blocked'",
             _logger)
         return self.is_blocked(sysop)
@@ -342,7 +347,7 @@ class APISite(BaseSite):
         """Return list of localized "word" magic words for the site."""
         if not hasattr(self, "_magicwords"):
             sirequest = pywikibot.data.api.CachedRequest(
-                expiry=config.API_config_expiry,
+                expiry=self.config.API_config_expiry,
                 site=self,
                 action="query",
                 meta="siteinfo",
@@ -404,32 +409,38 @@ class APISite(BaseSite):
 
     def _getsiteinfo(self, force=False):
         """Retrieve siteinfo and namespaces from site."""
+        debug("get site info called")
 
-        print("get site info called")
-
-        sirequest = pywikibot.data.api.CachedRequest(
-            expiry=(0 if force else config.API_config_expiry),
-            site=self,
-            action="query",
-            meta="siteinfo",
-            siprop="general|namespaces|namespacealiases|extensions"
-        )
-        print ("after create request")
         try:
-            print ("going to make request")
-            sidata = sirequest.submit()
-        except pywikibot.data.api.APIError as e:
-            print ("error")
-            print(e)
-            # hack for older sites that don't support 1.12 properties
-            # probably should delete if we're not going to support pre-1.12
-            sirequest = pywikibot.data.api.Request(
+            si_request = pywikibot.data.api.CachedRequest(
+                expiry=(0 if force else self.config.API_config_expiry),
                 site=self,
                 action="query",
                 meta="siteinfo",
-                siprop="general|namespaces"
+                siprop="general|namespaces|namespacealiases|extensions"
             )
-            sidata = sirequest.submit()
+            debug ("after create request")
+            debug (si_request)
+            debug ("going to make request")
+            sidata = si_request.submit()
+        except pywikibot.data.api.APIError as e:
+            debug ("error")
+            debug(e)
+
+            try:
+                # hack for older sites that don't support 1.12 properties
+                # probably should delete if we're not going to support pre-1.12
+                sir_equest = pywikibot.data.api.Request(
+                    site=self,
+                    action="query",
+                    meta="siteinfo",
+                    siprop="general|namespaces"
+                )
+                sidata = sirequest.submit()
+            except pywikibot.data.api.APIError as e:
+                debug ("error")
+                debug(e)
+        debug ("after query")
 
         assert 'query' in sidata, \
                "API siteinfo response lacks 'query' key"
@@ -438,7 +449,7 @@ class APISite(BaseSite):
                "API siteinfo response lacks 'general' key"
         assert 'namespaces' in sidata, \
                "API siteinfo response lacks 'namespaces' key"
-        print(sidata)
+        debug(sidata)
         self._siteinfo = sidata['general']
         nsdata = sidata['namespaces']
         for nskey in nsdata:
@@ -486,16 +497,58 @@ class APISite(BaseSite):
     @property
     def siteinfo(self):
         """Site information dict."""
-        print("siteinfo called")
+        # {'time': '2013-12-08T05:49:45Z', 
+        #  'linkprefix': '', 
+        #  'timeoffset': 0, 
+        #  'rights': 'Creative Commons Attribution-Share Alike 3.0', 
+        #  'generator': 'MediaWiki 1.23wmf5', 
+        #  'base': 'http://en.wikipedia.org/wiki/Main_Page', 
+        #  'articlepath': '/wiki/$1', 
+        #  'linktrail': '/^([a-z]+)(.*)$/sD', 
+        #  'writeapi': '', 
+        #  'scriptpath': '/w', 
+        #  'misermode': '', 
+        #  'variantarticlepath': False, 
+        #  'git-hash': 'd7c6f6cdefdcb2ebe2327dfe8c3c26957f24bb2d', 
+        #  'case': 'first-letter', 
+        #  'fallback': [], 
+        #  'wikiid': 'enwiki', 
+        #  'script': '/w/index.php', 
+        #  'phpversion': '5.3.10-1ubuntu3.8+wmf2', 
+        #  'dbtype': 'mysql', 
+        #  'dbversion': '5.5.34-MariaDB-1~precise-log', 
+        #  'logo': '//upload.wikimedia.org/wikipedia/en/b/bc/Wiki.png', 
+        #  'server': '//en.wikipedia.org', 
+        #  'phpsapi': 'apache2handler', 
+        #  'sitename': 'Wikipedia', 
+        #  'imagewhitelistenabled': '', 
+        #  'timezone': 'UTC', 
+        #  'maxuploadsize': 1048576000, 
+        #  'titleconversion': '', 
+        #  'fallback8bitEncoding': 'windows-1252', 
+        #  'mainpage': 'Main Page', 
+        #  'linkprefixcharset': '', 
+        #  'lang': 'en', 
+        #  'langconversion': ''
+        # }
+
+        debug("siteinfo called")
         if not hasattr(self, "_siteinfo"):
-            print("_siteinfo missing")
+            debug("_siteinfo missing")
             self._getsiteinfo()
+        debug(self._siteinfo)
         return self._siteinfo
 
     def case(self):
         """Return this site's capitalization rule."""
-
-        return self.siteinfo['case']
+        info = self.siteinfo
+        if (info):
+            try:
+                return info['case']
+            except:
+                return "first-letter"
+        else:
+            return "first-letter"
 
     def dbName(self):
         """Return this site's internal id."""
@@ -769,7 +822,7 @@ class APISite(BaseSite):
             pywikibot.output("Retrieving %s pages from %s."
                              % (len(cache), self))
             for pagedata in rvgen:
-                pywikibot.debug("Preloading %s" % pagedata, _logger)
+                debug("Preloading %s" % pagedata, _logger)
                 try:
                     if pagedata['title'] not in cache:
 #                       API always returns a "normalized" title which is
@@ -789,9 +842,9 @@ class APISite(BaseSite):
                                 "'%s'" % pagedata['title'])
                             continue
                 except KeyError:
-                    pywikibot.debug("No 'title' in %s" % pagedata, _logger)
-                    pywikibot.debug("pageids=%s" % pageids, _logger)
-                    pywikibot.debug("titles=%s" % list(cache.keys()), _logger)
+                    debug("No 'title' in %s" % pagedata, _logger)
+                    debug("pageids=%s" % pageids, _logger)
+                    debug("titles=%s" % list(cache.keys()), _logger)
                     continue
                 page = cache[pagedata['title']]
                 pywikibot.data.api.update_page(page, pagedata)
@@ -816,7 +869,7 @@ class APISite(BaseSite):
                     % (page.title(withSection=False, asLink=True),
                         item['title']))
             pywikibot.data.api.update_page(page, item)
-            pywikibot.debug(str(item), _logger)
+            debug(str(item), _logger)
             return item[tokentype + "token"]
 
     # following group of methods map more-or-less directly to API queries
@@ -1313,7 +1366,7 @@ class APISite(BaseSite):
         if not isinstance(namespace, int):
             raise Error("allpages: only one namespace permitted.")
         if includeredirects is not None:
-            pywikibot.debug(
+            debug(
                 "allpages: 'includeRedirects' argument is deprecated; "
                 "use 'filterredirs'.",
                 _logger)
@@ -2075,12 +2128,12 @@ class APISite(BaseSite):
         while True:
             try:
                 result = req.submit()
-                pywikibot.debug("editpage response: %s" % result,
+                debug("editpage response: %s" % result,
                                 _logger)
             except pywikibot.data.api.APIError as err:
                 self.unlock_page(page)
                 if err.code.endswith("anon") and self.logged_in():
-                    pywikibot.debug(
+                    debug(
                         "editpage: received '%s' even though bot is logged in"
                         % err.code,
                         _logger)
@@ -2101,7 +2154,7 @@ class APISite(BaseSite):
                     raise LockedPage(errdata['title'])
                 if err.code in self._ep_errors:
                     raise Error(self._ep_errors[err.code] % errdata)
-                pywikibot.debug(
+                debug(
                     "editpage: Unexpected error code '%s' received."
                     % err.code,
                     _logger)
@@ -2221,11 +2274,11 @@ class APISite(BaseSite):
             req['noredirect'] = ""
         try:
             result = req.submit()
-            pywikibot.debug("movepage response: %s" % result,
+            debug("movepage response: %s" % result,
                             _logger)
         except pywikibot.data.api.APIError as err:
             if err.code.endswith("anon") and self.logged_in():
-                pywikibot.debug(
+                debug(
                     "movepage: received '%s' even though bot is logged in"
                     % err.code,
                     _logger)
@@ -2239,7 +2292,7 @@ class APISite(BaseSite):
             }
             if err.code in self._mv_errors:
                 raise Error(self._mv_errors[err.code] % errdata)
-            pywikibot.debug("movepage: Unexpected error code '%s' received."
+            debug("movepage: Unexpected error code '%s' received."
                             % err.code,
                             _logger)
             raise
@@ -2308,7 +2361,7 @@ class APISite(BaseSite):
             }
             if err.code in self._rb_errors:
                 raise Error(self._rb_errors[err.code] % errdata)
-            pywikibot.debug("rollback: Unexpected error code '%s' received."
+            debug("rollback: Unexpected error code '%s' received."
                             % err.code,
                             _logger)
             raise
@@ -2353,7 +2406,7 @@ class APISite(BaseSite):
             }
             if err.code in self._dl_errors:
                 raise Error(self._dl_errors[err.code] % errdata)
-            pywikibot.debug("delete: Unexpected error code '%s' received."
+            debug("delete: Unexpected error code '%s' received."
                             % err.code,
                             _logger)
             raise
@@ -2408,7 +2461,7 @@ class APISite(BaseSite):
             }
             if err.code in self._protect_errors:
                 raise Error(self._protect_errors[err.code] % errdata)
-            pywikibot.debug("protect: Unexpected error code '%s' received."
+            debug("protect: Unexpected error code '%s' received."
                             % err.code,
                             _logger)
             raise
@@ -2571,11 +2624,11 @@ class APISite(BaseSite):
         try:
             result = req.submit()
         except pywikibot.data.api.APIError as err:
-            print (err)
+            debug (err)
             # TODO: catch and process foreseeable errors
             raise
         result = result["upload"]
-        pywikibot.debug(result, _logger)
+        debug(result, _logger)
         if "warnings" in result:
             warning = list(result["warnings"].keys())[0]
             message = result["warnings"][warning]

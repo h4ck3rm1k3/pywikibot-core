@@ -9,10 +9,12 @@ __version__ = '$Id$'
 import datetime
 import pywikibot
 import pywikibot.data.api as api
+from pywikibot.bot import debug
 from tests.utils import PywikibotTestCase, unittest
 
 #mysite = pywikibot.Site('en', 'wikipedia')
 from pywikibot.site.apisite import APISite as Site
+from pywikibot.page import Page
 mysite = Site('en', 'wikipedia')
 
 class TestApiFunctions(unittest.TestCase):
@@ -66,11 +68,14 @@ class TestPageGenerator(PywikibotTestCase):
         """Test that PageGenerator yields pages with expected attributes."""
         titles = ["Broadcaster.com", "Broadcaster (definition)",
                   "Wiktionary", "Wikipedia:Disambiguation"]
+        debug(titles)
         results = [p for p in self.gen]
         self.assertEqual(len(results), 4)
         for page in results:
-            self.assertEqual(type(page), pywikibot.Page)
+            self.assertEqual(type(page), Page)
             self.assertEqual(page.site, mysite)
+
+            debug(page.title())
             self.assert_(page.title() in titles)
 
 

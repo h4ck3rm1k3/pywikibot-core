@@ -355,7 +355,7 @@ def logoutput(text, decoder=None, newline=True, _level=INFO, _logger="",
 
     # logger.log(_level, text, extra=context, **kwargs)
     print(text)
-    traceback.print_stack(limit=3)
+    #traceback.print_stack(limit=3)
 
 def output(text, decoder=None, newline=True, toStdout=False, **kwargs):
     """Output a message to the user via the userinterface.
@@ -396,12 +396,12 @@ def stdout(text, decoder=None, newline=True, **kwargs):
 def warning(text, decoder=None, newline=True, **kwargs):
     """Output a warning message to the user via the userinterface."""
     logoutput(text, decoder, newline, WARNING, **kwargs)
-
+    traceback.print_stack(limit=3)
 
 def error(text, decoder=None, newline=True, **kwargs):
     """Output an error message to the user via the userinterface."""
     logoutput(text, decoder, newline, ERROR, **kwargs)
-
+    traceback.print_stack(limit=3)
 
 def log(text, decoder=None, newline=True, **kwargs):
     """Output a record to the log file."""
@@ -420,6 +420,7 @@ def debug(text, layer="funky", decoder=None, newline=True, **kwargs):
     @param layer: The name of the logger that text will be sent to.
     """
     logoutput(text, decoder, newline, DEBUG, layer, **kwargs)
+    traceback.print_stack(limit=3)
     #print (text)
 
 
