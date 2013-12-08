@@ -190,7 +190,7 @@ class BaseSite(object):
             1: ["Talk"],
             2: ["User"],
             3: ["User talk"],
-            4: ["Project", "WP", "Wikipedia"],
+            4: ["Wikipedia", "Project", "WP"],
             5: ["Project talk", "Wikipedia Talk", "WT"],
             6: ["Image", "File"],
             7: ["Image talk"],

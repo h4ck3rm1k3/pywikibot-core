@@ -249,9 +249,11 @@ class Page(object):
 
     def __str__(self):
         """Return a console representation of the pagelink."""
-        return self.title(asLink=True, forceInterwiki=True
+        strval= self.title(asLink=True, forceInterwiki=True
                           ).encode(config.console_encoding,
                                    "xmlcharrefreplace")
+        return strval.decode("utf-8")
+
 
     def __unicode__(self):
         return self.title(asLink=True, forceInterwiki=True)

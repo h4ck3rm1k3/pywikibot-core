@@ -68,15 +68,19 @@ class TestPageGenerator(PywikibotTestCase):
         """Test that PageGenerator yields pages with expected attributes."""
         titles = ["Broadcaster.com", "Broadcaster (definition)",
                   "Wiktionary", "Wikipedia:Disambiguation"]
-        debug(titles)
+        debug("Titles: '%s'" % titles)
         results = [p for p in self.gen]
+        debug(list(results))
         self.assertEqual(len(results), 4)
         for page in results:
             self.assertEqual(type(page), Page)
             self.assertEqual(page.site, mysite)
 
-            debug(page.title())
-            self.assert_(page.title() in titles)
+            debug("Page Title: '%s' " % page.title())
+            debug("Page :%s" % str(page))
+            if page.title() not in titles :
+                debug("Page Title: '%s' not in '%s'" % (page.title(), titles))
+            self.assertTrue(page.title() in titles)
 
 
 class TestCachedRequest(unittest.TestCase):

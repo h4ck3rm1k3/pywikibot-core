@@ -85,10 +85,10 @@ class HTTP :
 
     # Prepare flush on quit
     def _flush(self):
-        for i in threads:
+        for i in self.threads:
             self.http_queue.put(None)
         log('Waiting for threads to finish... ')
-        for i in threads:
+        for i in self.threads:
             i.join()
         log("All threads finished.")
 

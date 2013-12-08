@@ -420,7 +420,7 @@ def debug(text, layer="funky", decoder=None, newline=True, **kwargs):
     @param layer: The name of the logger that text will be sent to.
     """
     logoutput(text, decoder, newline, DEBUG, layer, **kwargs)
-    traceback.print_stack(limit=3)
+    #traceback.print_stack(limit=3)
     #print (text)
 
 
