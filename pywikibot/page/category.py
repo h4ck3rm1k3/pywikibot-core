@@ -2,15 +2,16 @@ import pywikibot.page
 # import Page
 #import pywikibot
 from pywikibot.deprecate import deprecate_arg
+from pywikibot.bot import output, WARNING, warning
 from pywikibot.deprecate import deprecated
 #from pywikibot import config
 import pywikibot.site
 #import hashlib
 #import logging
 import re
-import unicodedata
-import urllib
-import collections
+#import unicodedata
+#import urllib
+#import collections
 
 
 #import pywikibot.page 

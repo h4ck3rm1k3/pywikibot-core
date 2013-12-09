@@ -17,7 +17,7 @@ import collections
 import pywikibot.config
 #from pywikibot.page import Page
 import pywikibot
-
+from pywikibot.page  import Page
 logger = logging.getLogger("pywiki.wiki.family")
 #from pywikibot.page import Page
 #import pywikibot.page

@@ -6,6 +6,9 @@ from pywikibot.site.base  import BaseSite
 from pywikibot.bot  import Bot
 #from pywikibot.ui  import UI 
 from pywikibot.exceptions  import Error
+from pywikibot.page.category  import Category
+from pywikibot.families.familybase  import Family
+from pywikibot.families.familybase  import WikimediaFamily
 
 from pywikibot.bot  import LoggingFormatter
 from pywikibot.bot  import RotatingFileHandler
@@ -69,8 +72,9 @@ from pywikibot.families.None_family  import Family
 from pywikibot.families.anarchopedia_family  import Family 
 from pywikibot.families.battlestarwiki_family  import Family 
 from pywikibot.families.commons_family  import Family
-from pywikibot.families.familybase  import Family
-from pywikibot.families.familybase  import WikimediaFamily
+
+
+
 from pywikibot.families.fon_family  import Family 
 from pywikibot.families.gentoo_family  import Family 
 from pywikibot.families.i18n_family  import Family 
@@ -118,7 +122,7 @@ from pywikibot.logentries  import RightsEntry
 from pywikibot.logentries  import UploadEntry
 from pywikibot.login  import LoginManager
 
-from pywikibot.page.category  import Category
+
 from pywikibot.page.claimpage  import Claim
 from pywikibot.page.imagepage  import ImagePage
 from pywikibot.page.itempage  import ItemPage

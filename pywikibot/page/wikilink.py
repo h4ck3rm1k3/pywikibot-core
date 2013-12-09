@@ -1,7 +1,7 @@
 
 import pywikibot
-from pywikibot.deprecate import deprecate_arg
-from pywikibot.deprecate import deprecated
+#from pywikibot.deprecate import deprecate_arg
+f#rom pywikibot.deprecate import deprecated
 #from pywikibot.config import loadconfig
 from pywikibot.site.base import BaseSite
 

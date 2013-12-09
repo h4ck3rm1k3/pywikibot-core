@@ -1,20 +1,19 @@
 
 
 import pywikibot
-from pywikibot.deprecate import deprecate_arg
-from pywikibot.deprecate import deprecated
-from pywikibot import config
+#from pywikibot import config
 import pywikibot.site
-
-import hashlib
-import html.entities 
-import logging
-import re
-import unicodedata
-import urllib
+from pywikibot.page.imagepage  import ImagePage
+from pywikibot.page.itempage  import ItemPage
+#import hashlib
+#import html.entities 
+#import logging
+#import re
+#import unicodedata
+#import urllib
 import collections
-from pywikibot.page import Page
-from pywikibot.page.wikibasepage  import WikibasePage
+#from pywikibot.page import Page
+#from pywikibot.page.wikibasepage  import WikibasePage
 from pywikibot.page.propertypage  import PropertyPage
 class Claim(PropertyPage):
     """

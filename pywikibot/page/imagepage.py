@@ -1,17 +1,17 @@
 
 import pywikibot
-from pywikibot.deprecate import deprecate_arg
+#from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
-from pywikibot import config
+#from pywikibot import config
 import pywikibot.site
 
 import hashlib
-import html.entities 
-import logging
-import re
-import unicodedata
+#import html.entities 
+#import logging
+#import re
+#import unicodedata
 import urllib
-import collections
+#import collections
 from pywikibot.page import Page
 class ImagePage(Page):
     """A subclass of Page representing an image descriptor wiki page.

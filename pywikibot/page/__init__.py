@@ -18,10 +18,10 @@ __version__ = '$Id$'
 #from pywikibot.deprecate import deprecated
 #from pywikibot import async_request
 #from pywikibot.threadserver import async_request
-
+import pywikibot.threadserver
 import pywikibot 
 from pywikibot.link_regex import link_regex
-
+import pywikibot.page.category
 
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
 #from pywikibot import config,  Timestamp, Coordinate, WbTime
@@ -29,7 +29,7 @@ from pywikibot.link_regex import link_regex
 #config = loadconfig()
 #import pywikibot.site
 #from pywikibot.families.familybase import Family as FamilyBase
-
+import pywikibot.page.itempage
 
 #from pywikibot.textlib import removeLanguageLinks, removeCategoryLinks
 #, removeDisabledParts, extract_templates_and_params, replaceCategoryInPlace, replaceCategoryLinks
@@ -37,10 +37,10 @@ from pywikibot.bot import output, inputChoice, log,  warning, user_input, called
 #, debug
 
 from pywikibot.bot import error as print_error
-#from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse, NoUsername, EditConflict
-from pywikibot.exceptions import Error, IsRedirectPage, NoPage, SectionError, IsNotRedirectPage, PageNotSaved, LockedPage
+#from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse,, 
+from pywikibot.exceptions import Error, IsRedirectPage, NoPage, SectionError, IsNotRedirectPage, PageNotSaved, LockedPage,  NoUsername, EditConflict,SpamfilterError
 #from pywikibot.i18n import translate
-#from pywikibot.exceptions import , , , , , , SpamfilterError, InvalidTitle
+#from pywikibot.exceptions import , , , , , , , InvalidTitle
 #import hashlib
 #import html.entities
 import logging
@@ -54,6 +54,7 @@ import urllib.request, urllib.parse, urllib.error
 #  pywikibot.data.api.APIError
 
 #from pywikibot.site.base import BaseSite
+import pywikibot.site.base 
 #from logging import  WARNING
 from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
@@ -79,6 +80,7 @@ reNamespace = re.compile("^(.+?) *: *(.*)$")
 
 #from pywikibot.page.category import Category
 #import Category
+from pywikibot.config  import loadconfig
 
 class Page(object):
     """Page: A MediaWiki page
@@ -122,6 +124,7 @@ class Page(object):
         @type ns: int
 
         """
+        self.config=loadconfig()
         # init fields for lint
         self._revid         = None
         self._isredir       = None
@@ -130,7 +133,7 @@ class Page(object):
         self._title         = ""
         self._text          = ""
 
-        if isinstance(source, BaseSite):
+        if isinstance(source, pywikibot.site.base.BaseSite):
             self._link = pywikibot.page.wikilink.Link(title, source=source, defaultNamespace=ns)
             self._revisions = {}
         elif isinstance(source, Page):
@@ -202,15 +205,15 @@ class Page(object):
         if asLink:
             if forceInterwiki or \
                (allowInterwiki and
-                (self.site.family.name != config.family
-                 or self.site.code != config.mylang)):
+                (self.site.family.name != self.config.family
+                 or self.site.code != self.config.mylang)):
 
                 log( self.site.family.name)
-                log (config.family)
+                log (self.config.family)
                 log (self.site.family.name)
                 log(self.site.code)
 
-                if self.site.family.name != config.family \
+                if self.site.family.name != self.config.family \
                    and self.site.family.name != self.site.code:
                     return '[[%s:%s:%s]]' % (self.site.family.name,
                                               self.site.code,
@@ -255,7 +258,7 @@ class Page(object):
     def __str__(self):
         """Return a console representation of the pagelink."""
         strval= self.title(asLink=True, forceInterwiki=True
-                          ).encode(config.console_encoding,
+                          ).encode(self.config.console_encoding,
                                    "xmlcharrefreplace")
         return strval.decode("utf-8")
 
@@ -266,7 +269,7 @@ class Page(object):
     def __repr__(self):
         """Return a more complete string representation."""
         return "%s(%s)" % (self.__class__.__name__,
-                           self.title().encode(config.console_encoding))
+                           self.title().encode(self.config.console_encoding))
 
     def __cmp__(self, other):
         """Test for equality and inequality of Page objects.
@@ -560,7 +563,7 @@ class Page(object):
     def getCategoryRedirectTarget(self):
         """If this is a category redirect, return the target category title."""
         if self.isCategoryRedirect():
-            return Category(pywikibot.page.wikilink.Link(self._catredirect, self.site))
+            return pywikibot.page.category.Category(pywikibot.page.wikilink.Link(self._catredirect, self.site))
         raise IsNotRedirectPage(self.title())
 
     def isEmpty(self):
@@ -571,8 +574,8 @@ class Page(object):
 
         """
         txt = self.get()
-        txt = removeLanguageLinks(txt, site=self.site)
-        txt = removeCategoryLinks(txt, site=self.site)
+        txt = pywikibot.textlib.removeLanguageLinks(txt, site=self.site)
+        txt = pywikibot.textlib.removeCategoryLinks(txt, site=self.site)
         return len(txt) < 4
 
     def isTalkPage(self):
@@ -798,7 +801,7 @@ class Page(object):
 
         """
         # TODO: move this to Site object?
-        if config.ignore_bot_templates:  # Check the "master ignore switch"
+        if self.config.ignore_bot_templates:  # Check the "master ignore switch"
             return True
         username = self.site.user()
         try:
@@ -865,7 +868,7 @@ class Page(object):
 
         """
         if not comment:
-            comment = config.default_edit_summary
+            comment = self.config.default_edit_summary
         if watch is None:
             watchval = None
         elif watch:
@@ -879,7 +882,7 @@ class Page(object):
         if botflag is None:
             botflag = ("bot" in self.site.userinfo["rights"])
         if async:
-            async_request(self._save, comment=comment, minor=minor,
+            pywikibot.threadserver.async_request(self._save, comment=comment, minor=minor,
                                     watchval=watchval, botflag=botflag,
                                     async=async, callback=callback, **kwargs)
         else:
@@ -891,7 +894,7 @@ class Page(object):
               **kwargs):
         err = None
         link = self.title(asLink=True)
-        if config.cosmetic_changes:
+        if self.config.cosmetic_changes:
             comment = self._cosmetic_changes_hook(comment) or comment
         try:
             done = self.site.editpage(self, summary=comment, minor=minor,
@@ -917,20 +920,20 @@ class Page(object):
 
     def _cosmetic_changes_hook(self, comment):
         if self.isTalkPage() or \
-           calledModuleName() in config.cosmetic_changes_deny_script:
+           calledModuleName() in self.config.cosmetic_changes_deny_script:
             return
         family = self.site.family.name
-        config.cosmetic_changes_disable.update({'wikidata': ('repo', )})
-        if config.cosmetic_changes_mylang_only:
-            cc = ((family == config.family and
-                   self.site.lang == config.mylang) or
-                  family in list(config.cosmetic_changes_enable.keys()) and
-                  self.site.lang in config.cosmetic_changes_enable[family])
+        self.config.cosmetic_changes_disable.update({'wikidata': ('repo', )})
+        if self.config.cosmetic_changes_mylang_only:
+            cc = ((family == self.config.family and
+                   self.site.lang == self.config.mylang) or
+                  family in list(self.config.cosmetic_changes_enable.keys()) and
+                  self.site.lang in self.config.cosmetic_changes_enable[family])
         else:
             cc = True
         cc = (cc and not
-              (family in list(config.cosmetic_changes_disable.keys()) and
-               self.site.lang in config.cosmetic_changes_disable[family]))
+              (family in list(self.config.cosmetic_changes_disable.keys()) and
+               self.site.lang in self.config.cosmetic_changes_disable[family]))
         if not cc:
             return
         old = self.text
@@ -1030,7 +1033,7 @@ class Page(object):
         else:
             text = self.text
         for linkmatch in link_regex.finditer(
-                removeDisabledParts(text)):
+                pywikibot.textlib.removeDisabledParts(text)):
             linktitle = linkmatch.group("title")
             link = pywikibot.page.wikilink.Link(linktitle, self.site)
             # only yield links that are to a different site and that
@@ -1078,7 +1081,7 @@ class Page(object):
         Convinience function to get the Wikibase item of a page
         @return: ItemPage
         """
-        return ItemPage.fromPage(self)
+        return pywikibot.page.itempage.ItemPage.fromPage(self)
 
     def templates(self, content=False):
         """Return a list of Page objects for templates used on this Page.
@@ -1142,7 +1145,7 @@ class Page(object):
         # WARNING: may not return all templates used in particularly
         # intricate cases such as template substitution
         titles = list(t.title() for t in self.templates())
-        templates = extract_templates_and_params(self.text)
+        templates = pywikibot.textlib.extract_templates_and_params(self.text)
         # backwards-compatibility: convert the dict returned as the second
         # element into a list in the format used by old scripts
         result = []
@@ -1534,16 +1537,16 @@ class Page(object):
 
         if inPlace or self.namespace() == 10:
             oldtext = self.get(get_redirect=True)
-            newtext = replaceCategoryInPlace(oldtext, oldCat, newCat)
+            newtext = pywikibot.textlib.replaceCategoryInPlace(oldtext, oldCat, newCat)
         else:
             if newCat:
-                cats[cats.index(oldCat)] = Category(site, newCat.title(),
+                cats[cats.index(oldCat)] = pywikibot.page.category.Category(site, newCat.title(),
                                                     sortKey=sortKey)
             else:
                 cats.pop(cats.index(oldCat))
             oldtext = self.get(get_redirect=True)
             try:
-                newtext = replaceCategoryLinks(oldtext, cats)
+                newtext = pywikibot.textlib.replaceCategoryLinks(oldtext, cats)
             except ValueError:
                 # Make sure that the only way replaceCategoryLinks() can return
                 # a ValueError is in the case of interwiki links to self.

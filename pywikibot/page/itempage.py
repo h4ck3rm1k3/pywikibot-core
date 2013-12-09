@@ -1,18 +1,22 @@
 
 import pywikibot
-from pywikibot.deprecate import deprecate_arg
-from pywikibot.deprecate import deprecated
-from pywikibot import config
+#from pywikibot.deprecate import deprecate_arg
+#from pywikibot.deprecate import deprecated
+#from pywikibot import config
 import pywikibot.site
-import hashlib
-import html.entities 
-import logging
-import re
-import unicodedata
-import urllib
-import collections
+#import hashlib
+#import html.entities 
+#import logging
+#import re
+#import unicodedata
+#import urllib
+#import collections
 from pywikibot.site.apisite import APISite
 from pywikibot.page.wikibasepage  import WikibasePage
+from pywikibot.page.claimpage  import Claim
+from pywikibot.families.familybase  import Family
+from pywikibot.page  import Page
+from pywikibot.exceptions  import NoPage
 class ItemPage(WikibasePage):
     def __init__(self, site, title=None):
         """

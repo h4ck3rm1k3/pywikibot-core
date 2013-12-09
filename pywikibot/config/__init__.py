@@ -51,10 +51,6 @@ class Config :
         return True
 
     @property
-    def use_mwparserfromhell(self):
-        return True
-
-    @property
     def mylang(self):
         return "en"
 
@@ -82,9 +78,6 @@ class Config :
     def console_encoding(self):
         return "utf-8"
 
-    @property
-    def base_dir(self):
-        return "/tmp/"
         
     @property
     def family(self):

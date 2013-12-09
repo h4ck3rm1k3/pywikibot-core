@@ -34,7 +34,7 @@ from pywikibot.bot import    user_input
 #calledModuleName, warning, inputChoice, output,  log, 
 #from pywikibot.page.category import Category
 from pywikibot.deprecate import deprecate_arg
-from pywikibot.deprecate import deprecated
+#from pywikibot.deprecate import deprecated
 
 # ported from version 1 for backwards-compatibility
 # most of these functions just wrap a Site or Page method that returns
