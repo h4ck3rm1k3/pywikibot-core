@@ -6,8 +6,8 @@ Note: the script requires the Python IRC library
 http://python-irclib.sourceforge.net/
 
 from pywikibot.botirc import IRCBot
-
 """
+from pywikibot.page  import Page
 #
 # (C) Balasyum
 # (C) Pywikipedia bot team, 2008-2012

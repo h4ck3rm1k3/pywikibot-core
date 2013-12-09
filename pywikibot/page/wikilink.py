@@ -1,18 +1,19 @@
-
-import pywikibot
+from pywikibot.exceptions  import Error
+from pywikibot.exceptions  import InvalidTitle
+#import pywikibot
 #from pywikibot.deprecate import deprecate_arg
-f#rom pywikibot.deprecate import deprecated
+#rom pywikibot.deprecate import deprecated
 #from pywikibot.config import loadconfig
 from pywikibot.site.base import BaseSite
 
-import hashlib
-import html.entities 
-import logging
+#import hashlib
+#import html.entities 
+#import logging
 import re
 import unicodedata
-import urllib
-import collections
-import traceback
+#import urllib
+#import collections
+#import traceback
 from pywikibot.page.htmlunicode import html2unicode
 
 from pywikibot.debug import tryencode

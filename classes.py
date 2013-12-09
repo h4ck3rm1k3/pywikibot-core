@@ -1,15 +1,10 @@
-
 from pywikibot.page  import Page
-from pywikibot.config  import Config  
-from tests  import TestRequest
-from pywikibot.site.base  import BaseSite
-from pywikibot.bot  import Bot
-#from pywikibot.ui  import UI 
-from pywikibot.exceptions  import Error
-from pywikibot.page.category  import Category
-from pywikibot.families.familybase  import Family
-from pywikibot.families.familybase  import WikimediaFamily
 
+#from pywikibot.exceptions  import  Exception 
+#from pywikibot.ui  import UI 
+#from scripts.flickrripper  import Tkdialog
+#from scripts.script_wui  import ScriptWUIBot
+from pywikibot.bot  import Bot
 from pywikibot.bot  import LoggingFormatter
 from pywikibot.bot  import RotatingFileHandler
 from pywikibot.botcontext  import bot_execution
@@ -25,9 +20,8 @@ from pywikibot.comms.threadedhttp  import HttpProcessor
 from pywikibot.comms.threadedhttp  import HttpRequest
 from pywikibot.comms.threadedhttp  import LockableCookieJar
 from pywikibot.comms.threadedhttp  import RedirectLimit 
-
+from pywikibot.config  import Config  
 from pywikibot.coord  import Coordinate
-
 from pywikibot.data.api  import APIError
 from pywikibot.data.api  import APIWarning
 from pywikibot.data.api  import CachedRequest
@@ -43,13 +37,12 @@ from pywikibot.data.api  import Request
 from pywikibot.data.api  import TimeoutError
 from pywikibot.date  import FormatDate
 from pywikibot.editor  import TextEditor
-#from pywikibot.exceptions  import  Exception 
 from pywikibot.exceptions  import AutoblockUser
 from pywikibot.exceptions  import BadTitle
 from pywikibot.exceptions  import CaptchaError
 from pywikibot.exceptions  import CircularRedirect
 from pywikibot.exceptions  import EditConflict
-
+from pywikibot.exceptions  import Error
 from pywikibot.exceptions  import FatalServerError
 from pywikibot.exceptions  import InvalidTitle
 from pywikibot.exceptions  import IsNotRedirectPage
@@ -72,9 +65,8 @@ from pywikibot.families.None_family  import Family
 from pywikibot.families.anarchopedia_family  import Family 
 from pywikibot.families.battlestarwiki_family  import Family 
 from pywikibot.families.commons_family  import Family
-
-
-
+from pywikibot.families.familybase  import Family
+from pywikibot.families.familybase  import WikimediaFamily
 from pywikibot.families.fon_family  import Family 
 from pywikibot.families.gentoo_family  import Family 
 from pywikibot.families.i18n_family  import Family 
@@ -122,7 +114,7 @@ from pywikibot.logentries  import RightsEntry
 from pywikibot.logentries  import UploadEntry
 from pywikibot.login  import LoginManager
 
-
+from pywikibot.page.category  import Category
 from pywikibot.page.claimpage  import Claim
 from pywikibot.page.imagepage  import ImagePage
 from pywikibot.page.itempage  import ItemPage
@@ -136,7 +128,7 @@ from pywikibot.pagegenerators  import GeneratorFactory
 from pywikibot.pagegenerators  import GoogleSearchPageGenerator
 from pywikibot.pagegenerators  import YahooSearchPageGenerator
 from pywikibot.site.apisite  import APISite
-
+from pywikibot.site.base  import BaseSite
 from pywikibot.site.datasite  import DataSite 
 from pywikibot.site.datasite  import DataSite 
 from pywikibot.site.loginstatus  import LoginStatus
@@ -147,7 +139,6 @@ from pywikibot.textlib  import _GetDataHTML
 from pywikibot.threadserver  import ThreadServer  
 from pywikibot.throttle  import Throttle
 from pywikibot.timestamp  import Timestamp
-
 from pywikibot.tools  import ThreadList
 from pywikibot.tools  import ThreadedGenerator
 from pywikibot.userinterfaces.cgi_interface  import UI 
@@ -171,7 +162,6 @@ from scripts.category  import CategoryMoveRobot
 from scripts.category  import CategoryRemoveRobot
 from scripts.category  import CategoryTidyRobot 
 from scripts.category  import CategoryTreeRobot 
-
 from scripts.category_redirect  import CategoryRedirectBot
 from scripts.cfd  import ReCheck 
 from scripts.claimit  import ClaimRobot 
@@ -184,7 +174,6 @@ from scripts.data_ingestion  import Photo
 from scripts.delete  import DeletionRobot
 from scripts.editarticle  import ArticleEditor
 from scripts.featured  import FeaturedBot
-#from scripts.flickrripper  import Tkdialog
 from scripts.harvest_template  import HarvestRobot
 from scripts.image  import ImageRobot
 from scripts.interwiki  import GiveUpOnPage
@@ -217,7 +206,6 @@ from scripts.reflinks  import XmlDumpPageGenerator
 from scripts.replace  import ReplaceRobot
 from scripts.replace  import XmlDumpReplacePageGenerator
 from scripts.replicate_wiki  import SyncSites
-#from scripts.script_wui  import ScriptWUIBot
 from scripts.solve_disambiguation  import DisambiguationRobot
 from scripts.solve_disambiguation  import PrimaryIgnoreManager
 from scripts.solve_disambiguation  import ReferringPageGeneratorWithIgnore
@@ -227,8 +215,7 @@ from scripts.tests.test_data_ingestion  import TestCSVReader
 from scripts.tests.test_data_ingestion  import TestPhoto
 from scripts.touch  import TouchBot
 from scripts.upload  import UploadRobot
-
 from scripts.welcome  import FilenameNotSet
 from scripts.welcome  import Global
 from scripts.welcome  import WelcomeBot
-
+from tests  import TestRequest

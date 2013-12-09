@@ -121,6 +121,6 @@ def some_routine():
                     fn = testpath
                 else:
                     raise Exception("%s not found!" % fn)
-        run_python_file(fn, argv, argvu)
+        run_python_file(fn, argv, sys.argv)
     elif __name__ == "__main__":
         print(__doc__)

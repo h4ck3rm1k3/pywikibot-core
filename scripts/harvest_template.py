@@ -1,5 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+from pywikibot.page.itempage  import ItemPage
+from pywikibot.page  import Page
+
 """
 Usage:
 

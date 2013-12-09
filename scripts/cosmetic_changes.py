@@ -82,7 +82,7 @@ from pywikibot import i18n
 #from pywikibot import config2 as config
 from pywikibot.bot import log
 from pywikibot.page.htmlunicode import html2unicode
-
+from pywikibot.config import loadconfig
 warning = """
 ATTENTION: You can run this script as a stand-alone for testing purposes.
 However, the changes that are made are only minor, and other users
@@ -165,6 +165,7 @@ class CosmeticChangesToolkit:
         self.template = (self.namespace == 10)
         self.talkpage = self.namespace >= 0 and self.namespace % 2 == 1
         self.title = pageTitle
+        self.config= loadconfig()
 
     def change(self, text):
         """
@@ -311,7 +312,7 @@ class CosmeticChangesToolkit:
             text = text.strip() + self.site.family.interwiki_text_separator
             allstars.sort()
             for element in allstars:
-                text += '%s%s' % (element.strip(), config.line_separator)
+                text += '%s%s' % (element.strip(), self.config.line_separator)
                 log('%s' % element.strip())
         # Adding the interwiki
         if interwikiLinks:
@@ -573,7 +574,7 @@ class CosmeticChangesToolkit:
         return pywikibot.replaceExcept(
             text,
             r'(?m)^(={1,7}) *(?P<title>[^=]+?) *\1 *\r?\n',
-            r'\1 \g<title> \1%s' % config.LS,
+            r'\1 \g<title> \1%s' % self.config.LS,
             ['comment', 'math', 'nowiki', 'pre'])
 
     def putSpacesInLists(self, text):

@@ -12,20 +12,21 @@ Text editor class for your favourite editor.
 #
 __version__ = "$Id$"
 #
-
+from pywikibot.ui  import UI 
 import sys
 import os
 import tempfile
 #import pywikibot
 #from pywikibot import config2 as config
 #from pywikibot.userinterfaces import UI
-
+from pywikibot.config  import loadconfig
 class TextEditor(object):
     def __init__(self):
+        self.config = loadconfig()
         pass
 
     def command(self, tempFilename, text, jumpIndex=None):
-        command = config.editor
+        command = self.config.editor
         if jumpIndex:
             # Some editors make it possible to mark occurences of substrings,
             # or to jump to the line of the first occurence.
@@ -37,20 +38,20 @@ class TextEditor(object):
             line = column = 0
         # Linux editors. We use startswith() because some users might use
         # parameters.
-        if config.editor.startswith('kate'):
+        if self.config.editor.startswith('kate'):
             command += " -l %i -c %i" % (line + 1, column + 1)
-        elif config.editor.startswith('gedit'):
+        elif self.config.editor.startswith('gedit'):
             command += " +%i" % (line + 1)  # seems not to support columns
-        elif config.editor.startswith('emacs'):
+        elif self.config.editor.startswith('emacs'):
             command += " +%i" % (line + 1)  # seems not to support columns
-        elif config.editor.startswith('jedit'):
+        elif self.config.editor.startswith('jedit'):
             command += " +line:%i" % (line + 1)  # seems not to support columns
-        elif config.editor.startswith('vim'):
+        elif self.config.editor.startswith('vim'):
             command += " +%i" % (line + 1)  # seems not to support columns
-        elif config.editor.startswith('nano'):
+        elif self.config.editor.startswith('nano'):
             command += " +%i,%i" % (line + 1, column + 1)
         # Windows editors
-        elif config.editor.lower().endswith('notepad++.exe'):
+        elif self.config.editor.lower().endswith('notepad++.exe'):
             command += " -n%i" % (line + 1)  # seems not to support columns
 
         command += ' %s' % tempFilename
@@ -85,11 +86,11 @@ class TextEditor(object):
             * highlight - a substring; each occurence will be highlighted
         """
         text = self.convertLinebreaks(text)
-        if config.editor:
+        if self.config.editor:
             tempFilename = '%s.%s' % (tempfile.mktemp(),
-                                      config.editor_filename_extension)
+                                      self.config.editor_filename_extension)
             tempFile = open(tempFilename, 'w')
-            tempFile.write(text.encode(config.editor_encoding))
+            tempFile.write(text.encode(self.config.editor_encoding))
             tempFile.close()
             creationDate = os.stat(tempFilename).st_mtime
             command = self.command(tempFilename, text, jumpIndex)
@@ -99,7 +100,7 @@ class TextEditor(object):
                 # Nothing changed
                 return None
             else:
-                newcontent = open(tempFilename).read().decode(config.editor_encoding)
+                newcontent = open(tempFilename).read().decode(self.config.editor_encoding)
                 os.unlink(tempFilename)
                 return self.restoreLinebreaks(newcontent)
         else:

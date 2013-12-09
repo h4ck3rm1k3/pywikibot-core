@@ -2,17 +2,23 @@
 import pywikibot
 from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
-from pywikibot import config
+from pywikibot.bot import output
+from pywikibot.exceptions  import AutoblockUser
+from pywikibot.page.wikilink  import Link
+from pywikibot.exceptions  import UserActionRefuse
+from pywikibot.page.imagepage  import ImagePage
+#from pywikibot import config
 import pywikibot.site
-
-import hashlib
-import html.entities 
-import logging
-import re
-import unicodedata
-import urllib
-import collections
+#import hashlib
+#import html.entities 
+#import logging
+#import re
+#import unicodedata
+#import urllib
+#import collections
 from pywikibot.page  import Page
+from pywikibot.page.ipaddress import ip_regexp
+
 class User(Page):
     """A class that represents a Wiki user.
     """

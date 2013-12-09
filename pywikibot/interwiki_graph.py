@@ -17,6 +17,8 @@ except ImportError:
 import pywikibot
 #from pywikibot import config2 as config
 
+from pywikibot.config import loadconfig
+config = loadconfig()
 
 class GraphImpossible(Exception):
     "Drawing a graph is not possible on your system."

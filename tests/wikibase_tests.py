@@ -12,15 +12,14 @@ __version__ = '$Id$'
 import os
 import pywikibot
 import json
-
+from pywikibot.page.itempage  import ItemPage
 from tests.utils import PywikibotTestCase, unittest
 
 from pywikibot.site.base import BaseSite as Site
 from pywikibot.page.wikilink import Link
 #from pywikibot.page import Link
-from tests.utils import PywikibotTestCase, unittest
-from pywikibot.families.wikipedia_family import Family as WikipediaFamily
-from pywikibot.families.wiktionary_family import Family as WiktionaryFamily
+#from pywikibot.families.wikipedia_family import Family as WikipediaFamily
+#from pywikibot.families.wiktionary_family import Family as WiktionaryFamily
 from pywikibot.page import Page
 
 

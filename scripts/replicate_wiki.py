@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
+
+from pywikibot.page  import Page
+
 """
 This bot replicates all pages (from specific namespaces) in a wiki to a second wiki within one family.
 
@@ -25,7 +28,7 @@ not take the origin wiki into account.
 #
 __version__ = '$Id$'
 #
-
+from pywikibot.site.base import BaseSite as Site
 import sys
 #import re
 #from pywikibot import getSite, config, Page
@@ -47,24 +50,26 @@ def multiple_replace(text, word_dict):
     return text
 
 
+from pywikibot.config import loadconfig
+
 class SyncSites:
     '''Work is done in here.'''
 
     def __init__(self, options):
         self.options = options
-
+        self.config = loadconfig()
         if options.original_wiki:
             original_wiki = options.original_wiki
         else:
-            original_wiki = config.mylang
+            original_wiki = self.config.mylang
 
         pywikibot.output("Syncing from " + original_wiki)
 
-        family = options.family or config.family
+        family = options.family or self.config.family
 
         sites = options.destination_wiki
 
-        self.original = getSite(original_wiki, family)
+        self.original = Site(original_wiki, family)
 
         if options.namespace and 'help' in options.namespace:
             nsd = namespaces(self.original)
@@ -72,7 +77,7 @@ class SyncSites:
                 pywikibot.output('%s %s' % (k, nsd[k]))
             sys.exit()
 
-        self.sites = [getSite(s, family) for s in sites]
+        self.sites = [Site(s, family) for s in sites]
 
         self.differences = {}
         self.user_diff = {}
@@ -186,8 +191,11 @@ class SyncSites:
             else:
                 txt2 = ''
 
-            if str(site) in config.replicate_replace:
-                txt_new = multiple_replace(txt1, config.replicate_replace[str(site)])
+            if str(site) in self.config.replicate_replace:
+                txt_new = multiple_replace(
+                    txt1, 
+                    self.config.replicate_replace[str(site)]
+                )
                 if txt1 != txt_new:
                     pywikibot.output('NOTE: text replaced using config.sync_replace')
                     pywikibot.output('%s %s %s' % (txt1, txt_new, txt2))

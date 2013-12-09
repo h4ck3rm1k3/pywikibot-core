@@ -7,7 +7,7 @@
 __version__ = '$Id$'
 
 import datetime
-import pywikibot
+#import pywikibot
 import pywikibot.data.api as api
 from pywikibot.bot import debug
 from tests.utils import PywikibotTestCase, unittest

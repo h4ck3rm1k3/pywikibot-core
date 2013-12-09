@@ -6,6 +6,21 @@ Objects representing MediaWiki sites (wikis) and families (groups of wikis
 on the same topic in different languages).
 from pywikibot.site import BaseSite
 """
+#from pywikibot.data.api  import APIError
+#from pywikibot.data.api  import APIWarning
+#from pywikibot.data.api  import CachedRequest
+from pywikibot.data.api  import CategoryPageGenerator
+from pywikibot.data.api  import ImagePageGenerator
+from pywikibot.data.api  import ListGenerator
+from pywikibot.data.api  import LogEntryListGenerator
+#from pywikibot.data.api  import LoginManager
+from pywikibot.page  import Page
+from pywikibot.data.api  import PageGenerator
+from pywikibot.data.api  import PropertyGenerator
+#from pywikibot.data.api  import QueryGenerator
+#from pywikibot.data.api  import Request
+#from pywikibot.data.api  import TimeoutError
+
 #
 # (C) Pywikibot team, 2008-2012
 #
@@ -422,7 +437,7 @@ class APISite(BaseSite):
             debug ("after create request")
             debug (si_request)
             debug ("going to make request")
-            sidata = si_request.submit()
+            si_data = si_request.submit()
         except pywikibot.data.api.APIError as e:
             debug ("error")
             debug(e)
@@ -430,28 +445,28 @@ class APISite(BaseSite):
             try:
                 # hack for older sites that don't support 1.12 properties
                 # probably should delete if we're not going to support pre-1.12
-                sir_equest = pywikibot.data.api.Request(
+                si_request = pywikibot.data.api.Request(
                     site=self,
                     action="query",
                     meta="siteinfo",
                     siprop="general|namespaces"
                 )
-                sidata = sirequest.submit()
+                si_data = si_request.submit()
             except pywikibot.data.api.APIError as e:
                 debug ("error")
                 debug(e)
         debug ("after query")
 
-        assert 'query' in sidata, \
+        assert 'query' in si_data, \
                "API siteinfo response lacks 'query' key"
-        sidata = sidata['query']
-        assert 'general' in sidata, \
+        si_data = si_data['query']
+        assert 'general' in si_data, \
                "API siteinfo response lacks 'general' key"
-        assert 'namespaces' in sidata, \
+        assert 'namespaces' in si_data, \
                "API siteinfo response lacks 'namespaces' key"
-        debug(sidata)
-        self._siteinfo = sidata['general']
-        nsdata = sidata['namespaces']
+        debug(si_data)
+        self._siteinfo = si_data['general']
+        nsdata = si_data['namespaces']
         for nskey in nsdata:
             ns = int(nskey)
             if ns in self._namespaces:
@@ -461,15 +476,15 @@ class APISite(BaseSite):
                 self._namespaces[ns].insert(0, nsdata[nskey]["*"])
             else:
                 self._namespaces[ns] = [nsdata[nskey]["*"]]
-        if 'namespacealiases' in sidata:
-            aliasdata = sidata['namespacealiases']
+        if 'namespacealiases' in si_data:
+            aliasdata = si_data['namespacealiases']
             for item in aliasdata:
                 if item["*"] in self._namespaces[int(item['id'])]:
                     continue
                 # this is a less preferred form so it goes at the end
                 self._namespaces[int(item['id'])].append(item["*"])
-        if 'extensions' in sidata:
-            self._extensions = sidata['extensions']
+        if 'extensions' in si_data:
+            self._extensions = si_data['extensions']
         else:
             self._extensions = None
 
@@ -643,7 +658,7 @@ class APISite(BaseSite):
     def loadpageinfo(self, page):
         """Load page info from api and save in page attributes"""
         title = page.title(withSection=False)
-        query = self._generator(pywikibot.data.api.PropertyGenerator,
+        query = self._generator(PropertyGenerator,
                                 type_arg="info",
                                 titles=title.encode(self.encoding()),
                                 inprop="protection")
@@ -659,7 +674,7 @@ class APISite(BaseSite):
         """Load [[mw:Extension:GeoData]] info"""
         # prop=coordinates&titles=Wikimedia Foundation&format=jsonfm&coprop=type|name|dim|country|region&coprimary=all
         title = page.title(withSection=False)
-        query = self._generator(pywikibot.data.api.PropertyGenerator,
+        query = self._generator(PropertyGenerator,
                                 type_arg="coordinates",
                                 titles=title.encode(self.encoding()),
                                 coprop=['type', 'name', 'dim',
@@ -676,7 +691,7 @@ class APISite(BaseSite):
 
     def loadpageprops(self, page):
         title = page.title(withSection=False)
-        query = self._generator(pywikibot.data.api.PropertyGenerator,
+        query = self._generator(PropertyGenerator,
                                 type_arg="pageprops",
                                 titles=title.encode(self.encoding()),
                                 )
@@ -698,7 +713,7 @@ class APISite(BaseSite):
         args = {"titles": title}
         if not history:
             args["total"] = 1
-        query = self._generator(pywikibot.data.api.PropertyGenerator,
+        query = self._generator(PropertyGenerator,
                                 type_arg="imageinfo",
                                 iiprop=["timestamp", "user", "comment",
                                         "url", "size", "sha1", "mime",
@@ -811,7 +826,7 @@ class APISite(BaseSite):
                 props += '|templates'
             if langlinks:
                 props += '|langlinks'
-            rvgen = pywikibot.data.api.PropertyGenerator(props, site=self)
+            rvgen = PropertyGenerator(props, site=self)
             rvgen.set_maximum_items(-1)  # suppress use of "rvlimit" parameter
             if len(pageids) == len(sublist):
                 # only use pageids if all pages have them
@@ -858,7 +873,7 @@ class APISite(BaseSite):
             see API documentation for full list of types
 
         """
-        query = pywikibot.data.api.PropertyGenerator("info",
+        query = PropertyGenerator("info",
                                       titles=page.title(withSection=False),
                                       intoken=tokentype,
                                       site=self)
@@ -897,7 +912,7 @@ class APISite(BaseSite):
         if filterRedirects is not None:
             blargs["gblfilterredir"] = (filterRedirects and "redirects" or
                                         "nonredirects")
-        blgen = self._generator(api.PageGenerator, type_arg="backlinks",
+        blgen = self._generator(PageGenerator, type_arg="backlinks",
                                 namespaces=namespaces, step=step, total=total,
                                 g_content=content, **blargs)
         if followRedirects:
@@ -905,7 +920,7 @@ class APISite(BaseSite):
             # links identified by MediaWiki as redirects may not really be,
             # so we have to check each "redirect" page and see if it
             # really redirects to this page
-            redirgen = self._generator(api.PageGenerator,
+            redirgen = self._generator(PageGenerator,
                                        type_arg="backlinks",
                                        gbltitle=bltitle,
                                        gblfilterredir="redirects")
@@ -948,7 +963,7 @@ class APISite(BaseSite):
         if filterRedirects is not None:
             eiargs["geifilterredir"] = (filterRedirects and "redirects" or
                                         "nonredirects")
-        eigen = self._generator(api.PageGenerator, type_arg="embeddedin",
+        eigen = self._generator(PageGenerator, type_arg="embeddedin",
                                 namespaces=namespaces, step=step, total=total,
                                 g_content=content, **eiargs)
         return eigen
@@ -997,7 +1012,7 @@ class APISite(BaseSite):
             plargs['titles'] = pltitle
         if follow_redirects:
             plargs['redirects'] = ''
-        plgen = self._generator(api.PageGenerator, type_arg="links",
+        plgen = self._generator(PageGenerator, type_arg="links",
                                 namespaces=namespaces, step=step, total=total,
                                 g_content=content, **plargs)
         return plgen
@@ -1017,7 +1032,7 @@ class APISite(BaseSite):
         else:
             clargs['titles'] = page.title(
                 withSection=False).encode(self.encoding())
-        clgen = self._generator(api.CategoryPageGenerator,
+        clgen = self._generator(CategoryPageGenerator,
                                 type_arg="categories", step=step, total=total,
                                 g_content=content, **clargs)
         return clgen
@@ -1031,7 +1046,7 @@ class APISite(BaseSite):
 
         """
         imtitle = page.title(withSection=False).encode(self.encoding())
-        imgen = self._generator(api.ImagePageGenerator, type_arg="images",
+        imgen = self._generator(ImagePageGenerator, type_arg="images",
                                 titles=imtitle, step=step, total=total,
                                 g_content=content)
         return imgen
@@ -1045,7 +1060,7 @@ class APISite(BaseSite):
 
         """
         tltitle = page.title(withSection=False).encode(self.encoding())
-        tlgen = self._generator(api.PageGenerator, type_arg="templates",
+        tlgen = self._generator(PageGenerator, type_arg="templates",
                                 titles=tltitle, namespaces=namespaces,
                                 step=step, total=total, g_content=content)
         return tlgen
@@ -1135,7 +1150,7 @@ class APISite(BaseSite):
             raise ValueError("categorymembers: "
                              "invalid combination of 'sortby' and 'endsort'")
 
-        cmgen = self._generator(api.PageGenerator, namespaces=namespaces,
+        cmgen = self._generator(PageGenerator, namespaces=namespaces,
                                 step=step, total=total, g_content=content,
                                 **cmargs)
         return cmgen
@@ -1216,7 +1231,7 @@ class APISite(BaseSite):
         # assemble API request
         if revids is None:
             rvtitle = page.title(withSection=False).encode(self.encoding())
-            rvgen = self._generator(api.PropertyGenerator,
+            rvgen = self._generator(PropertyGenerator,
                                     type_arg="info|revisions",
                                     titles=rvtitle, step=step, total=total)
         else:
@@ -1224,7 +1239,7 @@ class APISite(BaseSite):
                 ids = str(revids)
             else:
                 ids = "|".join(str(r) for r in revids)
-            rvgen = self._generator(api.PropertyGenerator,
+            rvgen = self._generator(PropertyGenerator,
                                     type_arg="info|revisions", revids=ids,
                                     step=step, total=total)
         if getText:
@@ -1272,7 +1287,7 @@ class APISite(BaseSite):
     def pagelanglinks(self, page, step=None, total=None):
         """Iterate all interlanguage links on page, yielding Link objects."""
         lltitle = page.title(withSection=False)
-        llquery = self._generator(api.PropertyGenerator,
+        llquery = self._generator(PropertyGenerator,
                                   type_arg="langlinks",
                                   titles=lltitle.encode(self.encoding()),
                                   step=step, total=total)
@@ -1291,7 +1306,7 @@ class APISite(BaseSite):
     def page_extlinks(self, page, step=None, total=None):
         """Iterate all external links on page, yielding URL strings."""
         eltitle = page.title(withSection=False)
-        elquery = self._generator(api.PropertyGenerator, type_arg="extlinks",
+        elquery = self._generator(PropertyGenerator, type_arg="extlinks",
                                   titles=eltitle.encode(self.encoding()),
                                   step=step, total=total)
         for pageitem in elquery:
@@ -1307,7 +1322,7 @@ class APISite(BaseSite):
     def getcategoryinfo(self, category):
         """Retrieve data on contents of category."""
         cititle = category.title(withSection=False)
-        ciquery = self._generator(api.PropertyGenerator,
+        ciquery = self._generator(PropertyGenerator,
                                   type_arg="categoryinfo",
                                   titles=cititle.encode(self.encoding()))
         for pageitem in ciquery:
@@ -1381,7 +1396,7 @@ class APISite(BaseSite):
                 #filterredirs = False
                 pass
 
-        apgen = self._generator(api.PageGenerator, type_arg="allpages",
+        apgen = self._generator(PageGenerator, type_arg="allpages",
                                 gapnamespace=str(namespace),
                                 gapfrom=start, step=step, total=total,
                                 g_content=content)
@@ -1440,7 +1455,7 @@ class APISite(BaseSite):
             raise Error("alllinks: unique and fromids cannot both be True.")
         if not isinstance(namespace, int):
             raise Error("alllinks: only one namespace permitted.")
-        algen = self._generator(api.ListGenerator, type_arg="alllinks",
+        algen = self._generator(ListGenerator, type_arg="alllinks",
                                 alnamespace=str(namespace), alfrom=start,
                                 step=step, total=total)
         if prefix:
@@ -1472,7 +1487,7 @@ class APISite(BaseSite):
             description page, not the pages that are members of the category
 
         """
-        acgen = self._generator(api.CategoryPageGenerator,
+        acgen = self._generator(CategoryPageGenerator,
                                 type_arg="allcategories", gacfrom=start,
                                 step=step, total=total, g_content=content)
         if prefix:
@@ -1506,7 +1521,7 @@ class APISite(BaseSite):
         @type group: str
 
         """
-        augen = self._generator(api.ListGenerator, type_arg="allusers",
+        augen = self._generator(ListGenerator, type_arg="allusers",
                                 auprop="editcount|groups|registration",
                                 aufrom=start, step=step, total=total)
         if prefix:
@@ -1535,7 +1550,7 @@ class APISite(BaseSite):
             description page, not the image itself
 
         """
-        aigen = self._generator(api.ImagePageGenerator,
+        aigen = self._generator(ImagePageGenerator,
                                 type_arg="allimages", gaifrom=start,
                                 step=step, total=total, g_content=content)
         if prefix:
@@ -1579,7 +1594,7 @@ class APISite(BaseSite):
                     raise pywikibot.Error(
                         "blocks: "
                         "endtime must be before starttime with reverse=False")
-        bkgen = self._generator(api.ListGenerator, type_arg="blocks",
+        bkgen = self._generator(ListGenerator, type_arg="blocks",
                                 step=step, total=total)
         bkgen.request["bkprop"] = "id|user|by|timestamp|expiry|reason|range|flags"
         if starttime:
@@ -1604,7 +1619,7 @@ class APISite(BaseSite):
         @param protocol: The protocol prefix (default: "http")
 
         """
-        eugen = self._generator(api.PageGenerator, type_arg="exturlusage",
+        eugen = self._generator(PageGenerator, type_arg="exturlusage",
                                 geuquery=url, geuprotocol=protocol,
                                 namespaces=namespaces, step=step,
                                 total=total, g_content=content)
@@ -1627,7 +1642,7 @@ class APISite(BaseSite):
         if filterredir is not None:
             iuargs["giufilterredir"] = (filterredir and "redirects"
                                         or "nonredirects")
-        iugen = self._generator(api.PageGenerator, type_arg="imageusage",
+        iugen = self._generator(PageGenerator, type_arg="imageusage",
                                 namespaces=namespaces, step=step,
                                 total=total, g_content=content, **iuargs)
         return iugen
@@ -1658,7 +1673,7 @@ class APISite(BaseSite):
                     raise Error(
                         "logevents: "
                         "start must be later than end with reverse=False")
-        legen = self._generator(api.LogEntryListGenerator, type_arg=logtype,
+        legen = self._generator(LogEntryListGenerator, type_arg=logtype,
                                 step=step, total=total)
         if logtype is not None:
             legen.request["letype"] = logtype
@@ -1728,7 +1743,7 @@ class APISite(BaseSite):
                     raise Error(
                         "recentchanges: "
                         "start must be later than end with reverse=False")
-        rcgen = self._generator(api.ListGenerator, type_arg="recentchanges",
+        rcgen = self._generator(ListGenerator, type_arg="recentchanges",
                                 rcprop="user|comment|timestamp|title|ids"
                                        "|sizes|redirect|loginfo|flags",
                                 namespaces=namespaces, step=step,
@@ -1803,7 +1818,7 @@ class APISite(BaseSite):
         if not namespaces:
             pywikibot.warning("search: namespaces cannot be empty; using [0].")
             namespaces = [0]
-        srgen = self._generator(api.PageGenerator, type_arg="search",
+        srgen = self._generator(PageGenerator, type_arg="search",
                                 gsrsearch=searchstring, gsrwhat=where,
                                 namespaces=namespaces, step=step,
                                 total=total, g_content=content)
@@ -1844,7 +1859,7 @@ class APISite(BaseSite):
                     raise Error(
                         "usercontribs: "
                         "start must be later than end with reverse=False")
-        ucgen = self._generator(api.ListGenerator, type_arg="usercontribs",
+        ucgen = self._generator(ListGenerator, type_arg="usercontribs",
                                 ucprop="ids|title|timestamp|comment|flags",
                                 namespaces=namespaces, step=step,
                                 total=total)
@@ -1893,7 +1908,7 @@ class APISite(BaseSite):
                     raise Error(
                         "watchlist_revs: "
                         "start must be later than end with reverse=False")
-        wlgen = self._generator(api.ListGenerator, type_arg="watchlist",
+        wlgen = self._generator(ListGenerator, type_arg="watchlist",
                                 wlprop="user|comment|timestamp|title|ids|flags",
                                 wlallrev="", namespaces=namespaces,
                                 step=step, total=total)
@@ -1968,7 +1983,7 @@ class APISite(BaseSite):
                         "User:%s not authorized to view deleted content."
                         % self.user())
 
-        drgen = self._generator(api.ListGenerator, type_arg="deletedrevs",
+        drgen = self._generator(ListGenerator, type_arg="deletedrevs",
                                 titles=page.title(withSection=False),
                                 drprop="revid|user|comment|minor",
                                 step=step, total=total)
@@ -1992,7 +2007,7 @@ class APISite(BaseSite):
         """
         if not isinstance(usernames, str):
             usernames = "|".join(usernames)
-        usgen = pywikibot.data.api.ListGenerator(
+        usgen = pywikibot.data.ListGenerator(
             "users", ususers=usernames, site=self,
             usprop="blockinfo|groups|editcount|registration|emailable"
         )
@@ -2025,7 +2040,7 @@ class APISite(BaseSite):
             (default False)
 
         """
-        rngen = self._generator(api.PageGenerator, type_arg="random",
+        rngen = self._generator(PageGenerator, type_arg="random",
                                 namespaces=namespaces, step=step, total=total,
                                 g_content=content)
         if redirects:
@@ -2722,7 +2737,7 @@ class APISite(BaseSite):
         Yields a tuple of Page object, length(int).
 
         """
-        lpgen = self._generator(api.ListGenerator,
+        lpgen = self._generator(ListGenerator,
                                 type_arg="querypage", qppage="Longpages",
                                 step=step, total=total)
         for pageitem in lpgen:
@@ -2737,7 +2752,7 @@ class APISite(BaseSite):
         Yields a tuple of Page object, length(int).
 
         """
-        spgen = self._generator(api.ListGenerator,
+        spgen = self._generator(ListGenerator,
                                 type_arg="querypage", qppage="Shortpages",
                                 step=step, total=total)
         for pageitem in spgen:
@@ -2748,7 +2763,7 @@ class APISite(BaseSite):
     @deprecate_arg("repeat", None)
     def deadendpages(self, step=None, total=None):
         """Yield Page objects retrieved from Special:Deadendpages."""
-        degen = self._generator(api.PageGenerator,
+        degen = self._generator(PageGenerator,
                                 type_arg="querypage", gqppage="Deadendpages",
                                 step=step, total=total)
         return degen
@@ -2757,7 +2772,7 @@ class APISite(BaseSite):
     @deprecate_arg("repeat", None)
     def ancientpages(self, step=None, total=None):
         """Yield Pages, datestamps from Special:Ancientpages."""
-        apgen = self._generator(api.ListGenerator,
+        apgen = self._generator(ListGenerator,
                                 type_arg="querypage", qppage="Ancientpages",
                                 step=step, total=total)
         for pageitem in apgen:
@@ -2768,7 +2783,7 @@ class APISite(BaseSite):
     @deprecate_arg("repeat", None)
     def lonelypages(self, step=None, total=None):
         """Yield Pages retrieved from Special:Lonelypages."""
-        lpgen = self._generator(api.PageGenerator,
+        lpgen = self._generator(PageGenerator,
                                 type_arg="querypage", gqppage="Lonelypages",
                                 step=step, total=total)
         return lpgen
@@ -2779,7 +2794,7 @@ class APISite(BaseSite):
         """Yield Pages from Special:Unwatchedpages (requires Admin privileges).
 
         """
-        uwgen = self._generator(api.PageGenerator,
+        uwgen = self._generator(PageGenerator,
                                 type_arg="querypage", gqppage="Unwatchedpages",
                                 step=step, total=total)
         return uwgen
@@ -2789,7 +2804,7 @@ class APISite(BaseSite):
     def uncategorizedcategories(self, number=None, repeat=True,
                                 step=None, total=None):
         """Yield Categories from Special:Uncategorizedcategories."""
-        ucgen = self._generator(api.CategoryPageGenerator,
+        ucgen = self._generator(CategoryPageGenerator,
                                 type_arg="querypage",
                                 gqppage="Uncategorizedcategories",
                                 step=step, total=total)
@@ -2800,7 +2815,7 @@ class APISite(BaseSite):
     def uncategorizedimages(self, number=None, repeat=True,
                             step=None, total=None):
         """Yield ImagePages from Special:Uncategorizedimages."""
-        uigen = self._generator(api.ImagePageGenerator,
+        uigen = self._generator(ImagePageGenerator,
                                 type_arg="querypage",
                                 gqppage="Uncategorizedimages",
                                 step=step, total=total)
@@ -2814,7 +2829,7 @@ class APISite(BaseSite):
     def uncategorizedpages(self, number=None, repeat=True,
                            step=None, total=None):
         """Yield Pages from Special:Uncategorizedpages."""
-        upgen = self._generator(api.PageGenerator,
+        upgen = self._generator(PageGenerator,
                                 type_arg="querypage",
                                 gqppage="Uncategorizedpages",
                                 step=step, total=total)
@@ -2825,7 +2840,7 @@ class APISite(BaseSite):
     def uncategorizedtemplates(self, number=None, repeat=True, step=None,
                                total=None):
         """Yield Pages from Special:Uncategorizedtemplates."""
-        utgen = self._generator(api.PageGenerator,
+        utgen = self._generator(PageGenerator,
                                 type_arg="querypage",
                                 gqppage="Uncategorizedtemplates",
                                 step=step, total=total)
@@ -2835,7 +2850,7 @@ class APISite(BaseSite):
     @deprecate_arg("repeat", None)
     def unusedcategories(self, step=None, total=None):
         """Yield Category objects from Special:Unusedcategories."""
-        ucgen = self._generator(api.CategoryPageGenerator,
+        ucgen = self._generator(CategoryPageGenerator,
                                 type_arg="querypage",
                                 gqppage="Unusedcategories",
                                 step=step, total=total)
@@ -2845,7 +2860,7 @@ class APISite(BaseSite):
     @deprecate_arg("repeat", None)
     def unusedfiles(self, step=None, total=None):
         """Yield ImagePage objects from Special:Unusedimages."""
-        uigen = self._generator(api.ImagePageGenerator,
+        uigen = self._generator(ImagePageGenerator,
                                 type_arg="querypage",
                                 gqppage="Unusedimages",
                                 step=step, total=total)
@@ -2858,7 +2873,7 @@ class APISite(BaseSite):
     @deprecate_arg("repeat", None)
     def withoutinterwiki(self, step=None, total=None):
         """Yield Pages without language links from Special:Withoutinterwiki."""
-        wigen = self._generator(api.PageGenerator,
+        wigen = self._generator(PageGenerator,
                                 type_arg="querypage",
                                 gqppage="Withoutinterwiki",
                                 step=step, total=total)
@@ -2867,7 +2882,7 @@ class APISite(BaseSite):
     def broken_redirects(self, step=None, total=None):
         """Yield Pages without language links from Special:BrokenRedirects."""
         assert self.versionnumber >= 18
-        brgen = self._generator(api.PageGenerator,
+        brgen = self._generator(PageGenerator,
                                 type_arg="querypage",
                                 gqppage="BrokenRedirects",
                                 step=step, total=total)
@@ -2876,7 +2891,7 @@ class APISite(BaseSite):
     def double_redirects(self, step=None, total=None):
         """Yield Pages without language links from Special:BrokenRedirects."""
         assert self.versionnumber >= 18
-        drgen = self._generator(api.PageGenerator,
+        drgen = self._generator(PageGenerator,
                                 type_arg="querypage",
                                 gqppage="DoubleRedirects",
                                 step=step, total=total)
@@ -2885,7 +2900,7 @@ class APISite(BaseSite):
     def redirectpages(self, step=None, total=None):
         """Yield redirect pages from Special:ListRedirects."""
         assert self.versionnumber >= 18
-        lrgen = self._generator(api.PageGenerator,
+        lrgen = self._generator(PageGenerator,
                                 type_arg="querypage",
                                 gqppage="Listredirects",
                                 step=step, total=total)

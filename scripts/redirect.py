@@ -1,5 +1,7 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+
 """
 Script to resolve double redirects, and to delete broken redirects. Requires
 access to MediaWiki's maintenance pages or to a XML dump file. Delete

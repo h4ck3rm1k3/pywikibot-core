@@ -56,7 +56,7 @@ but 'p' must be included.
 #
 __version__ = '$Id$'
 #
-
+from pywikibot.page.itempage  import ItemPage
 import json
 import pywikibot
 from pywikibot import pagegenerators

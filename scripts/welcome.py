@@ -1,4 +1,6 @@
 # -*- coding: utf-8  -*-
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+
 """
 Script to welcome new users. This script works out of the box for Wikis that
 have been defined in the script. It is currently used on the Dutch, Norwegian,

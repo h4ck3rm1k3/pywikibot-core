@@ -10,7 +10,7 @@ Installer script for Pywikibot 2.0 framework
 __version__ = '$Id$'
 #
 
-import sys
+#import sys
 
 #from ez_setup import use_setuptools
 #use_setuptools()

@@ -1,17 +1,17 @@
 import datetime
-import difflib
+#import difflib
 #import logging
-import math
-import re
+#import math
+#import re
 #import sys
 import threading
-from queue import Queue
-import datetime
+#from queue import Queue
+#import datetime
 from config import loadconfig
-import threading
+#import threading
 from queue import Queue
 
-from pywikibot.bot import warning, output, inputChoice, debug, log
+from pywikibot.bot import output, inputChoice, debug, log
 import pywikibot.comms.pybothttp
 
 import atexit
@@ -55,7 +55,7 @@ class ThreadServer :
 
 
             self.page_put_queue.put((None, [], {}))
-            stopped = True
+            self.stopped = True
 
             if self.page_put_queue.qsize() > 1:
                 output('Waiting for %i pages to be put. Estimated time remaining: %s'
@@ -82,21 +82,21 @@ class ThreadServer :
     def async_manager(self):
         """Daemon; take requests from the queue and execute them in background."""
         while True:
-            (request2, args, kwargs) = page_put_queue.get()
+            (request2, args, kwargs) = self.page_put_queue.get()
             if request2 is None:
                 break
             pywikibot.comms.pybothttp.request(*args, **kwargs)
 
     def async_request(self,request, *args, **kwargs):
         """Put a request on the queue, and start the daemon if necessary."""
-        if not _putthread.isAlive():
+        if not self._putthread.isAlive():
             try:
-                page_put_queue.mutex.acquire()
+                self.page_put_queue.mutex.acquire()
                 try:
-                    _putthread.start()
+                    self._putthread.start()
                 except (AssertionError, RuntimeError):
                     pass
             finally:
-                page_put_queue.mutex.release()
-        page_put_queue.put((pywikibot.comms.pybothttp.request, args, kwargs))
+                self.page_put_queue.mutex.release()
+        self.page_put_queue.put((pywikibot.comms.pybothttp.request, args, kwargs))
 

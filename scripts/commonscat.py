@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8  -*-
+from pywikibot.page  import Page
 """
 With this tool you can add the template {{commonscat}} to categories.
 The tool works by following the interwiki links. If the template is present on

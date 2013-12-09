@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8  -*-
-
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
 """
 This bot goes over multiple pages of a wiki, and edits them without
 changing. This is for example used to get category links in templates

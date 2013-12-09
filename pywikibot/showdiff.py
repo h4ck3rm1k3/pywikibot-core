@@ -1,19 +1,20 @@
-import datetime
+#import datetime
 import difflib
 #import logging
-import math
-import re
+#import math
+#import re
 #import sys
-import threading
-from queue import Queue
+#import threading
+#from queue import Queue
+from pywikibot.bot  import output
 
 # Use pywikibot. prefix for all in-package imports; this is to prevent
 # confusion with similarly-named modules in version 1 framework, for users
 # who want to continue using both
 
-import pywikibot
-from pywikibot import config2 as config
-from pywikibot.bot import warning, output, inputChoice, debug
+#import pywikibot
+##from pywikibot import config2 as config
+#from pywikibot.bot import warning, output, inputChoice, debug
 #from pywikibot.exceptions import *
 #from pywikibot.textlib import *
 #from pywikibot.i18n import translate

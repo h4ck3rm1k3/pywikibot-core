@@ -50,7 +50,7 @@ class UI:
             'white',
         ]
 
-        self.colorTagR = re.compile('\03{(?P<name>%s)}' % '|'.join(colors))
+        self.colorTagR = re.compile('\03{(?P<name>%s)}' % '|'.join(self.colors))
 
         self.stdin = sys.stdin
         self.stdout = sys.stdout
@@ -79,7 +79,7 @@ class UI:
 
         # default handler for display to terminal
         default_handler = TerminalHandler(self, strm=default_stream)
-        if config.verbose_output:
+        if self.config.verbose_output:
             default_handler.setLevel(VERBOSE)
         else:
             default_handler.setLevel(INFO)
@@ -110,7 +110,7 @@ class UI:
         for i, line in enumerate(lines):
             if i > 0:
                 line = "\n" + line
-            line, count = colorTagR.subn('', line)
+            line, count = self.colorTagR.subn('', line)
             if count > 0:
                 line += ' ***'
             targetStream.write(line.encode(self.encoding, 'replace'))
@@ -118,7 +118,7 @@ class UI:
     printColorized = printNonColorized
 
     def _print(self, text, targetStream):
-        if config.colorized_output:
+        if self.config.colorized_output:
             self.printColorized(text, targetStream)
         else:
             self.printNonColorized(text, targetStream)
@@ -129,7 +129,7 @@ class UI:
         terminal, it will be replaced with a question mark or by a
         transliteration.
         """
-        if config.transliterate:
+        if self.config.transliterate:
             # Encode our unicode string in the encoding used by the user's
             # console, and decode it back to unicode. Then we can see which
             # characters can't be represented in the console encoding.
@@ -150,10 +150,10 @@ class UI:
                 # original question marks.
                 if codecedText[i] == '?' and text[i] != '?':
                     try:
-                        transliterated = transliterator.transliterate(
+                        transliterated = self.transliterator.transliterate(
                             text[i], default='?', prev=prev, next=text[i + 1])
                     except IndexError:
-                        transliterated = transliterator.transliterate(
+                        transliterated = self.transliterator.transliterate(
                             text[i], default='?', prev=prev, next=' ')
                     # transliteration was successful. The replacement
                     # could consist of multiple letters.
@@ -193,7 +193,7 @@ class UI:
         """
 
         # sound the terminal bell to notify the user
-        if config.ring_bell:
+        if self.config.ring_bell:
             sys.stdout.write('\07')
         # TODO: make sure this is logged as well
         self.output(question + ' ')

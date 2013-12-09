@@ -10,6 +10,6 @@ class UI :
 
 #ui = UI()
 
-def get_ui():
-    return ui.ui
+#def get_ui():
+    #return ui.ui
     

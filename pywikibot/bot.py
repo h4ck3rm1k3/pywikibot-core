@@ -13,7 +13,7 @@ __version__ = '$Id$'
 # class definition that can be subclassed to create new, functional bot
 # scripts, instead of writing each one from scratch.
 import traceback
-
+from pywikibot.config import loadconfig
 import logging
 import logging.handlers
        # all output goes thru python std library "logging" module
@@ -31,7 +31,7 @@ STDOUT = 16
 VERBOSE = 18
 INPUT = 25
 
-#from pywikibot.config import loadconfig
+
 
 import pywikibot
 #from pywikibot import config
@@ -109,6 +109,7 @@ class LoggingFormatter(logging.Formatter):
     whether the output to the user's console does.
 
     """
+
     def formatException(self, ei):
         """
         Make sure that the exception trace is converted to unicode:
@@ -120,6 +121,7 @@ class LoggingFormatter(logging.Formatter):
 
         Formatter.formatException also strips the trailing \n, which we need.
         """
+        config = loadconfig()
         strExc = logging.Formatter.formatException(self, ei)
 
         if isinstance(strExc, str):
@@ -534,6 +536,7 @@ def handleArgs(*args):
     args may be passed as an argument, thereby overriding sys.argv
 
     """
+    config=loadconfig()
     # get commandline arguments if necessary
     if not args:
         # it's the version in pywikibot.__init__ that is changed by scripts,

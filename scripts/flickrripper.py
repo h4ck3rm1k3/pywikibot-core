@@ -31,6 +31,11 @@ Todo:
 #
 __version__ = '$Id$'
 #
+class FlickrAPI:
+    pass 
+
+class FlickrError :
+    pass 
 
 import urllib.request, urllib.parse, urllib.error
 import re
@@ -86,7 +91,7 @@ def getPhoto(flickr=None, photo_id=''):
             photoSizes = flickr.photos_getSizes(photo_id=photo_id)
             #xml.etree.ElementTree.dump(photoSizes)
             gotPhoto = True
-        except flickrapi.exceptions.FlickrError:
+        except FlickrError:
             #gotPhotos = False
             pywikibot.output('Flickr api problem, sleeping')
             time.sleep(30)
@@ -434,7 +439,7 @@ def getPhotos(flickr=None, user_id='', group_id='', photoset_id='',
                             else:
                                 yield photo.attrib['id']
 
-                except flickrapi.exceptions.FlickrError:
+                except FlickrError:
                     gotPhotos = False
                     pywikibot.output('Flickr api problem, sleeping')
                     time.sleep(30)
@@ -463,7 +468,7 @@ def getPhotos(flickr=None, user_id='', group_id='', photoset_id='',
                             else:
                                 yield photo.attrib['id']
 
-                except flickrapi.exceptions.FlickrError:
+                except FlickrError:
                     gotPhotos = False
                     pywikibot.output('Flickr api problem, sleeping')
                     time.sleep(30)
@@ -492,7 +497,7 @@ def getPhotos(flickr=None, user_id='', group_id='', photoset_id='',
                             else:
                                 yield photo.attrib['id']
 
-                except flickrapi.exceptions.FlickrError:
+                except FlickrError:
                     gotPhotos = False
                     pywikibot.output('Flickr api problem, sleeping')
                     time.sleep(30)
@@ -527,7 +532,7 @@ def main():
         return
 
     if 'api_secret' in config.flickr and config.flickr['api_secret']:
-        flickr = flickrapi.FlickrAPI(config.flickr['api_key'], config.flickr['api_secret'])
+        flickr = FlickrAPI(config.flickr['api_key'], config.flickr['api_secret'])
         (token, frob) = flickr.get_token_part_one(perms='read')
         if not token:
             # The user still hasn't authorised this app yet, get_token_part_one() will have spawn a browser window
@@ -535,7 +540,7 @@ def main():
         flickr.get_token_part_two((token, frob))
     else:
         pywikibot.output('Accessing public content only')
-        flickr = flickrapi.FlickrAPI(config.flickr['api_key'])
+        flickr = FlickrAPI(config.flickr['api_key'])
 
     group_id = ''
     photoset_id = ''

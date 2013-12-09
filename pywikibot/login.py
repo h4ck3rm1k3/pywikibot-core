@@ -11,7 +11,7 @@ Library to log the robot in to a wiki account.
 #
 __version__ = '$Id$'
 #
-
+from pywikibot.page  import Page
 #import logging
 #import pywikibot
 #from 
@@ -29,11 +29,14 @@ from pywikibot.bot import debug, log,  user_input, error
 # If bots are listed in a template, the templates name must be given as
 # second parameter, otherwise it must be None
 
-
+from pywikibot.config import loadconfig
 class LoginManager(object):
     @deprecate_arg("username", "user")
     @deprecate_arg("verbose", None)
     def __init__(self, password=None, sysop=False, site=None, user=None):
+
+        self.config = loadconfig()
+
         self._logger = "wiki.login"
         self.botList = {
             'wikipedia': {
@@ -53,7 +56,7 @@ class LoginManager(object):
             self._username = user
         elif sysop:
             try:
-                self._username = config.sysopnames[
+                self._username = self.config.sysopnames[
                     self._site.family.name][self._site.code]
             except KeyError:
                 raise NoUsername(
@@ -65,7 +68,7 @@ sysopnames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
                        'wiki_code': self._site.code})
         else:
             try:
-                self._username = config.usernames[
+                self._username = self.config.usernames[
                     self._site.family.name][self._site.code]
             except:
                 raise NoUsername(
@@ -76,7 +79,7 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
                     % {'fam_name': self._site.family.name,
                        'wiki_code': self._site.code})
         self._password = password
-        if getattr(config, 'password_file', ''):
+        if getattr(self.config, 'password_file', ''):
             self.readPassword()
 
     @property
@@ -144,9 +147,9 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
         Returns nothing.
         """
         # THIS IS OVERRIDDEN IN data/api.py
-        filename = config.datafilepath('pywikibot.lwp')
+        filename = self.config.datafilepath('pywikibot.lwp')
         debug("Storing cookies to %s" % filename,
-                        _logger)
+                        self._logger)
         f = open(filename, 'w')
         f.write(data)
         f.close()
@@ -172,7 +175,7 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
         (u"my_sysop_user", u"my_sysop_password")
         (u"en", u"wikipedia", u"my_en_user", u"my_en_pass")
         """
-        password_f = open(config.password_file)
+        password_f = open(self.config.password_file)
         for line in password_f:
             if not line.strip():
                 continue

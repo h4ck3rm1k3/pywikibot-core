@@ -6,15 +6,11 @@ __version__ = '$Id$'
 
 import os
 import unittest
-#import test_utils
-#import pywikibot
-#import data_ingestion
-import scripts.data_ingestion 
-
+from scripts.data_ingestion  import Photo
 
 class TestPhoto(unittest.TestCase):
     def setUp(self):
-        self.obj = data_ingestion.Photo(URL='http://upload.wikimedia.org/wikipedia/commons/f/fc/MP_sounds.png',
+        self.obj = Photo(URL='http://upload.wikimedia.org/wikipedia/commons/f/fc/MP_sounds.png',
                                         metadata={'description.en': '"Sounds" icon',
                                                   'source': 'http://commons.wikimedia.org/wiki/File:Sound-icon.svg',
                                                   'author': 'KDE artists | Silstor',
@@ -45,11 +41,12 @@ class TestPhoto(unittest.TestCase):
 |source=http://commons.wikimedia.org/wiki/File:Sound-icon.svg
 }}""")  # noqa
 
+from scripts.data_ingestion  import CSVReader
 
 class TestCSVReader(unittest.TestCase):
     def setUp(self):
         fileobj = open(os.path.join(os.path.split(__file__)[0], 'data', 'csv_ingestion.csv'))
-        self.iterator = data_ingestion.CSVReader(fileobj, 'url')
+        self.iterator = CSVReader(fileobj, 'url')
         self.obj = next(self.iterator)
 
     def test_PhotoURL(self):

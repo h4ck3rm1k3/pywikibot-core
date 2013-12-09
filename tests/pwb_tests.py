@@ -9,7 +9,7 @@ __version__ = '$Id$'
 import os
 import sys
 import subprocess
-import pywikibot
+#import pywikibot
 from pywikibot.config import loadconfig
 from tests.utils import unittest
 

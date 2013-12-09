@@ -1,3 +1,5 @@
+from pywikibot.site.base  import BaseSite as Site
+import math
 class Coordinate(object):
     """
     Class for handling and storing Coordinates.

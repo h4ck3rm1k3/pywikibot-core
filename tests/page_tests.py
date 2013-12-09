@@ -2,6 +2,7 @@
 """
 Tests for the page module.
 """
+from pywikibot.page.imagepage  import ImagePage
 #
 # (C) Pywikipedia bot team, 2008
 #
@@ -21,10 +22,10 @@ from pywikibot.families.wikipedia_family import Family as WikipediaFamily
 from pywikibot.families.wiktionary_family import Family as WiktionaryFamily
 from pywikibot.page import Page
 from pywikibot.exceptions import NoPage
-import pprint
+#import pprint
 from pywikibot.bot import debug
 from pywikibot.timestamp  import Timestamp
-
+from pywikibot.page.category  import Category
 class TestBase(PywikibotTestCase):
 
     def __init__(self,  tests):

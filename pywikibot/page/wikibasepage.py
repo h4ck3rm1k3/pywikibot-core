@@ -1,17 +1,20 @@
 
-import pywikibot
+#import pywikibot
 #from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
-from pywikibot import config
-import pywikibot.site
-import hashlib
-import html.entities 
-import logging
-import re
-import unicodedata
-import urllib
-import collections
+#from pywikibot import config
+#import pywikibot.site
+#import hashlib
+#import html.entities 
+#import logging
+#import re
+#import unicodedata
+#import urllib
+#import collection
+from pywikibot.exceptions  import NoPage
 from pywikibot.page import Page
+from pywikibot.site.base  import BaseSite
+
 class WikibasePage(Page):
     """
     The base page for the Wikibase extension.

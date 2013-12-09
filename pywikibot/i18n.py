@@ -15,7 +15,7 @@ import re
 import locale
 from pywikibot.exceptions import Error
 from .plural import plural_rules
-import pywikibot
+#import pywikibot
 #import pywikibot.config2 as config
 from pywikibot.bot import  user_input
 # output, calledModuleName, log,  warning, inputChoice, 
@@ -227,6 +227,7 @@ class TranslationError(Error):
     pass
 
 from pywikibot.config import loadconfig
+config = loadconfig()
 
 def translate(code, xdict, parameters=None, fallback=True):
     """Return the most appropriate translation from a translation dict.

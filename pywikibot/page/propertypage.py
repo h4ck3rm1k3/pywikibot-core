@@ -1,5 +1,5 @@
 
-import pywikibot
+#import pywikibot
 #from pywikibot.deprecate import deprecate_arg
 #from pywikibot.deprecate import deprecated
 #from pywikibot import config

@@ -28,7 +28,7 @@ Tests for the page module.
 #
 #
 __version__ = '$Id$'
-
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName, error, critical, debug, exception
 import io
 import logging
 import os

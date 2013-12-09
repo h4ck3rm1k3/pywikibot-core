@@ -19,7 +19,7 @@ These parameters are supported to specify which pages titles to print:
 #
 __version__ = '$Id$'
 #
-
+from pywikibot.page.itempage  import ItemPage
 import re
 #import sys
 import codecs
@@ -35,7 +35,8 @@ from pywikibot.bot import    user_input
 #from pywikibot.page.category import Category
 from pywikibot.deprecate import deprecate_arg
 #from pywikibot.deprecate import deprecated
-
+from pywikibot import i18n
+from pywikibot.page.category  import Category
 # ported from version 1 for backwards-compatibility
 # most of these functions just wrap a Site or Page method that returns
 # a generator

@@ -503,8 +503,8 @@ class Global(object):
     repository = False
 
     def __init__(self, config):
-        minsubjects = config.interwiki_min_subjects
-        contentsondisk = config.interwiki_contents_on_disk
+        self.minsubjects = config.interwiki_min_subjects
+        self.contentsondisk = config.interwiki_contents_on_disk
         
     def readOptions(self, arg):
         """ Read all commandline parameters for the global container """

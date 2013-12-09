@@ -1,24 +1,24 @@
 u"""
 from pywikibot.familybase import Family as FamilyBase
 """
-import sys
-import datetime
-import difflib
-#import logging
-import math
-import re
 #import sys
-import threading
-from queue import Queue
+#import datetime
+#import difflib
+#import logging
+#import math
+#import re
+#import sys
+#import threading
+#from queue import Queue
 
 # Use pywikibot. prefix for all in-package imports; this is to prevent
 # confusion with similarly-named modules in version 1 framework, for users
 # who want to continue using both
 
-import pywikibot
+#import pywikibot
 #from pywikibot.config import loadconfig
-from pywikibot.bot import warning, output, inputChoice, debug
-from pywikibot.exceptions import Error
+#from pywikibot.bot import warning, output, inputChoice, debug
+#from pywikibot.exceptions import Error
 #from pywikibot.textlib import *
 #from pywikibot.i18n import translate
 

@@ -86,19 +86,12 @@ class BaseSite(object):
     def pagelanglinks(self, step, total):
         pass
 
-    def pagelinks(self):
-        pass
-
     def language (self, code='en'):
         return "en"
 
 
     def case(self, code='en'):
         return "first-letter"
-
-
-    def page_isredirect(self, page):
-        pass
 
     def pagereferences(
             self,

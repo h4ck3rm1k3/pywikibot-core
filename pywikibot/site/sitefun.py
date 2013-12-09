@@ -1,7 +1,7 @@
 #_sites = {}
 #getSite = Site  # alias for backwards-compability
 from pywikibot.config import loadconfig
-from pywikibot.bot import debug
+#from pywikibot.bot import debug
 from pywikibot.site.base import BaseSite
 class SiteManager :
     def __init__(self):
@@ -19,7 +19,7 @@ class SiteManager :
         @param user: bot user name to use on this site
         @type user: unicode
         """
-        _logger = "wiki"
+        #_logger = "wiki"
 
         config = loadconfig()
 

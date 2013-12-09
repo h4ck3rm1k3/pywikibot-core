@@ -65,7 +65,7 @@ __version__ = '$Id$'
 #
 __version__ = '$Id$'
 #
-
+from pywikibot.page.itempage  import ItemPage
 #import os.path
 import pickle
 import re

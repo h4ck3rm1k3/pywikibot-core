@@ -1,4 +1,4 @@
-import pywikibot
+#import pywikibot
 from mustbe import must_be
 from tests.utils import unittest
 from pywikibot.site.apisite import APISite

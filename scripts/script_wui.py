@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8  -*-
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
 """
 Robot which runs python framework scripts as (sub-)bot and provides a
 WikiUserInterface (WUI) with Lua support for bot operators.

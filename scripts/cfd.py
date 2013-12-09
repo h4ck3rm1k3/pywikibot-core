@@ -22,7 +22,7 @@ from . import category
 
 # The location of the CFD working page.
 cfdPage = 'Wikipedia:Categories for discussion/Working'
-from pywikibot.page.category import Category
+#from pywikibot.page.category import Category
 # A list of templates that are used on category pages as part of the CFD
 # process that contain information such as the link to the per-day discussion page.
 cfdTemplates = ['Cfd full', 'Cfr full']
