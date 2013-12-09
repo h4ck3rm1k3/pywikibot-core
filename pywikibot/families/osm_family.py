@@ -2,14 +2,14 @@
 
 __version__ = '$Id$'
 
-from pywikibot.families.familybase import Family
+from pywikibot.families.familybase import Family as FamilyBase
 
 
 # The project wiki of OpenStreetMap (OSM).
-class Family(family.Family):
+class Family(FamilyBase):
 
     def __init__(self):
-        family.Family.__init__(self)
+        FamilyBase.__init__(self)
         self.name = 'osm'
         self.langs = {
             'en': 'wiki.openstreetmap.org',

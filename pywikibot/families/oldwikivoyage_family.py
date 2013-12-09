@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from pywikibot.families.familybase import Family
+from pywikibot.families.familybase import Family as FamilyBase
 
 __version__ = '$Id$'
 
 
 #Family file for the original wikivoyage
-class Family(family.Family):
+class Family (FamilyBase):
     def __init__(self):
-        family.Family.__init__(self)
+        Family.__init__(self)
         self.name = 'oldwikivoyage'
         self.langs = {
             'de': 'www.wikivoyage-old.org',

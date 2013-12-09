@@ -17,8 +17,8 @@ import sys
 import os
 import tempfile
 #import pywikibot
-from pywikibot import config2 as config
-from pywikibot.userinterfaces import UI
+#from pywikibot import config2 as config
+#from pywikibot.userinterfaces import UI
 
 class TextEditor(object):
     def __init__(self):

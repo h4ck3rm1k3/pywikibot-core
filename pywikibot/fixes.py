@@ -666,7 +666,8 @@ fixes = {
 #
 # Load the user fixes file.
 
-from pywikibot import config
+from pywikibot.config import loadconfig
+config = loadconfig()
 
 try:
     exec(compile(open(config.datafilepath("user-fixes.py")).read(), config.datafilepath("user-fixes.py"), 'exec'))

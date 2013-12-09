@@ -27,16 +27,16 @@ from pywikibot.page import Page
 class TestGeneral(PywikibotTestCase):
     def setUp(self):
         self.site = Site('en', 'wikipedia')
-        self.mainpage = Page(Link("Main Page", site))
-        self.wikidata = site.data_repository()
+        self.mainpage = Page(Link("Main Page", self.site))
+        self.wikidata = self.site.data_repository()
 
 class TestGeneral(TestGeneral):
     def testWikibase(self):
-        if not site.has_transcluded_data:
+        if not self.site.has_transcluded_data:
             return
-        repo = site.data_repository()
-        item = pywikibot.ItemPage.fromPage(mainpage)
-        self.assertType(item, pywikibot.ItemPage)
+        repo = self.site.data_repository()
+        item = ItemPage.fromPage(self.mainpage)
+        self.assertType(item, ItemPage)
         self.assertEqual(item.getID(), 'Q5296')
         self.assertEqual(item.title(), 'Q5296')
         self.assertTrue('en' in item.labels)
@@ -44,7 +44,7 @@ class TestGeneral(TestGeneral):
         self.assertTrue('en' in item.aliases)
         self.assertTrue('HomePage' in item.aliases['en'])
         self.assertEqual(item.namespace(), 0)
-        item2 = pywikibot.ItemPage(repo, 'q5296')
+        item2 = ItemPage(repo, 'q5296')
         self.assertEqual(item2.getID(), 'Q5296')
         self.assertEqual(item.labels['en'], 'Main Page')
         prop = pywikibot.PropertyPage(repo, 'Property:P21')
@@ -52,23 +52,23 @@ class TestGeneral(TestGeneral):
         self.assertEqual(prop.namespace(), 120)
         claim = pywikibot.Claim(repo, 'p21')
         self.assertRaises(ValueError, claim.setTarget, value="test")
-        claim.setTarget(pywikibot.ItemPage(repo, 'q1'))
+        claim.setTarget(ItemPage(repo, 'q1'))
         self.assertEqual(claim._formatDataValue(), {'entity-type': 'item', 'numeric-id': 1})
 
         # test WikibasePage.__cmp__
-        self.assertEqual(pywikibot.ItemPage.fromPage(mainpage), pywikibot.ItemPage(repo, 'q5296'))
+        self.assertEqual(ItemPage.fromPage(self.mainpage), ItemPage(repo, 'q5296'))
 
     def testItemPageExtensionability(self):
-        class MyItemPage(pywikibot.ItemPage):
+        class MyItemPage(ItemPage):
             pass
-        self.assertIsInstance(MyItemPage.fromPage(mainpage), MyItemPage)
+        self.assertIsInstance(MyItemPage.fromPage(self.mainpage), MyItemPage)
 
 
 class TestLinks(PywikibotTestCase):
     """Test cases to test links stored in wikidata"""
     def setUp(self):
         super(TestLinks, self).setUp()
-        self.wdp = pywikibot.ItemPage(wikidata, 'Q60')
+        self.wdp = ItemPage(self.wikidata, 'Q60')
         self.wdp.id = 'Q60'
         self.wdp._content = json.load(open(os.path.join(os.path.split(__file__)[0], 'pages', 'Q60_only_sitelinks.wd')))
         self.wdp.get()

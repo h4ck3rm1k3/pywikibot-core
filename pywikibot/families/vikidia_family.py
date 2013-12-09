@@ -2,12 +2,12 @@
 
 __version__ = '$Id$'
 
-from pywikibot.families.familybase import Family
+from pywikibot.families.familybase import Family as FamilyBase
 
 
-class Family(family.Family):
+class Family (FamilyBase):
     def __init__(self):
-        family.Family.__init__(self)
+        Family.__init__(self)
         self.name = 'vikidia'
 
         self.langs = {

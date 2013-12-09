@@ -114,8 +114,8 @@ starsList = [
     'وصلة مقالة مختارة',
 ]
 
-
-class NoEnoughData(pywikibot.Error):
+from pywikibot.exceptions  import Error
+class NoEnoughData(Error):
     """ Error class for when the user doesn't specified all the data needed """
 
 

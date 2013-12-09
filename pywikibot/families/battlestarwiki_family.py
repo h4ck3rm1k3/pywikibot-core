@@ -1,12 +1,13 @@
 # -*- coding: utf-8  -*-
 __version__ = '$Id$'
 
-from pywikibot.family import Family as FamilyBase
 
-
+from pywikibot.families.familybase import Family as FamilyBase
 # The Battlestar Wiki family, a set of Battlestar wikis.
 # http://battlestarwiki.org/
-class Family(FamilyBase):
+
+class Family (FamilyBase):
+
     def __init__(self):
         self.langs={}
         FamilyBase.__init__(self)

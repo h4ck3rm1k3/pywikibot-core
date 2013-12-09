@@ -71,7 +71,7 @@ import pywikibot
 from pywikibot import i18n
 from pywikibot import pagegenerators
 from pywikibot import config
-from Category import Category
+from pywikibot.page.category import Category
 # This is required for the text that is shown when you run this script
 # with the parameter -help.
 docuReplacements = {

@@ -15,7 +15,7 @@ try:
 except ImportError:
     pydotfound = False
 import pywikibot
-from pywikibot import config2 as config
+#from pywikibot import config2 as config
 
 
 class GraphImpossible(Exception):

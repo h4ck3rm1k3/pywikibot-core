@@ -1,16 +1,16 @@
 # -*- coding: utf-8  -*-
 __version__ = '$Id$'
 
-from pywikibot.families.familybase import Family
+from pywikibot.families.familybase import Family as FamilyBase
 
 
 # The LyricWiki family
 
 # user_config.py:
 # usernames['lyricwiki']['en'] = 'user'
-class Family(family.Family):
+class Family (FamilyBase):
     def __init__(self):
-        family.Family.__init__(self)
+        Family.__init__(self)
         self.name = 'lyricwiki'
         self.langs = {
             'en': 'lyrics.wikia.com',

@@ -13,7 +13,6 @@ except ImportError:
 import codecs
 import os
 
-import pywikibot
 import pywikibot.textlib as textlib
 from pywikibot.config import loadconfig
 config = loadconfig()

@@ -99,7 +99,7 @@ class ClaimRobot:
         self.source_values = json.loads(page.get())
         self.source_values = self.source_values['wikipedia']
         for source_lang in self.source_values:
-            self.source_values[source_lang] = pywikibot.ItemPage(self.repo,
+            self.source_values[source_lang] = ItemPage(self.repo,
                                                                  self.source_values[source_lang])
 
     def run(self):
@@ -110,7 +110,7 @@ class ClaimRobot:
             pywikibot.output('\'exists\' argument set to \'%s\'' % self.exists_arg)
         for page in self.generator:
             pywikibot.output('Processing %s' % page)
-            item = pywikibot.ItemPage.fromPage(page)
+            item = ItemPage.fromPage(page)
             if not item.exists():
                 # TODO FIXME: We should provide an option to create the page
                 pywikibot.output('%s doesn\'t have a wikidata item :(' % page)
@@ -190,7 +190,7 @@ def main():
     for i in range(0, len(commandline_claims), 2):
         claim = pywikibot.Claim(repo, commandline_claims[i])
         if claim.getType() == 'wikibase-item':
-            target = pywikibot.ItemPage(repo, commandline_claims[i + 1])
+            target = ItemPage(repo, commandline_claims[i + 1])
         elif claim.getType() == 'string':
             target = commandline_claims[i + 1]
         elif claim.getType() == 'globecoordinate':

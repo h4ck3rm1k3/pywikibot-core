@@ -95,12 +95,6 @@ class Coordinate(object):
 
         The longitudinal can be derived as follows:
 
-        In small angle approximation (and thus in radians):
-
-        ¦¤¦Ë ¡Ö ¦¤pos / r_¦Õ, where r_¦Õ is the radius of earth at the given latitude. ¦¤¦Ë is the error in longitude.
-
-           r_¦Õ = r cos ¦Õ, where r is the radius of earth, ¦Õ the latitude
-
         Therefore: precision = math.degrees( self._dim / ( radius * math.cos( math.radians( self.lat ) ) ) )
         """
         if not self._precision:

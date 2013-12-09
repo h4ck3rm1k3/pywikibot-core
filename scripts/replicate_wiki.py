@@ -28,7 +28,7 @@ __version__ = '$Id$'
 
 import sys
 #import re
-from pywikibot import getSite, config, Page
+#from pywikibot import getSite, config, Page
 import pywikibot 
 
 

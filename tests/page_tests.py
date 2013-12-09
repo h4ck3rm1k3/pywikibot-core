@@ -23,7 +23,7 @@ from pywikibot.page import Page
 from pywikibot.exceptions import NoPage
 import pprint
 from pywikibot.bot import debug
-from pywikibot.timestamp import TimeStamp
+from pywikibot.timestamp  import Timestamp
 
 class TestBase(PywikibotTestCase):
 

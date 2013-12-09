@@ -94,7 +94,7 @@ This will move all pages in the category US to the category United States.
 #
 __version__ = '$Id$'
 #
-from Category import Category
+from pywikibot.page.category import Category
 import os
 import re
 import pickle

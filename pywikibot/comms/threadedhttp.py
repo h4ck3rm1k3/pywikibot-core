@@ -33,14 +33,14 @@ class RedirectLimit (Exception):
     pass 
 
 #import urllib.request, 
-from urllib.parse import urljoin, splittype, splithost, unquote
+#from urllib.parse import urljoin, splittype, splithost, unquote
+from urllib.parse import urljoin
 #urllib.error
-import http.cookiejar
 import urllib.request, urllib.parse, urllib.error
 import http.cookiejar
 #import sys
 
-import pywikibot
+#import pywikibot
 from pywikibot.bot import debug
 from pywikibot.config import loadconfig
 
@@ -124,14 +124,15 @@ class ConnectionPool(object):
             if identifier not in self.connections:
                 self.connections[identifier] = []
 
-            if len(self.connections[identifier]) == self.maxnum:
+            if not len(self.connections[identifier]) == self.maxnum:
+                self.connections[identifier].append(connection)
+            else:
                 debug("closing %s connection %r"
                                 % (identifier, connection),
                                 _logger)
                 connection.close()
                 del connection
-            else:
-                self.connections[identifier].append(connection)
+
         finally:
             self.lock.release()
 
@@ -234,11 +235,11 @@ class Http(httplib2.Http):
             )
             debug("after request %s " % response)
             #debug("after content %s " % content)
-        except Exception as e:  # what types?
+        except Exception as exp:  # what types?
             # return exception instance to be retrieved by the calling thread
             print(traceback.format_exc())
             print("exp %s" % (exp))
-            raise e
+            raise exp
             #return e
         self.follow_redirects = follow_redirects
 

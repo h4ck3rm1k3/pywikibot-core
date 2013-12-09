@@ -6,8 +6,7 @@ from pywikibot.families.familybase import Family as FamilyBase
 
 # The Adams family, no just kidding, for testing 
 
-class Family(FamilyBase):
-
+class Family (FamilyBase):
 
     def __init__(self):
         

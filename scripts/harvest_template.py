@@ -69,7 +69,7 @@ class HarvestRobot:
         self.source_values = json.loads(page.get())
         self.source_values = self.source_values['wikipedia']
         for source_lang in self.source_values:
-            self.source_values[source_lang] = pywikibot.ItemPage(self.repo,
+            self.source_values[source_lang] = ItemPage(self.repo,
                                                                  self.source_values[source_lang])
 
     def run(self):
@@ -102,7 +102,7 @@ class HarvestRobot:
         """
         Proces a single page
         """
-        item = pywikibot.ItemPage.fromPage(page)
+        item = ItemPage.fromPage(page)
         pywikibot.output('Processing %s' % page)
         if not item.exists():
             pywikibot.output('%s doesn\'t have a wikidata item :(' % page)
@@ -112,8 +112,11 @@ class HarvestRobot:
             templates = pywikibot.extract_templates_and_params(pagetext)
             for (template, fielddict) in templates:
                 # Clean up template
-                template = pywikibot.Page(page.site, template,
-                                          ns=10).title(withNamespace=False)
+                template = Page(
+                    page.site, 
+                    template,
+                    ns=10
+                ).title(withNamespace=False)
                 # We found the template we were looking for
                 if template in self.templateTitles:
                     for field, value in list(fielddict.items()):
@@ -139,7 +142,7 @@ class HarvestRobot:
                                             linkedPage = pywikibot.Page(link)
                                             if linkedPage.isRedirectPage():
                                                 linkedPage = linkedPage.getRedirectTarget()
-                                            linkedItem = pywikibot.ItemPage.fromPage(linkedPage)
+                                            linkedItem = ItemPage.fromPage(linkedPage)
                                             claim.setTarget(linkedItem)
                                         except pywikibot.exceptions.NoPage:
                                             pywikibot.output('[[%s]] doesn\'t exist so I can\'t link to it' % (linkedItem.title(),))

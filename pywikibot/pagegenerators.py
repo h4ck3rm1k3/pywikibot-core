@@ -28,11 +28,13 @@ import pywikibot
 import time
 from . import date
 from pywikibot import config
-from pywikibot import deprecate_arg, i18n
+#from pywikibot.deprecate import deprecate_arg, i18n
 from pywikibot.comms import pybothttp as http
 from pywikibot.bot import    user_input
 #calledModuleName, warning, inputChoice, output,  log, 
-from Category import Category
+#from pywikibot.page.category import Category
+from pywikibot.deprecate import deprecate_arg
+from pywikibot.deprecate import deprecated
 
 # ported from version 1 for backwards-compatibility
 # most of these functions just wrap a Site or Page method that returns
@@ -914,14 +916,14 @@ def WikidataItemGenerator(gen):
     and yield their relevant Wikidata items
     """
     for page in gen:
-        if isinstance(page, pywikibot.ItemPage):
+        if isinstance(page, ItemPage):
             yield page
         elif page.site.data_repository() == page.site:
             # These are already items, just not item pages
             # FIXME: If we've already fetched content, we should retain it
-            yield pywikibot.ItemPage(page.site, page.title())
+            yield ItemPage(page.site, page.title())
         else:
-            yield pywikibot.ItemPage.fromPage(page)
+            yield ItemPage.fromPage(page)
 
 
 #TODO below

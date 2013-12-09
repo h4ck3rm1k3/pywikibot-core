@@ -5,13 +5,13 @@ from pywikibot.families.wikimedia_family import Family
 '''
 __version__ = '$Id$'
 
-from pywikibot.families.familybase import Family
+from pywikibot.families.familybase import Family as FamilyBase
 
 
 # The wikis of Chapters of the Wikimedia Foundation living at a xy.wikimedia.org url
-class Family(family.Family):
+class Family(FamilyBase):
     def __init__(self):
-        family.Family.__init__(self)
+        Family.__init__(self)
         self.name = 'wikimediachapter'
 
         self.countries = [

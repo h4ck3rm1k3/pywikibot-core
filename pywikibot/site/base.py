@@ -26,11 +26,11 @@ import threading
 import time
 import urllib.request, urllib.parse, urllib.error
 #import json
-from Category import Category
+from pywikibot.page.category import Category
 import pywikibot
-#from pywikibot import deprecate_arg
+#from pywikibot.deprecate import deprecate_arg
 #from pywikibot import config
-#from pywikibot import deprecated
+#from pywikibot.deprecate import deprecated
 from pywikibot.bot import log
 #from pywikibot import pagegenerators
 from pywikibot.throttle import Throttle
@@ -42,6 +42,7 @@ from pywikibot.debug import debugprint
 import pywikibot.families.familybase 
 import pywikibot.families.wikipedia_family
 import pywikibot.families.wiktionary_family
+import pywikibot.families.commons_family
 
 
 from pywikibot.exceptions import (
@@ -214,6 +215,8 @@ class BaseSite(object):
                 self.__family = pywikibot.families.wikipedia_family.Family()
             elif fam == "wiktionary":
                 self.__family = pywikibot.families.wiktionary_family.Family()
+            elif fam == "commons":
+                self.__family = pywikibot.families.commons_family.Family()
             else:
                 raise Exception("Family is not object %s" % fam)
             

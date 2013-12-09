@@ -42,7 +42,7 @@ import pywikibot
 from pywikibot import config
 from . import upload
 
-import flickrapi                  # see: http://stuvel.eu/projects/flickrapi
+#import flickrapi                  # see: http://stuvel.eu/projects/flickrapi
 from tkinter  import (
     Button,
     END,

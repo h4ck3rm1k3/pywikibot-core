@@ -30,7 +30,7 @@ import atexit
 from pywikibot.bot import log, debug
 
 from ssl import SSLError as SSLHandshakeError
-from pywikibot import config
+#from pywikibot import config
 from pywikibot.exceptions import FatalServerError, Server504Error
 import pywikibot
 import pywikibot.bot
@@ -166,8 +166,8 @@ class HTTP :
 
 # global object
 from pywikibot.config import loadconfig
-config = loadconfig()
-global_http = HTTP(config)
+
+global_http = HTTP(config = loadconfig())
 
 
 def request(site, uri, ssl=False, *args, **kwargs):

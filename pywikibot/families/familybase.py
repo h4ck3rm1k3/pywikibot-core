@@ -1,6 +1,6 @@
 # -*- coding: utf-8  -*-
 '''
-from pywikibot.families.familybase import Family
+from pywikibot.families.familybase import Family as FamilyBase
 '''
 #
 # (C) Pywikibot team, 2004-2013
@@ -15,9 +15,9 @@ import re
 #import urllib
 import collections
 import pywikibot.config
-
+#from pywikibot.page import Page
 import pywikibot
-from pywikibot.debug import debugprint
+
 logger = logging.getLogger("pywiki.wiki.family")
 #from pywikibot.page import Page
 #import pywikibot.page
@@ -899,7 +899,7 @@ class Family(object):
         if cr_template_list:
             cr_template = cr_template_list[0]
             # start with list of category redirect templates from family file
-            cr_page = pywikibot.page.Page(pywikibot.Site(code, self),
+            cr_page = Page(pywikibot.Site(code, self),
                                      "Template:" + cr_template)
             # retrieve all redirects to primary template from API,
             # add any that are not already on the list

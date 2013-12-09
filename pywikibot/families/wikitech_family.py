@@ -3,7 +3,7 @@
 __version__ = '$Id$'
 
 
-from pywikibot.family import Family as BaseFamily
+from pywikibot.families.familybase import Family as BaseFamily
 
 # The Wikitech family
 class Family(BaseFamily):

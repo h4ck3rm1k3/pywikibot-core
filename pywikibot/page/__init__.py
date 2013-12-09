@@ -14,9 +14,10 @@ __version__ = '$Id$'
 #import pywikibot
 #from comms import pybothttp
 
-#from pywikibot import deprecate_arg
-#from pywikibot import deprecated
+#from pywikibot.deprecate import deprecate_arg
+#from pywikibot.deprecate import deprecated
 #from pywikibot import async_request
+#from pywikibot.threadserver import async_request
 
 import pywikibot 
 from pywikibot.link_regex import link_regex
@@ -24,33 +25,36 @@ from pywikibot.link_regex import link_regex
 
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
 #from pywikibot import config,  Timestamp, Coordinate, WbTime
-from pywikibot.config import loadconfig
-config = loadconfig()
+#from pywikibot.config import loadconfig
+#config = loadconfig()
 #import pywikibot.site
-#from pywikibot.families.familybase import Family
+#from pywikibot.families.familybase import Family as FamilyBase
 
-from pywikibot.site.apisite import APISite
-from pywikibot.textlib import removeLanguageLinks, removeCategoryLinks, removeDisabledParts, extract_templates_and_params, replaceCategoryInPlace, replaceCategoryLinks
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName, debug
+
+#from pywikibot.textlib import removeLanguageLinks, removeCategoryLinks
+#, removeDisabledParts, extract_templates_and_params, replaceCategoryInPlace, replaceCategoryLinks
+from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+#, debug
 
 from pywikibot.bot import error as print_error
-from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse, NoUsername, EditConflict
+#from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse, NoUsername, EditConflict
+from pywikibot.exceptions import Error, IsRedirectPage, NoPage, SectionError, IsNotRedirectPage, PageNotSaved, LockedPage
 #from pywikibot.i18n import translate
-from pywikibot.exceptions import NoPage, SectionError, IsNotRedirectPage, IsRedirectPage, PageNotSaved, LockedPage, SpamfilterError, InvalidTitle
-import hashlib
-import html.entities
+#from pywikibot.exceptions import , , , , , , SpamfilterError, InvalidTitle
+#import hashlib
+#import html.entities
 import logging
 import re
-import unicodedata
+#import unicodedata
 import urllib.request, urllib.parse, urllib.error
-import collections
+#import collections
 #from pywikibot.data.api import Request, APIError
-import pywikibot.data.api # import Request, APIError
+#import pywikibot.data.api # import Request, APIError
 # pywikibot.data.api.Request
 #  pywikibot.data.api.APIError
 
-from pywikibot.site.base import BaseSite
-from logging import  WARNING
+#from pywikibot.site.base import BaseSite
+#from logging import  WARNING
 from pywikibot.deprecate import deprecate_arg
 from pywikibot.deprecate import deprecated
 #from pywikibot.comms.pybothttp import request 
@@ -59,9 +63,10 @@ from pywikibot.deprecate import deprecated
 #, CRITICAL
 # DEBUG,
 # INFO, 
+#from pywikibot.site.apisite import APISite
 
 #from 
-import pywikibot.page.wikilink 
+#import pywikibot.page.wikilink 
 
 logger = logging.getLogger("pywiki.wiki.page")
 
@@ -72,7 +77,7 @@ reNamespace = re.compile("^(.+?) *: *(.*)$")
 # Note: Link objects (defined later on) represent a wiki-page's title, while
 # Page objects (defined here) represent the page itself, including its contents.
 
-#from Category import Category
+#from pywikibot.page.category import Category
 #import Category
 
 class Page(object):

@@ -1,7 +1,7 @@
 u'''
 from pywikibot.config import loadconfig
 '''
-#from pywikibot.families.familybase import Family
+#from pywikibot.families.familybase import Family as FamilyBase
 import pywikibot.families.familybase 
 import os.path
 import os
@@ -13,6 +13,14 @@ class Config :
         self._user_names = {}
         self._sys_op_names = {}
         self._site_interface = None
+
+    @property
+    def interwiki_min_subjects(self):
+        return False
+
+    @property
+    def interwiki_contents_on_disk(self):
+        return False
 
     @property
     def put_throttle(self):

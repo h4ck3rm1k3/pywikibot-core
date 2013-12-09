@@ -23,7 +23,7 @@ __version__ = '$Id$'
 #
 __version__ = '$Id$'
 #
-from Category import Category
+from pywikibot.page.category import Category
 import pickle
 #import math
 import re

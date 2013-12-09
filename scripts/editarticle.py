@@ -30,7 +30,7 @@ from pywikibot.editor import TextEditor
 
 class ArticleEditor(object):
     # join lines if line starts with this ones
-    joinchars = string.letters + '[]' + string.digits
+    joinchars = string.ascii_letters + '[]' + string.digits
 
     def __init__(self, *args):
         self.set_options(*args)

@@ -1,7 +1,7 @@
 
 import pywikibot
-from pywikibot import deprecate_arg
-from pywikibot import deprecated
+from pywikibot.deprecate import deprecate_arg
+from pywikibot.deprecate import deprecated
 from pywikibot import config
 import pywikibot.site
 import hashlib
@@ -11,7 +11,8 @@ import re
 import unicodedata
 import urllib
 import collections
-
+from pywikibot.site.apisite import APISite
+from pywikibot.page.wikibasepage  import WikibasePage
 class ItemPage(WikibasePage):
     def __init__(self, site, title=None):
         """
@@ -93,13 +94,13 @@ class ItemPage(WikibasePage):
         Iterates through all the sitelinks
         @param family: string/Family object which represents what family of
                        links to iterate
-        @type family: str|family.Family
+        @type family: str|Family
         @return: iterator of Page objects
         """
         if not hasattr(self, 'sitelinks'):
             self.get()
         if family is not None and not isinstance(family,
-                                                 family.Family):
+                                                 Family):
             family = Family(family)
         for dbname in self.sitelinks:
             pg = Page(APISite.fromDBName(dbname),

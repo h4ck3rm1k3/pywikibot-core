@@ -113,7 +113,7 @@ import pywikibot
 from pywikibot import i18n
 from pywikibot import  pagegenerators #, catlib, config
 from scripts import replace
-from Category import Category
+from pywikibot.page.category import Category
 
 def UserEditFilterGenerator(generator, username, timestamp=None, skip=False):
     """

@@ -8,9 +8,8 @@ Tests for the site module.
 # Distributed under the terms of the MIT license.
 #
 __version__ = '$Id$'
+from pywikibot.site.apisite import APISite
 
-
-import pywikibot
 #import warnings
 #from tests import patch_request, unpatch_request
 
@@ -19,7 +18,7 @@ from tests.utils import PywikibotTestCase, unittest
 mysite = None
 mainpage = None
 imagepage = None
-from Category import Category
+from pywikibot.page.category import Category
 
 class TestSiteObject(PywikibotTestCase):
     """Test cases for Site methods."""
@@ -202,7 +201,7 @@ class TestSiteObject(PywikibotTestCase):
 
         datasite = mysite.data_repository()
 
-        items = [pywikibot.ItemPage(datasite, 'q' + str(num)) for num in range(1, 6)]
+        items = [ItemPage(datasite, 'q' + str(num)) for num in range(1, 6)]
         for page in datasite.preloaditempages(items):
             self.assertTrue(hasattr(page, '_content'))
 

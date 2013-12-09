@@ -17,7 +17,7 @@ __version__ = '$Id$'
 #from 
 import pywikibot.page 
 from pywikibot.deprecate import deprecate_arg
-#from pywikibot import deprecate_arg
+#from pywikibot.deprecate import deprecate_arg
 from pywikibot.exceptions import NoUsername
 from pywikibot.bot import debug, log,  user_input, error
 # NoSuchSite, 
@@ -109,7 +109,7 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
                 and self._site.code in self.botList[self._site.family.name]:
             botListPageTitle, botTemplate = self.botList[
                 self._site.family.name][self._site.code]
-            botListPage = pywikibot.page.Page(self._site, botListPageTitle)
+            botListPage = Page(self._site, botListPageTitle)
             if botTemplate:
                 for template in botListPage.templatesWithParams():
                     if template[0] == botTemplate \

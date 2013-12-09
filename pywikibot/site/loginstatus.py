@@ -27,9 +27,9 @@ __version__ = '$Id$'
 #import json
 
 #import pywikibot
-#from pywikibot import deprecate_arg
+#from pywikibot.deprecate import deprecate_arg
 #from pywikibot import config
-#from pywikibot import deprecated
+#from pywikibot.deprecate import deprecated
 #from pywikibot.bot import log
 #from pywikibot import pagegenerators
 #from pywikibot.throttle import Throttle

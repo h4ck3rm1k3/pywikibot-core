@@ -31,10 +31,10 @@ from mustbe import must_be
 from pywikibot.site.base import BaseSite
 from pywikibot.captcha import Captcha
 import pywikibot
-#from pywikibot import deprecate_arg
+#from pywikibot.deprecate import deprecate_arg
 #from pywikibot import config
 from pywikibot.config import loadconfig
-#from pywikibot import deprecated
+#from pywikibot.deprecate import deprecated
 from pywikibot.bot import log, debug
 #from pywikibot import pagegenerators
 #from pywikibot.throttle import Throttle
@@ -2306,7 +2306,7 @@ class APISite(BaseSite):
             pywikibot.warning(
                 "movepage: Talk page %s not moved"
                 % (page.toggleTalkPage().title(asLink=True)))
-        return pywikibot.Page(page, newtitle)
+        return Page(page, newtitle)
 
     # catalog of rollback errors for use in error messages
     _rb_errors = {

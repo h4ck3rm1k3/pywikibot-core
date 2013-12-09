@@ -77,7 +77,7 @@ from pywikibot import i18n
 from pywikibot.pagegenerators import PreloadingGenerator
 interactive=None
 afterpage=None
-from Category import Category
+from pywikibot.page.category import Category
 def CAT(site, name, hide):
     name = site.namespace(14) + ':' + name
     cat = Category(site, name)
@@ -95,7 +95,7 @@ def BACK(site, name, hide):
 
 
 def DATA(site, name, hide):
-    dp = pywikibot.ItemPage(site.data_repository(), name)
+    dp = ItemPage(site.data_repository(), name)
     try:
         title = dp.getSitelink(site)
     except pywikibot.PageNotFound:
@@ -213,8 +213,8 @@ former_name = {
     'zh': (CAT, "已撤销的特色条目"),
 }
 
-
-class FeaturedBot(pywikibot.Bot):
+from pywikibot.bot  import Bot
+class FeaturedBot(Bot):
     # Bot configuration.
     # Only the keys of the dict can be passed as init options
     # The values are the default values
@@ -300,7 +300,7 @@ class FeaturedBot(pywikibot.Bot):
 
         if self.getOption('fromall'):
             item_no = good_name['wikidata'][1]
-            dp = pywikibot.ItemPage(pywikibot.Site().data_repository(), item_no)
+            dp = ItemPage(pywikibot.Site().data_repository(), item_no)
             dp.get()
 
             ### Quick and dirty hack - any ideas?
@@ -340,7 +340,7 @@ class FeaturedBot(pywikibot.Bot):
 
         if self.getOption('fromall'):
             item_no = featured_name['wikidata'][1]
-            dp = pywikibot.ItemPage(pywikibot.Site().data_repository(), item_no)
+            dp = ItemPage(pywikibot.Site().data_repository(), item_no)
             dp.get()
 
             ### Quick and dirty hack - any ideas?

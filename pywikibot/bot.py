@@ -31,7 +31,7 @@ STDOUT = 16
 VERBOSE = 18
 INPUT = 25
 
-from pywikibot.config import loadconfig
+#from pywikibot.config import loadconfig
 
 import pywikibot
 #from pywikibot import config

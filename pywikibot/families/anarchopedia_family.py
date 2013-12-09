@@ -5,7 +5,9 @@ __version__ = '$Id$'
 from pywikibot.families.familybase import Family as FamilyBase
 
 # The Anarchopedia family
-class Family(FamilyBase):
+
+class Family (FamilyBase):
+
     def __init__(self):
         self.langs={}
         FamilyBase.__init__(self)

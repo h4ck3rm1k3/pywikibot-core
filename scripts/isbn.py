@@ -1163,8 +1163,8 @@ ranges = {
 
 
 
-
-class InvalidIsbnException(pywikibot.Error):
+from pywikibot.exceptions import Error
+class InvalidIsbnException(Error):
     """Invalid ISBN"""
 
 

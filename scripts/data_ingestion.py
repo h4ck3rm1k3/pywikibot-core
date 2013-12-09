@@ -18,7 +18,7 @@ import urllib.request, urllib.parse, urllib.error
 import hashlib
 import base64
 import io
-
+from pywikibot.site.base  import BaseSite as Site
 
 class Photo(object):
     '''
@@ -50,7 +50,7 @@ class Photo(object):
             self.contents = io.StringIO(imageFile)
         return self.contents
 
-    def findDuplicateImages(self, site=pywikibot.Site('commons', 'commons')):
+    def findDuplicateImages(self, site=Site('commons', 'commons')):
         '''
         Takes the photo, calculates the SHA1 hash and asks the mediawiki api for a list of duplicates.
 
@@ -97,7 +97,7 @@ def CSVReader(fileobj, urlcolumn, *args, **kwargs):
 from . import upload
 
 class DataIngestionBot:
-    def __init__(self, reader, titlefmt, pagefmt, site=pywikibot.Site('commons', 'commons')):
+    def __init__(self, reader, titlefmt, pagefmt, site=Site('commons', 'commons')):
         self.reader = reader
         self.titlefmt = titlefmt
         self.pagefmt = pagefmt

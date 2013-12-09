@@ -10,7 +10,7 @@ Interface functions to Mediawiki's api.php
 __version__ = '$Id$'
 
 from collections import MutableMapping
-from pywikibot.comms.pybothttp import HTTP #request
+#from pywikibot.comms.pybothttp import HTTP #request
 from email.mime.multipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
 import datetime
@@ -39,11 +39,13 @@ from pywikibot.config import loadconfig
 from pywikibot.login import LoginManager as LoginManagerBase
 #from pywikibot.page import Page, Category, ImagePage, Link
 
-from Category import Category
+from pywikibot.page.category import Category
 
 from pywikibot.exceptions import (Server504Error, FatalServerError, Error)
 #, AutoblockUser
 #, UserActionRefuse
+
+from pywikibot.page import Page
 
 _logger = "data.api"
 
@@ -855,7 +857,7 @@ class PageGenerator(QueryGenerator):
         of object.
 
         """
-        p = pywikibot.page.Page(self.site, pagedata['title'], pagedata['ns'])
+        p = Page(self.site, pagedata['title'], pagedata['ns'])
         update_page(p, pagedata)
         return p
 
@@ -1057,7 +1059,7 @@ def update_page(page, pagedict):
         page._catinfo = pagedict["categoryinfo"]
 
     if "templates" in pagedict:
-        page._templates = [pywikibot.page.Page(page.site, tl['title'])
+        page._templates = [Page(page.site, tl['title'])
                            for tl in pagedict['templates']]
 
     if "langlinks" in pagedict:

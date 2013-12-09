@@ -443,7 +443,7 @@ class CommonscatBot:
     def findCommonscatLink(self, page=None):
         # In Pywikibot 2.0, page.interwiki() now returns Link objects, not Page objects
         for ipageLink in page.langlinks():
-            ipage = pywikibot.page.Page(ipageLink)
+            ipage = Page(ipageLink)
             log("Looking for template on %s" % (ipage.title()))
             try:
                 if(ipage.exists() and not ipage.isRedirectPage()

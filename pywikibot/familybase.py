@@ -58,4 +58,4 @@ from pywikibot.exceptions import Error
 #                 sys.exit(1)
 #             else:
 #                 raise Error("Family %s does not exist" % fam)
-#     return myfamily.Family()
+#     return myFamily()

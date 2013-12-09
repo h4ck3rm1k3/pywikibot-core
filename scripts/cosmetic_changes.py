@@ -79,7 +79,7 @@ import pywikibot
 from . import isbn
 from pywikibot import pagegenerators
 from pywikibot import i18n
-from pywikibot import config2 as config
+#from pywikibot import config2 as config
 from pywikibot.bot import log
 from pywikibot.page.htmlunicode import html2unicode
 

@@ -32,7 +32,7 @@ The following command line parameters are supported:
 #
 __version__ = '$Id$'
 #
-from Category import Category
+from pywikibot.page.category import Category
 import sys
 import re
 import urllib.request, urllib.parse, urllib.error

@@ -1,7 +1,7 @@
 
 import pywikibot
-from pywikibot import deprecate_arg
-from pywikibot import deprecated
+from pywikibot.deprecate import deprecate_arg
+from pywikibot.deprecate import deprecated
 from pywikibot import config
 import pywikibot.site
 import hashlib
@@ -11,7 +11,7 @@ import re
 import unicodedata
 import urllib
 import collections
-
+from pywikibot.page.wikibasepage  import WikibasePage
 class QueryPage(WikibasePage):
     """
     For future usage, not implemented yet

@@ -5,7 +5,7 @@
 
 
 from pywikibot import config2 as config
-from pywikibot.bot import warning, output, inputChoice, debug
+#from pywikibot.bot import output, inputChoice, debug, warning
 #from pywikibot.exceptions import *
 #from pywikibot.textlib import *
 #from pywikibot.i18n import translate

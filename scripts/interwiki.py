@@ -365,8 +365,8 @@ docuReplacements = {
     '&pagegenerators_help;': pagegenerators.parameterHelp
 }
 
-
-class SaveError(pywikibot.Error):
+from pywikibot.exceptions  import Error
+class SaveError(Error):
     """
     An attempt to save a page with changed interwiki has failed.
     """
@@ -378,8 +378,8 @@ class LinkMustBeRemoved(SaveError):
     preferences or because the user chose not to change the page.
     """
 
-
-class GiveUpOnPage(pywikibot.Error):
+from pywikibot.exceptions  import Error
+class GiveUpOnPage(Error):
     """
     The user chose not to work on this page and its linked pages any more.
     """
@@ -487,13 +487,13 @@ class Global(object):
     parenthesesonly = False
     rememberno = False
     followinterwiki = True
-    minsubjects = config.interwiki_min_subjects
+    minsubjects = False
     nobackonly = False
     askhints = False
     hintnobracket = False
     hints = []
     hintsareright = False
-    contentsondisk = config.interwiki_contents_on_disk
+    contentsondisk = False
     lacklanguage = None
     minlinks = 0
     quiet = False
@@ -502,6 +502,10 @@ class Global(object):
     summary = ''
     repository = False
 
+    def __init__(self, config):
+        minsubjects = config.interwiki_min_subjects
+        contentsondisk = config.interwiki_contents_on_disk
+        
     def readOptions(self, arg):
         """ Read all commandline parameters for the global container """
         if arg == '-noauto':
@@ -621,8 +625,8 @@ class Global(object):
             return False
         return True
 
-
-class StoredPage(pywikibot.Page):
+from pywikibot.page  import Page
+class StoredPage(Page):
     """
     Store the Page contents on disk to avoid sucking too much
     memory when a big number of Page objects will be loaded
@@ -1177,7 +1181,7 @@ class Subject(object):
                 newHint = pywikibot.input(
                     'Give the alternative for language %s, not using a '
                     'language code:' % page.site.language())
-                alternativePage = pywikibot.Page(page.site, newHint)
+                alternativePage = Page(page.site, newHint)
                 return (True, alternativePage)
             elif choice == 'g':
                 self.makeForcedStop(counter)
@@ -1832,7 +1836,7 @@ class Subject(object):
         # remove interwiki links to ignore
         for iw in re.finditer('<!-- *\[\[(.*?:.*?)\]\] *-->', pagetext):
             try:
-                ignorepage = pywikibot.Page(page.site, iw.groups()[0])
+                ignorepage = Page(page.site, iw.groups()[0])
             except (pywikibot.NoSuchSite, ):
                 continue
             try:
@@ -2603,7 +2607,8 @@ def main():
                 pass
 
 #===========
-globalvar = Global()
+import pywikibot.config
+globalvar = Global(pywikibot.config.loadconfig())
 
 if __name__ == "__main__":
     try:

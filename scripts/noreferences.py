@@ -35,7 +35,7 @@ a list of affected articles
 """
 
 __version__ = '$Id$'
-from Category import Category
+from pywikibot.page.category import Category
 import re
 #import sys
 import pywikibot

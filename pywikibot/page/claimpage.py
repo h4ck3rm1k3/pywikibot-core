@@ -1,8 +1,8 @@
 
 
 import pywikibot
-from pywikibot import deprecate_arg
-from pywikibot import deprecated
+from pywikibot.deprecate import deprecate_arg
+from pywikibot.deprecate import deprecated
 from pywikibot import config
 import pywikibot.site
 
@@ -13,7 +13,9 @@ import re
 import unicodedata
 import urllib
 import collections
-
+from pywikibot.page import Page
+from pywikibot.page.wikibasepage  import WikibasePage
+from pywikibot.page.propertypage  import PropertyPage
 class Claim(PropertyPage):
     """
     Claims are standard claims as well as references.

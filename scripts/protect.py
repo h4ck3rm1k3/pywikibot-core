@@ -46,7 +46,7 @@ Unprotect all pages listed in text file "unprotect.txt" without prompting.
 #
 __version__ = '$Id$'
 #
-from Category import Category
+from pywikibot.page.category import Category
 import pywikibot
 from pywikibot import catlib
 from pywikibot import pagegenerators

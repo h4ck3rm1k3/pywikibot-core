@@ -3,6 +3,13 @@ PYTHONPATH=/mnt/data/home/mdupont/experiments/wiki/pywikibot-core:/mnt/data/home
 PYTHON=PYTHONPATH=$(PYTHONPATH) PYTHONIOENCODING=utf8 python3 
 #PYTHON=PYTHONIOENCODING=utf8 python3 
 
+classes :
+	$(PYTHON) classes.py
+
+imports :
+	$(PYTHON) import.py
+
+
 alltests:
 	~/.local/bin/nosetests
 one2:

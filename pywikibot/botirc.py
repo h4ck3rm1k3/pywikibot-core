@@ -90,7 +90,7 @@ class IRCBot(pywikibot.bot.Bot, SingleServerIRCBot):
         text = request(self.site, self.api_url)
         text = text.decode()
         entry = self.api_found.findall(text)
-        page = pywikibot.page.Page(self.site, name)
+        page = Page(self.site, name)
         try:
                 text = page.get()
         except pywikibot.page.NoPage:
@@ -114,7 +114,7 @@ class IRCBot(pywikibot.bot.Bot, SingleServerIRCBot):
         name = msg[8:msg.find('14', 9)]
         text = request(self.site, self.api_url)
         entry = self.api_found.findall(text)
-        page = pywikibot.page.Page(self.site, name)
+        page = Page(self.site, name)
         try:
                 text = page.get()
         except pywikibot.page.NoPage:

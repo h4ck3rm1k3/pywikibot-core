@@ -17,7 +17,7 @@ __version__ = '$Id$'
 from pywikibot.exceptions import Error
 import collections
 import mwparserfromhell
-from Category import Category
+from pywikibot.page.category import Category
 import pywikibot
 import re
 from html.parser import HTMLParser

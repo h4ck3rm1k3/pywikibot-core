@@ -125,8 +125,8 @@ user_sandboxTemplate = {
     'de': 'User:DrTrigonBot/Spielwiese',
 }
 
-
-class SandboxBot(pywikibot.Bot):
+from pywikibot.bot  import Bot
+class SandboxBot(Bot):
     availableOptions = {
         'hours': 1,
         'no_repeat': True,

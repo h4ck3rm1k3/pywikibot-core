@@ -188,12 +188,12 @@ import locale
 import codecs
 #from datetime import timedelta
 from random import choice
-from string import capitalize
+#from string import capitalize
 import pywikibot
 from pywikibot import i18n
 from pywikibot import config
 #import query
-
+from pywikibot.exceptions  import Error
 locale.setlocale(locale.LC_ALL, '')
 
 # Script users the class pywikibot.translate() to find the right
@@ -401,7 +401,7 @@ logpage_header = {
 ############################################################################
 
 
-class FilenameNotSet(pywikibot.Error):
+class FilenameNotSet(Error):
     """An exception indicating that a signature filename was not specifed."""
 
 
@@ -626,8 +626,8 @@ class WelcomeBot(object):
                 'Log page is not exist, getting information for page creation')
             text = pywikibot.translate(self.site, logpage_header)
             text += '\n!%s' % self.site.namespace(2)
-            text += '\n!%s' % capitalize(
-                self.site.mediawiki_message('contribslink'))
+            t =self.site.mediawiki_message('contribslink').capitalize()
+            text += '\n!%s' % t
 
         for result in queue:
             # Adding the log... (don't take care of the variable's name...).
