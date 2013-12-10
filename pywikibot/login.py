@@ -11,7 +11,7 @@ Library to log the robot in to a wiki account.
 #
 __version__ = '$Id$'
 #
-from pywikibot.page  import Page
+
 #import logging
 #import pywikibot
 #from 
@@ -112,6 +112,7 @@ usernames['%(fam_name)s']['%(wiki_code)s'] = 'myUsername'"""
                 and self._site.code in self.botList[self._site.family.name]:
             botListPageTitle, botTemplate = self.botList[
                 self._site.family.name][self._site.code]
+            from pywikibot.page  import Page
             botListPage = Page(self._site, botListPageTitle)
             if botTemplate:
                 for template in botListPage.templatesWithParams():

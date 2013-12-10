@@ -14,7 +14,7 @@ from pywikibot.data.api  import ImagePageGenerator
 from pywikibot.data.api  import ListGenerator
 from pywikibot.data.api  import LogEntryListGenerator
 #from pywikibot.data.api  import LoginManager
-from pywikibot.page  import Page
+
 from pywikibot.data.api  import PageGenerator
 from pywikibot.data.api  import PropertyGenerator
 #from pywikibot.data.api  import QueryGenerator
@@ -2321,6 +2321,7 @@ class APISite(BaseSite):
             pywikibot.warning(
                 "movepage: Talk page %s not moved"
                 % (page.toggleTalkPage().title(asLink=True)))
+        from pywikibot.page  import Page
         return Page(page, newtitle)
 
     # catalog of rollback errors for use in error messages

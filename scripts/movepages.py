@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8  -*-
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+from pywikibot.bot import warning
+#log,  calledModuleName, user_input, inputChoice,  output
 """
 This script can move pages.
 

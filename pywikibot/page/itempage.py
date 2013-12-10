@@ -13,7 +13,7 @@ import pywikibot.site
 #import collections
 from pywikibot.site.apisite import APISite
 from pywikibot.page.wikibasepage  import WikibasePage
-from pywikibot.page.claimpage  import Claim
+
 from pywikibot.families.familybase  import Family
 from pywikibot.page  import Page
 from pywikibot.exceptions  import NoPage
@@ -62,6 +62,7 @@ class ItemPage(WikibasePage):
         force will override caching
         args are the values of props
         """
+        from pywikibot.page.claimpage  import Claim
         super(ItemPage, self).get(force=force, *args)
 
         #claims
@@ -190,6 +191,7 @@ class ItemPage(WikibasePage):
         """
         # this check allows single claims to be remove by pushing them into a
         # list of length one.
+        from pywikibot.page.claimpage  import Claim
         if isinstance(claims, Claim):
             claims = [claims]
         self.repo.removeClaims(claims, **kwargs)

@@ -37,15 +37,15 @@ from pywikibot.config import loadconfig
 #, login
 
 from pywikibot.login import LoginManager as LoginManagerBase
-#from pywikibot.page import Page, Category, ImagePage, Link
 
-from pywikibot.page.category import Category
+
+
 
 from pywikibot.exceptions import (Server504Error, FatalServerError, Error)
 #, AutoblockUser
 #, UserActionRefuse
 
-from pywikibot.page import Page
+
 
 _logger = "data.api"
 
@@ -857,6 +857,7 @@ class PageGenerator(QueryGenerator):
         of object.
 
         """
+        from pywikibot.page import Page
         p = Page(self.site, pagedata['title'], pagedata['ns'])
         update_page(p, pagedata)
         return p
@@ -868,6 +869,7 @@ class CategoryPageGenerator(PageGenerator):
 
     def result(self, pagedata):
         p = PageGenerator.result(self, pagedata)
+        from pywikibot.page.category import Category
         return Category(p)
 
 
@@ -1059,6 +1061,7 @@ def update_page(page, pagedict):
         page._catinfo = pagedict["categoryinfo"]
 
     if "templates" in pagedict:
+        from pywikibot.page import Page
         page._templates = [Page(page.site, tl['title'])
                            for tl in pagedict['templates']]
 

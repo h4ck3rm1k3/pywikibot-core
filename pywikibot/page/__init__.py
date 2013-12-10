@@ -21,7 +21,7 @@ __version__ = '$Id$'
 import pywikibot.threadserver
 import pywikibot 
 from pywikibot.link_regex import link_regex
-import pywikibot.page.category
+#import pywikibot.page.category
 
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
 #from pywikibot import config,  Timestamp, Coordinate, WbTime
@@ -29,7 +29,7 @@ import pywikibot.page.category
 #config = loadconfig()
 #import pywikibot.site
 #from pywikibot.families.familybase import Family as FamilyBase
-import pywikibot.page.itempage
+#import pywikibot.page.itempage
 
 #from pywikibot.textlib import removeLanguageLinks, removeCategoryLinks
 #, removeDisabledParts, extract_templates_and_params, replaceCategoryInPlace, replaceCategoryLinks

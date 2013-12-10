@@ -15,16 +15,17 @@ import re
 
 
 #import pywikibot.page 
-from pywikibot.page import Page
+
 
 class Category(pywikibot.page.Page):
     """A page in the Category: namespace"""
 
     @deprecate_arg("insite", None)
     def __init__(self, source, title="", sortKey=None):
-        """All parameters are the same as for Page() constructor.
-
         """
+        All parameters are the same as for Page() constructor.
+        """
+        from pywikibot.page import Page
         Page.__init__(self, source, title, ns=14)
         if self.namespace() != 14:
             raise ValueError("'%s' is not in the category namespace!"

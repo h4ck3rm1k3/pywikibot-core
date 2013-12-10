@@ -11,7 +11,7 @@
 #import unicodedata
 #import urllib
 #import collections
-from pywikibot.page.claimpage  import Claim
+
 from pywikibot.page.wikibasepage  import WikibasePage
 class PropertyPage(WikibasePage):
     """
@@ -50,5 +50,6 @@ class PropertyPage(WikibasePage):
         for a specific property
         @return: Claim
         """
+        from pywikibot.page.claimpage  import Claim
         return Claim(self.site, self.getID(), *args, **kwargs)
 

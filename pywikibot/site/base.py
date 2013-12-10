@@ -26,7 +26,7 @@ import threading
 import time
 import urllib.request, urllib.parse, urllib.error
 #import json
-from pywikibot.page.category import Category
+
 import pywikibot
 #from pywikibot.deprecate import deprecate_arg
 #from pywikibot import config
@@ -480,6 +480,7 @@ class BaseSite(object):
         except KeyError:
             raise Error("No disambiguation category name found for %(site)s"
                         % {'site': self})
+        from pywikibot.page.category import Category
         return Category(pywikibot.Link(name, self))
 
     @deprecated("pywikibot.Link")

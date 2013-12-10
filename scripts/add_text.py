@@ -79,7 +79,8 @@ import pywikibot
 from pywikibot import config
 from pywikibot import i18n
 from pywikibot import pagegenerators
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+from pywikibot.bot import  inputChoice, user_input
+#log,warning, , calledModuleName, output,
 docuReplacements = {
     '&params;': pagegenerators.parameterHelp,
 }

@@ -3,7 +3,7 @@
 import pywikibot
 #from pywikibot import config
 import pywikibot.site
-from pywikibot.page.imagepage  import ImagePage
+
 from pywikibot.page.itempage  import ItemPage
 #import hashlib
 #import html.entities 
@@ -67,6 +67,7 @@ class Claim(PropertyPage):
                                         str(data['mainsnak']['datavalue']
                                             ['value']['numeric-id']))
             elif claim.getType() == 'commonsMedia':
+                from pywikibot.page.imagepage  import ImagePage
                 claim.target = ImagePage(site.image_repository(), 'File:' +
                                          data['mainsnak']['datavalue']['value'])
             elif claim.getType() == 'globecoordinate':
@@ -120,6 +121,7 @@ class Claim(PropertyPage):
         Sets the target to the passed value.
         There should be checks to ensure type compliance
         """
+        from pywikibot.page.imagepage  import ImagePage
         types = {'wikibase-item': ItemPage,
                  'string': str,
                  'commonsMedia': ImagePage,
