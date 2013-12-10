@@ -13,7 +13,7 @@ from pywikibot.site.apisite import APISite
 from pywikibot.page.itempage  import ItemPage
 #import warnings
 #from tests import patch_request, unpatch_request
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+from pywikibot.bot import   warning
 from tests.utils import PywikibotTestCase, unittest
 from pywikibot.page  import Page
 mysite = None
@@ -24,7 +24,7 @@ from pywikibot.page.wikilink  import Link
 from pywikibot.site.base import BaseSite as Site
 from pywikibot.exceptions  import Error
 from pywikibot.exceptions  import NoUsername
-from pywikibot.exceptions  import IsRedirectPage
+#from pywikibot.exceptions  import IsRedirectPage
 from pywikibot.logentries  import LogEntry
 from pywikibot.exceptions  import IsNotRedirectPage
 from pywikibot.data.api  import APIError
@@ -968,10 +968,11 @@ class TestSiteObject(PywikibotTestCase):
         del mysite._extensions
 
 if __name__ == '__main__':
+
     try:
-        try:
-            unittest.main()
-        except SystemExit:
-            pass
-    finally:
-        stopme()
+        unittest.main()
+    except SystemExit:
+        pass
+
+    #finally:
+    #    #stopme()

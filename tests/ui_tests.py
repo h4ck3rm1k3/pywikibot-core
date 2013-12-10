@@ -28,62 +28,18 @@ Tests for the page module.
 #
 #
 __version__ = '$Id$'
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName, error, critical, debug, exception
+from pywikibot.bot import output, inputChoice, log,  warning, user_input,  error, critical, debug, exception
 import io
 import logging
 import os
 import sys
 import time
-import pywikibot.bot
-from pywikibot.bot import output
+#import pywikibot.bot
+
 from pywikibot.config import loadconfig
 from tests.utils import unittest
 from bot import DEBUG, VERBOSE, INFO, STDOUT, INPUT, WARNING, ERROR, CRITICAL
 
-if os.name == "nt":
-    from multiprocessing.managers import BaseManager
-    import threading
-    import win32clipboard
-
-    class pywikibotWrapper(object):
-        def init(self):
-            self.config = loadconfig()
-
-            pass
-
-        def output(self, *args, **kwargs):
-            return output(*args, **kwargs)
-
-        def request_input(self, *args, **kwargs):
-            self.input = None
-
-            def threadedinput():
-                self.input = input(*args, **kwargs)
-            self.inputthread = threading.Thread(target=threadedinput)
-            self.inputthread.start()
-
-        def get_input(self):
-            self.inputthread.join()
-            return self.input
-
-        def set_config(self, key, value):
-            
-            setattr(config, key, value)
-
-        def set_ui(self, key, value):
-            setattr(ui, key, value)
-
-        def cls(self):
-            os.system('cls')
-
-    class pywikibotManager(BaseManager):
-        pass
-
-    pywikibotManager.register('pywikibot', pywikibotWrapper)
-    _manager = pywikibotManager(address=("127.0.0.1", 47228), authkey="4DJSchgwy5L5JxueZEWbxyeG")
-    if len(sys.argv) > 1 and sys.argv[1] == "--run-as-slave-interpreter":
-        s = _manager.get_server()
-        s.serve_forever()
 
 if __name__ == "__main__":
     oldstderr = sys.stderr
@@ -126,8 +82,8 @@ if __name__ == "__main__":
             self.config = loadconfig()
             self.config.colorized_output = True
             self.config.transliterate = False
-            ui.transliteration_target = None
-            ui.encoding = 'utf-8'
+            #ui.transliteration_target = None
+            #ui.encoding = 'utf-8'
 
         def tearDown(self):
             unpatch()
@@ -328,7 +284,7 @@ if __name__ == "__main__":
     @unittest.skipUnless(os.name == "posix", "requires Unix console")
     class TestTransliterationUnix(UITestCase):
         def testOutputTransliteratedUnicodeText(self):
-            ui.encoding = 'latin-1'
+            #ui.encoding = 'latin-1'
             self.config.transliterate = True
             output("abcd АБГД αβγδ あいうえお")
             self.assertEqual(newstdout.getvalue(), "")
@@ -376,19 +332,6 @@ if __name__ == "__main__":
                     return data
                 time.sleep(0.01)
 
-        def setclip(self, text):
-            win32clipboard.OpenClipboard()
-            win32clipboard.SetClipboardData(win32clipboard.CF_UNICODETEXT, str(text))
-            win32clipboard.CloseClipboard()
-
-        def getclip(self):
-            win32clipboard.OpenClipboard()
-            data = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
-            win32clipboard.CloseClipboard()
-            data = data.split("\x00")[0]
-            data = data.replace("\r\n", "\n")
-            return data
-
         def sendstdin(self, text):
             self.setclip(text.replace("\n", "\r\n"))
             self._app.window_().SetFocus()
@@ -402,8 +345,8 @@ if __name__ == "__main__":
             fn = inspect.getfile(inspect.currentframe())
             cls.setUpProcess(["python", "pwb.py", fn, "--run-as-slave-interpreter"])
 
-            _manager.connect()
-            cls.pywikibot = _manager.pywikibot()
+            #_manager.connect()
+            ##cls.pywikibot = _manager.pywikibot()
 
         @classmethod
         def tearDownClass(cls):
@@ -470,7 +413,7 @@ if __name__ == "__main__":
             pass
     finally:
         unpatch()
-        pywikibot.page.stopme()
+        #pywikibot.page.stopme()
 
 else:
     class TestTerminalUI(unittest.TestCase):

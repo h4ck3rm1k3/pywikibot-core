@@ -348,7 +348,7 @@ class TestPageObject(TestBase):
             total=2,
             content=3
         )
-
+        debug(x)
 
     def testReferences(self):
         count = 0
@@ -383,15 +383,16 @@ class TestPageObject(TestBase):
                            step=1,
                            total=2, 
                            content="bla")
+        debug(x)
 
-    def testLinks2(self):
+    def testLinks4(self):
         self.assertType(self.enwiki, Page)
         x = self.mainpage._link.site.pagelinks(None, 
                            namespaces=None, 
                            step=1,
                            total=2, 
                            content="bla")
-
+        debug(x)
 
     def testLinks3(self):
         self.assertType(self.mainpage, Page)

@@ -85,10 +85,9 @@ class TestLinks(PywikibotTestCase):
 
 
 if __name__ == '__main__':
+    
     try:
-        try:
-            unittest.main()
-        except SystemExit:
-            pass
-    finally:
-        pywikibot.stopme()
+        unittest.main()
+    except SystemExit:
+        pass
+
