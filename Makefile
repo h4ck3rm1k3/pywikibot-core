@@ -60,5 +60,5 @@ lint:
 	- ~/.local/bin/pylint -E --output-format=parseable */*/*.py  */*.py *.py
 
 flakes :
-	- ~/.local/bin/pyflakes */*/*.py  */*.py *.py
+	- ~/.local/bin/pyflakes pywikibot/data/api.py */*/*.py  */*.py *.py
 

@@ -35,10 +35,10 @@ from pywikibot.bot import log, error, warning, debug
 import pywikibot
 from pywikibot.config import loadconfig
 #, login
-
+from pywikibot.page.revisionpage  import Revision
 from pywikibot.login import LoginManager as LoginManagerBase
 
-
+from pywikibot.timestamp  import Timestamp
 
 
 from pywikibot.exceptions import (Server504Error, FatalServerError, Error)
@@ -703,25 +703,29 @@ class QueryGenerator(object):
         """
         count = 0
         while True:
-            if self.query_limit is not None:
-                if self.limit is None:
-                    if self.query_limit :
-                        new_limit = self.query_limit
-                    else: 
-                        new_limit = 0
-                elif self.limit > 0:
-                    new_limit = min(self.query_limit, self.limit - count)
-                else:
-                    new_limit = None
-                if "rvprop" in self.request \
-                        and "content" in self.request["rvprop"]:
-                    # queries that retrieve page content have lower limits
-                    # Note: although API allows up to 500 pages for content
-                    #   queries, these sometimes result in server-side errors
-                    #   so use 250 as a safer limit
-                    new_limit = min(new_limit, self.api_limit // 10, 250)
-                if new_limit is not None:
-                    self.request[self.prefix + "limit"] = str(new_limit)
+            # TODO:
+            # if self.query_limit is not None:
+            #     if self.limit is None:
+            #         if self.query_limit :
+            #             new_limit = self.query_limit
+            #         else: 
+            #             new_limit = 0
+            #     elif self.limit > 0:
+            #         new_limit = min(self.query_limit, self.limit - count)
+            #     else:
+            #         new_limit = None
+            #     #if "rvprop" in self.request \
+            #     #        and "content" in self.request["rvprop"]:
+            #         # queries that retrieve page content have lower limits
+            #         # Note: although API allows up to 500 pages for content
+            #         #   queries, these sometimes result in server-side errors
+            #         #   so use 250 as a safer limit
+            #         #if self.api_limit is not None :
+            #             #new_limit = min(new_limit, self.api_limit // 10, 250)
+            #         #new_limit - 
+            #     if new_limit is not None:
+            #         self.request[self.prefix + "limit"] = str(new_limit)
+
             if not hasattr(self, "data"):
                 try:
                     self.data = self.request.submit()
@@ -1041,9 +1045,9 @@ def update_page(page, pagedict):
             page._protection[item['type']] = item['level'], item['expiry']
     if 'revisions' in pagedict:
         for rev in pagedict['revisions']:
-            revision = pywikibot.page.Revision(
+            revision = Revision(
                 revid=rev['revid'],
-                timestamp=pywikibot.Timestamp.fromISOformat(rev['timestamp']),
+                timestamp=Timestamp.fromISOformat(rev['timestamp']),
                 user=rev.get('user', ''),
                 anon='anon' in rev,
                 comment=rev.get('comment', ''),

@@ -7,7 +7,7 @@ import datetime
 import threading
 #from queue import Queue
 #import datetime
-from config import loadconfig
+from pywikibot.config import loadconfig
 #import threading
 from queue import Queue
 

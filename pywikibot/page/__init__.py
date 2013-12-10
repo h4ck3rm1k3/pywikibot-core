@@ -133,7 +133,9 @@ class Page(object):
         self._title         = ""
         self._text          = ""
 
+        import pywikibot.site.base
         if isinstance(source, pywikibot.site.base.BaseSite):
+            import pywikibot.page.wikilink
             self._link = pywikibot.page.wikilink.Link(title, source=source, defaultNamespace=ns)
             self._revisions = {}
         elif isinstance(source, Page):

@@ -464,7 +464,7 @@ class APISite(BaseSite):
                "API siteinfo response lacks 'general' key"
         assert 'namespaces' in si_data, \
                "API siteinfo response lacks 'namespaces' key"
-        debug(si_data)
+        #debug(si_data)
         self._siteinfo = si_data['general']
         nsdata = si_data['namespaces']
         for nskey in nsdata:

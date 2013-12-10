@@ -360,7 +360,14 @@ def logoutput(text, decoder=None, newline=True, _level=INFO, _logger="",
     #             text = str(text, 'iso8859-1')
 
     # logger.log(_level, text, extra=context, **kwargs)
-    print(text)
+    if (isinstance(text,str)):
+        print(text)
+    elif (isinstance(text,bytes)):
+        print(text.decode())
+    else:
+        print ("TYPE %s" % type(text))
+        print ("DEBUG %s" % text)
+
     #traceback.print_stack(limit=3)
 
 def output(text, decoder=None, newline=True, toStdout=False, **kwargs):

@@ -40,9 +40,6 @@ from pywikibot.site.pageinuse import PageInUse
 from pywikibot.debug import debugprint
 
 import pywikibot.families.familybase 
-import pywikibot.families.wikipedia_family
-import pywikibot.families.wiktionary_family
-import pywikibot.families.commons_family
 
 
 from pywikibot.exceptions import (
@@ -204,6 +201,10 @@ class BaseSite(object):
         self._logger = "wiki.site"
         self.__code = code.lower()
         if isinstance(fam,str):
+            import pywikibot.families.wikipedia_family
+            import pywikibot.families.wiktionary_family
+            import pywikibot.families.commons_family
+
             if fam == "wikipedia":
                 self.__family = pywikibot.families.wikipedia_family.Family()
             elif fam == "wiktionary":
