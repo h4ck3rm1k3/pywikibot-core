@@ -21,16 +21,31 @@ def page(name):
 
 def extract_entity_names(t):
     entity_names = []
-    if hasattr(t, 'node') and t.node:
-        if t.node == 'NE':
-            entity_names.append(' '.join([child[0] for child in t]))
-        else:
-            for child in t:
-                entity_names.extend(extract_entity_names(child))
+    #    if hasattr(t, 'label') and t.label():
+    #        print ("Label:%s" % t.label())
+    
+    for child in t:
+
+        if len(child) == 1:
+            entity_names.append(
+                child[0][0]
+            )
+            #print ("child:%s" % str(child))
+
+        #for child2 in child:
+        #print ("child2:%s" % str(child2))
+          
+
+#        if t.node == 'NE':
+
+#        else:
+#            for child in t:
+#                entity_names.extend(extract_entity_names(child))
     return entity_names
 
 def parse_page(name):
     sample = page(name)
+#    sample = "this is a test. that is a dog. that is Kosovo."
     sentences = nltk.sent_tokenize(sample)
     tokenized_sentences = [nltk.word_tokenize(sentence) for sentence in sentences]
     tagged_sentences = [nltk.pos_tag(sentence) for sentence in tokenized_sentences]
@@ -43,7 +58,7 @@ def parse_page(name):
         entity_names.extend(extract_entity_names(tree))
  
     # Print all entity names
-    #print entity_names
+#    print (entity_names)
  
     # Print unique entity names
     print (set(entity_names))

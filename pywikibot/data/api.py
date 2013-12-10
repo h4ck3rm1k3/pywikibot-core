@@ -359,7 +359,7 @@ class Request(MutableMapping, object):
 
             if not isinstance(rawdata, str):
                 rawdata = rawdata.decode(self.site.encoding())
-            debug("API response received:\n" + rawdata, _logger)
+            #TODO : HUGE debug("API response received:\n" + rawdata, _logger)
             if rawdata.startswith("unknown_action"):
                 raise APIError(rawdata[:14], rawdata[16:])
             try:
