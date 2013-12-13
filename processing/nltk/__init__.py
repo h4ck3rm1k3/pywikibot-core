@@ -17,23 +17,36 @@ def page(name):
     return data
     #link = Link(u"Kosovo", self.enwiki)
 
-def extract_entity_names(t):
+def extract_entity_names(t, depth=0):
     entity_names = []
     #    if hasattr(t, 'label') and t.label():
     #        print ("Label:%s" % t.label())
-    
+    sep = "|" * depth
     for child in t:
 
-        if len(child) == 1:
-            entity_names.append(
-                child[0][0]
+        if isinstance(child, nltk.tree.Tree):
+            entity_names.extend( 
+                extract_entity_names(
+                    child,
+                    depth=+1
+                )
             )
-            #print ("child:%s" % str(child))
+
+        elif isinstance(child, tuple):
+            if len(child) == 1:
+                entity_names.append(
+                    child[0][0]
+                )
+            else:
+#                print ("type:%s" % type(child))
+#                print ("dir:%s" % dir(child))
+                print ("%s child:%s" % (sep, str(child)))
+        else :
+            print ("%s child:%s" % (sep, str(child)))
 
         #for child2 in child:
         #print ("child2:%s" % str(child2))
           
-
 #        if t.node == 'NE':
 
 #        else:
@@ -42,24 +55,12 @@ def extract_entity_names(t):
     return entity_names
 
 
-
-def parse_page(name):
-
-    filename="data/%s.wiki" % name
-    if not os.path.exists(filename):
-        sample = page(name)
-        of  = open(filename, 'wb')
-        of.write(sample.encode("utf-8"))
-    else:
-        of  = open(filename, 'rb')
-        sample = of.read().decode("utf-8")
-    of.close
-
+def process_text(sample):
     sentences = nltk.sent_tokenize(sample)
     tokenized_sentences = [nltk.word_tokenize(sentence) for sentence in sentences]
     tagged_sentences = [nltk.pos_tag(sentence) for sentence in tokenized_sentences]
-    chunked_sentences = nltk.batch_ne_chunk(tagged_sentences, binary=True)
-    
+    chunked_sentences = nltk.batch_ne_chunk(tagged_sentences)
+  
     entity_names = []
     for tree in chunked_sentences:
         # Print results per sentence
@@ -72,3 +73,18 @@ def parse_page(name):
     # Print unique entity names
     debug ("RESULT %s " % str(set(entity_names)).encode("utf-8"))
     return entity_names
+
+
+
+def parse_page(name):
+    print ("processing %s" % name)
+    filename="data/%s.wiki" % name
+    if not os.path.exists(filename):
+        sample = page(name)
+        of  = open(filename, 'wb')
+        of.write(sample.encode("utf-8"))
+    else:
+        of  = open(filename, 'rb')
+        sample = of.read().decode("utf-8")
+    of.close
+    return process_text(sample)
