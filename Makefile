@@ -5,7 +5,7 @@ PYTHON=PYTHONPATH=$(PYTHONPATH) PYTHONIOENCODING=utf8 python3
 #PYTHON=PYTHONIOENCODING=utf8 python3 
 
 history :
-	$(PYTHON) tests/page_tests.py TestPageObject.testHistory
+	$(PYTHON) tests/history_test.py #sTestPageObject.testHistory
 
 classes :
 	$(PYTHON) classes.py

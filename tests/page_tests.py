@@ -432,14 +432,22 @@ class TestPageObject(TestBase):
         """Test various methods that rely on API."""
         enwiki = APISite("en", self.wikipedia)
         link = Link(u"Kosovo", enwiki)
-        self.mainpage = Page(link,enwiki)
-        history = self.mainpage.getVersionHistory(
+        page = Page(link,enwiki)
+        history = page.getVersionHistory(
             #reverseOrder=False, 
             #getAll=True,
             #revCount=500
-            total=500
+            step=1,
+            total=10
         )
-        print (history)
+
+        revs = enwikiw.loadrevisions(page, getText=True, rvdir=False,
+                                step=1, total=100)
+        print ("Revs %s" % revs)
+        print ("History %s" % history)
+        print ("Revisions %s" % self.mainpage._revisions)
+        for page in self.mainpage._revisions :
+            print (page)
 
 # methods that still need tests implemented or expanded:
 

@@ -36,7 +36,8 @@ class Config :
 
     @property
     def maxlag(self):
-        return 1
+        # if this is too short
+        return 30
 
     @property
     def simulate(self):
