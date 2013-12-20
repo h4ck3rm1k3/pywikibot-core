@@ -165,9 +165,11 @@ class HTTP :
             raise Exception("no data")
 
 # global object
-from pywikibot.config import loadconfig
 
-global_http = HTTP(config = loadconfig())
+
+def global_http():
+    from pywikibot.config import loadconfig
+    return HTTP(config = loadconfig())
 
 
 def request(site, uri, ssl=False, *args, **kwargs):

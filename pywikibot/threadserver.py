@@ -7,11 +7,11 @@ import datetime
 import threading
 #from queue import Queue
 #import datetime
-from pywikibot.config import loadconfig
+#from pywikibot.config import loadconfig
 #import threading
 from queue import Queue
 
-from pywikibot.bot import output, inputChoice, debug, log
+#from pywikibot.bot import output, inputChoice, debug, log
 import pywikibot.comms.pybothttp
 
 import atexit

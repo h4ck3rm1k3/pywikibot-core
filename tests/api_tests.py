@@ -8,6 +8,7 @@ __version__ = '$Id$'
 
 import datetime
 #import pywikibot
+from pywikibot.bot import log
 import pywikibot.data.api as api
 from pywikibot.bot import debug
 from tests.utils import PywikibotTestCase, unittest

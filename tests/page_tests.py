@@ -15,6 +15,7 @@ print(sys.getdefaultencoding())
 import pywikibot.page
 #from pywikibot.site.apisite import APISite as Site
 from pywikibot.site.base import BaseSite as Site
+from pywikibot.site.apisite import APISite
 from pywikibot.page.wikilink import Link
 #from pywikibot.page import Link
 from tests.utils import PywikibotTestCase, unittest
@@ -425,6 +426,19 @@ class TestPageObject(TestBase):
             self.assertType(p, Category)
         for p in self.mainpage.extlinks():
             self.assertType(p, str)
+
+
+    def testHistory(self):
+        """Test various methods that rely on API."""
+        enwiki = APISite("en", self.wikipedia)
+        link = Link(u"Kosovo", enwiki)
+        self.mainpage = Page(link,enwiki)
+        history = self.mainpage.getVersionHistory(
+            reverseOrder=False, 
+            #getAll=True,
+            #revCount=500
+        )
+        print (history)
 
 # methods that still need tests implemented or expanded:
 

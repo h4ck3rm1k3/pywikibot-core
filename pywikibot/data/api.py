@@ -140,7 +140,7 @@ class Request(MutableMapping, object):
     def __init__(self, **kwargs):
         self.config = loadconfig()
         # we want only one http server
-        self.http = pywikibot.comms.pybothttp.global_http
+        self.http = pywikibot.comms.pybothttp.global_http()
 
         try:
             self.site = kwargs.pop("site")
@@ -518,7 +518,10 @@ class CachedRequest(Request):
     def _write_cache(self, data):
         """ writes data to self._cachefile_path() """
         data = [str(self.site), str(self), data, datetime.datetime.now()]
-        pickle.dump(data, open(self._cachefile_path(), 'wb'))
+        outfile = open(self._cachefile_path(), 'wb')
+        if(outfile):
+            pickle.dump(data, outfile)
+        outfile.close()
 
     def submit(self):
         cached_available = self._load_cache()

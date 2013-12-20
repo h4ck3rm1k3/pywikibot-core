@@ -16,7 +16,7 @@ __version__ = '$Id$'
 # TODO: These are copied from wikipedia.py; not certain that all of them
 # will be needed in the rewrite.
 
-from pywikibot.config  import loadconfig
+#from pywikibot.config  import loadconfig
 
 class Error(Exception):
     """Wikipedia error"""

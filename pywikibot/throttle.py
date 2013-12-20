@@ -14,10 +14,10 @@ __version__ = '$Id$'
 import math
 import threading
 import time
-from pywikibot.config import loadconfig
+#from pywikibot.config import loadconfig
 import pywikibot
 #from pywikibot import config
-from pywikibot.bot import log
+#from pywikibot.bot import log
 _logger = "wiki.throttle"
 
 pid = False     # global process identifier

@@ -117,7 +117,9 @@ def getversion_git(path=None):
     #tag  = subprocess.Popen('git config --get remote.origin.url',
     #                        shell=True,
     #                        stdout=subprocess.PIPE).stdout.read()
-    tag = open(os.path.join(_program_dir, '.git/config'), 'r').read()
+    fileobj = open(os.path.join(_program_dir, '.git/config'), 'r')
+    tag = fileobj.read()
+    fileobj.close()
     s = tag.find('url = ', tag.find('[remote "origin"]'))
     e = tag.find('\n', s)
     tag = tag[(s + 6):e]
@@ -181,10 +183,12 @@ def getfileversion(filename):
     size, mtime = None, None
     fn = os.path.join(_program_dir, filename)
     if os.path.exists(fn):
-        for line in open(fn, 'r').readlines():
+        fileobj = open(fn, 'r')
+        for line in fileobj.readlines():
             if line.find('__version__') == 0:
                 exec(line)
                 break
+        fileobj.close()
         stat = os.stat(fn)
         mtime = datetime.datetime.fromtimestamp(stat.st_mtime).isoformat(' ')
     if mtime and __version__:

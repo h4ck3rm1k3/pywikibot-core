@@ -13,7 +13,7 @@ __version__ = '$Id$'
 # class definition that can be subclassed to create new, functional bot
 # scripts, instead of writing each one from scratch.
 import traceback
-from pywikibot.config import loadconfig
+#from pywikibot.config import loadconfig
 import logging
 import logging.handlers
        # all output goes thru python std library "logging" module

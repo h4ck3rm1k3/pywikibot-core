@@ -42,8 +42,8 @@ import http.cookiejar
 
 #import pywikibot
 from pywikibot.bot import debug
-from pywikibot.config import loadconfig
-
+#from pywikibot.config import loadconfig
+from pywikibot.configurable import Configurable
 _logger = "comm.threadedhttp"
 
 
@@ -144,7 +144,7 @@ class LockableCookieJar(http.cookiejar.LWPCookieJar):
         self.lock = threading.Lock()
 
 
-class Http(httplib2.Http):
+class Http(httplib2.Http, Configurable):
     """Subclass of httplib2.Http that stores cookies.
 
     Overrides httplib2's internal redirect support to prevent cookies being
@@ -161,7 +161,8 @@ class Http(httplib2.Http):
                follow. 5 is default.
 
         """
-        self.config = loadconfig()
+        Configurable.__init__(self)
+        #self.config = loadconfig()
         try:
             self.cookiejar = kwargs.pop('cookiejar')
         except KeyError:
@@ -249,14 +250,14 @@ class Http(httplib2.Http):
         del self.connections[conn_key]
 
         # First write cookies
-        self.cookiejar.lock.acquire()
-        try:
-            self.cookiejar.extract_cookies(DummyResponse(response), req)
-        except Exception as exp:
-            print(traceback.format_exc())
-            print("cookie exp %s" % (exp))
-        finally:
-            self.cookiejar.lock.release()
+        # self.cookiejar.lock.acquire()
+        # try:
+        #     self.cookiejar.extract_cookies(DummyResponse(response), req)
+        # except Exception as exp:
+        #     print(traceback.format_exc())
+        #     print("cookie exp %s" % (exp))
+        # finally:
+        #     self.cookiejar.lock.release()
 
         # Check for possible redirects
         redirectable_response = ((response.status == 303) or

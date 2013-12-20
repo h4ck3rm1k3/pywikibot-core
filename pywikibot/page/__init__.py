@@ -25,7 +25,7 @@ from pywikibot.link_regex import link_regex
 
 #from pywikibot.site import Site, Timestamp, Coordinate, WbTime
 #from pywikibot import config,  Timestamp, Coordinate, WbTime
-#from pywikibot.config import loadconfig
+
 #config = loadconfig()
 #import pywikibot.site
 #from pywikibot.families.familybase import Family as FamilyBase
@@ -33,10 +33,10 @@ from pywikibot.link_regex import link_regex
 
 #from pywikibot.textlib import removeLanguageLinks, removeCategoryLinks
 #, removeDisabledParts, extract_templates_and_params, replaceCategoryInPlace, replaceCategoryLinks
-from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
+#from pywikibot.bot import output, inputChoice, log,  warning, user_input, calledModuleName
 #, debug
 
-from pywikibot.bot import error as print_error
+#from pywikibot.bot import error as print_error
 #from pywikibot.exceptions import Error, AutoblockUser, UserActionRefuse,, 
 from pywikibot.exceptions import Error, IsRedirectPage, NoPage, SectionError, IsNotRedirectPage, PageNotSaved, LockedPage,  NoUsername, EditConflict,SpamfilterError
 #from pywikibot.i18n import translate
@@ -80,9 +80,9 @@ reNamespace = re.compile("^(.+?) *: *(.*)$")
 
 #from pywikibot.page.category import Category
 #import Category
-from pywikibot.config  import loadconfig
-
-class Page(object):
+#from pywikibot.config  import loadconfig
+from pywikibot.configurable import Configurable
+class Page(Configurable):
     """Page: A MediaWiki page
 
     This object only implements internally methods that do not require
@@ -124,7 +124,7 @@ class Page(object):
         @type ns: int
 
         """
-        self.config=loadconfig()
+        Configurable.__init__(self)
         # init fields for lint
         self._revid         = None
         self._isredir       = None
