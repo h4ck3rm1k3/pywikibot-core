@@ -434,9 +434,10 @@ class TestPageObject(TestBase):
         link = Link(u"Kosovo", enwiki)
         self.mainpage = Page(link,enwiki)
         history = self.mainpage.getVersionHistory(
-            reverseOrder=False, 
+            #reverseOrder=False, 
             #getAll=True,
             #revCount=500
+            total=500
         )
         print (history)
 
