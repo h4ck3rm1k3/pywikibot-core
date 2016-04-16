@@ -37,6 +37,7 @@ Copy the template "Query service" from the Toolserver wiki to wikitech:
 #
 # (C) Merlijn van Deen, 2014
 # (C) Pywikibot team, 2015
+# (C) James Michael DuPont h4ck3rm1k3, 2016
 #
 # Distributed under the terms of the MIT license.
 #
@@ -81,6 +82,7 @@ class TargetPagesMissing(WikiTransferException):
 
     pass
 
+import sqlitedict
 
 def main(*args):
     """
@@ -92,6 +94,10 @@ def main(*args):
     @type args: list of unicode
     """
     local_args = pywikibot.handle_args(args)
+
+    file_store = sqlitedict.SqliteDict('transferbot.db', autocommit=True)
+    file_store_error = sqlitedict.SqliteDict('error.db', autocommit=True)
+    file_store_history = sqlitedict.SqliteDict('history.db', autocommit=True)
 
     fromsite = pywikibot.Site()
     tolang = fromsite.code
@@ -138,6 +144,12 @@ def main(*args):
 
     for page in gen:
         summary = "Moved page from %s" % page.title(asLink=True)
+
+        title = page.title()
+        
+        if title in file_store:
+            continue
+        
         targetpage = pywikibot.Page(tosite, prefix + page.title())
         edithistpage = pywikibot.Page(tosite, prefix + page.title() + '/edithistory')
 
@@ -155,21 +167,55 @@ def main(*args):
                             targetpage.title(asLink=True)))
 
         pywikibot.log("Getting page text.")
-        text = page.get(get_redirect=True)
-        text += ("<noinclude>\n\n<small>This page was moved from %s. It's "
-                 "edit history can be viewed at %s</small></noinclude>"
-                 % (page.title(asLink=True, insite=targetpage.site),
-                    edithistpage.title(asLink=True, insite=targetpage.site)))
+        try:
+            text = page.get(get_redirect=True)
+        except Exception as e:
+            print e
+            continue
+            
+        text += ("<noinclude>\n\n{{Wikipedia-deleted-new|%s|%s}}</noinclude>"
+             % (page.title(asLink=True, insite=targetpage.site),
+                edithistpage.title(asLink=True, insite=targetpage.site)))
 
         pywikibot.log("Getting edit history.")
         historytable = page.getVersionHistoryTable()
 
         pywikibot.log("Putting page text.")
-        targetpage.put(text, summary=summary)
+        try :
+            targetpage.put(text, summary=summary)
+        except pywikibot.exceptions.SpamfilterError as e:
+            print e
+            file_store_error[title]=text
+            file_store_history[title]=historytable
+            continue
+            #print text            
+
+        except pywikibot.exceptions.PageSaveRelatedError as e:
+            print e
+            file_store_error[title]=text
+            file_store_history[title]=historytable
+
+            continue
+            #print text.
+
+
+        #except Exception as e:
+            
+
 
         pywikibot.log("Putting edit history.")
-        edithistpage.put(historytable, summary=summary)
+        try :
+            edithistpage.put(historytable, summary=summary)
+        except pywikibot.exceptions.SpamfilterError as e:
+            #print historytable
+            file_store_error[title]=text
+            file_store_history[title]=historytable
+            print e
+            continue
 
+
+        file_store[title]=1
+            
 
 if __name__ == "__main__":
     try:
