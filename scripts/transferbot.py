@@ -153,6 +153,11 @@ def main(*args):
         targetpage = pywikibot.Page(tosite, prefix + page.title())
         edithistpage = pywikibot.Page(tosite, prefix + page.title() + '/edithistory')
 
+        t = page.title()
+        if t.startswith('Wikipedia:'):
+            print "Skipping" + t
+            continue
+
         if targetpage.exists() and not overwrite:
             pywikibot.output(
                 u"Skipped %s (target page %s exists)" % (
