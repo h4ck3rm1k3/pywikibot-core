@@ -149,6 +149,13 @@ def main(*args):
         
         if title in file_store:
             continue
+
+        if title in file_store_error:
+            continue
+
+        if title in file_store_history:
+            continue
+
         
         targetpage = pywikibot.Page(tosite, prefix + page.title())
         edithistpage = pywikibot.Page(tosite, prefix + page.title() + '/edithistory')
