@@ -1,5 +1,5 @@
 #!/bin/bash
 while true
 do
-    ./transfer_one.sh
+    /data/project/speedydeletionwikia/pywikibot-core/transfer_one.sh
 done

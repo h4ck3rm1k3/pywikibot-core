@@ -1,4 +1,5 @@
-
+#!/bin/bash
+cd ~/pywikibot-core/
 #set -e
 #python  ./pwb.py transferbot -lang:en -tolang:miraheze -tofamily:miraheze  -family:wikipedia "-cat:Linux" --debug
 IFS=$'\n'

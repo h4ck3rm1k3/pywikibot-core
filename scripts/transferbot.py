@@ -156,9 +156,9 @@ def main(*args):
         if title in file_store_history:
             continue
 
-        
-        targetpage = pywikibot.Page(tosite, prefix + page.title())
-        edithistpage = pywikibot.Page(tosite, prefix + page.title() + '/edithistory')
+        newtitle = page.title().replace(':',' - ');
+        targetpage = pywikibot.Page(tosite, prefix + newtitle)
+        edithistpage = pywikibot.Page(tosite, prefix + newtitle + '/edithistory')
 
         t = page.title()
         if t.startswith('Wikipedia:'):
